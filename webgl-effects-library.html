@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebGL / Three.js Effects Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1322; --panel:#141c30; --panel-2:#0f1626;
+    --border:rgba(201,162,75,.18); --border-2:rgba(201,162,75,.38);
+    --text:#eef1f7; --muted:#8c95ad; --dim:#5d6683;
+    --accent:#e7c878;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+  header{position:sticky;top:0;z-index:30;background:rgba(8,11,18,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+  .head-top{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 0 14px;flex-wrap:wrap}
+  .title{display:flex;align-items:center;gap:12px}
+  .title .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
+  .title h1{font-family:"Fraunces",Georgia,serif;font-size:22px;font-weight:600;letter-spacing:-.01em}
+  .title .sub{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--dim);letter-spacing:.14em;text-transform:uppercase}
+  .search{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:9px 14px;min-width:230px}
+  .rlink{font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:.04em;color:var(--muted);text-decoration:none;margin-left:18px;transition:color .2s;white-space:nowrap}
+  .rlink:hover{color:var(--accent)}
+  .search input{background:none;border:none;outline:none;color:var(--text);font-size:14px;width:100%;font-family:inherit}
+  .search input::placeholder{color:var(--dim)}
+  .search .k{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--dim)}
+  .chips{display:flex;gap:8px;padding:0 0 16px;flex-wrap:wrap}
+  .chip{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.04em;color:var(--muted);background:var(--panel);border:1px solid var(--border);padding:8px 14px;border-radius:99px;cursor:pointer;white-space:nowrap;transition:.18s}
+  .chip:hover{border-color:var(--border-2);color:var(--text)}
+  .chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  .intro{padding:34px 0 8px}
+  .intro p{color:var(--muted);max-width:66ch}
+  .intro .hint{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--dim);margin-top:10px}
+  .intro .warn{font-family:"IBM Plex Mono",monospace;font-size:12px;color:#f5b301;margin-top:6px}
+
+  section.cat{padding:34px 0 8px}
+  .cat-head{display:flex;align-items:baseline;gap:14px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:12px}
+  .cat-head h2{font-size:16px;font-weight:700;letter-spacing:.02em}
+  .cat-head .count{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--dim)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+  .item{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .2s}
+  .item:hover{border-color:var(--border-2)}
+  .frame-wrap{position:relative;background:var(--panel-2);border-bottom:1px solid var(--border)}
+  .frame{width:100%;height:200px;border:0;display:block;background:var(--panel-2)}
+  .replay{position:absolute;top:10px;right:10px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text);background:rgba(8,11,18,.82);border:1px solid var(--border-2);border-radius:6px;padding:5px 9px;opacity:0;transition:.2s;cursor:pointer;z-index:2}
+  .frame-wrap:hover .replay{opacity:1}
+  .replay:hover{border-color:var(--accent);color:var(--accent)}
+  .replay:active{transform:scale(.94)}
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px}
+  .name{font-size:13.5px;font-weight:600}
+  .cat-tag{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-top:2px;display:block}
+  .copy{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text);background:var(--panel-2);border:1px solid var(--border-2);border-radius:7px;padding:8px 12px;cursor:pointer;transition:.18s;white-space:nowrap;flex:none}
+  .copy:hover{border-color:var(--accent);color:var(--accent)}
+  .copy.done{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  .empty{display:none;padding:60px 0;text-align:center;color:var(--dim);font-family:"IBM Plex Mono",monospace}
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--accent);color:#fff;font-weight:600;font-size:14px;padding:12px 22px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.3s;z-index:50}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  footer{border-top:1px solid var(--border);margin-top:50px;padding:30px 0;text-align:center;color:var(--dim);font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.04em}
+
+  @media(max-width:600px){.search{min-width:0;flex:1}.grid{grid-template-columns:1fr}}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="head-top">
+      <div class="title">
+        <span class="dot"></span>
+        <div>
+          <h1>WebGL / Three.js Effects</h1>
+          <span class="sub">3D · Particles · Shaders</span>
+        </div>
+      </div>
+      <a href="resources.html" class="rlink">← Resources</a>
+      <label class="search"><span class="k">/</span><input id="search" type="text" placeholder="Search effects…" autocomplete="off"></label>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="intro">
+    <p>Heavy, premium 3D effects built on <b>Three.js</b> — the black-hole / particle-sphere tier. Each card is a live WebGL preview; hit <b>Copy</b> for a self-contained block (it already includes the Three.js CDN tag) you can paste into any page.</p>
+    <p class="hint">// Tip: hover a preview and hit ↻ replay to restart it.</p>
+    <p class="warn">// Needs an internet connection — each demo loads Three.js from a CDN.</p>
+  </div>
+  <div id="sections"></div>
+  <div class="empty" id="empty">// No effects match your search.</div>
+</div>
+
+<footer>WEBGL EFFECTS — POWERED BY THREE.JS r128 — <span id="total">0</span> EFFECTS</footer>
+<div class="toast" id="toast">Copied to clipboard ✓</div>
+
+<script>
+var CDN='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+var SHELL='<!doctype html><meta charset="utf-8"><style>html,body{margin:0;height:100%;background:#0f1626;overflow:hidden}</style>';
+
+var S={
+
+particleSphere:
+`<!-- Particle Sphere (Three.js) -->
+<div id="ps" style="width:100%;height:200px"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script>
+var el=document.getElementById('ps'),w=el.clientWidth||300,h=200;
+var scene=new THREE.Scene();
+var cam=new THREE.PerspectiveCamera(60,w/h,.1,100);cam.position.z=3;
+var rnd=new THREE.WebGLRenderer({antialias:true,alpha:true});
+rnd.setSize(w,h);rnd.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(rnd.domElement);
+var N=1600,pos=new Float32Array(N*3);
+for(var i=0;i<N;i++){var t=Math.acos(2*Math.random()-1),p=2*Math.PI*Math.random();
+  pos[i*3]=Math.sin(t)*Math.cos(p);pos[i*3+1]=Math.sin(t)*Math.sin(p);pos[i*3+2]=Math.cos(t);}
+var g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+var pts=new THREE.Points(g,new THREE.PointsMaterial({color:0x4c8dff,size:.03}));scene.add(pts);
+(function loop(){pts.rotation.y+=.004;pts.rotation.x+=.002;rnd.render(scene,cam);requestAnimationFrame(loop);})();
+<\/script>`,
+
+blackHole:
+`<!-- Black Hole Accretion Disk (Three.js) -->
+<div id="bh" style="width:100%;height:200px"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script>
+var el=document.getElementById('bh'),w=el.clientWidth||300,h=200;
+var scene=new THREE.Scene();
+var cam=new THREE.PerspectiveCamera(55,w/h,.1,100);cam.position.set(0,1.5,3.4);cam.lookAt(0,0,0);
+var rnd=new THREE.WebGLRenderer({antialias:true,alpha:true});
+rnd.setSize(w,h);rnd.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(rnd.domElement);
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(.5,32,32),new THREE.MeshBasicMaterial({color:0x000000})));
+var N=4200,pos=new Float32Array(N*3),col=new Float32Array(N*3),rad=[];
+var c1=new THREE.Color(0x4c8dff),c2=new THREE.Color(0xec4899);
+for(var i=0;i<N;i++){var rr=.75+Math.random()*1.7,a=Math.random()*Math.PI*2;rad.push({r:rr,a:a});
+  pos[i*3]=Math.cos(a)*rr;pos[i*3+1]=(Math.random()-.5)*.05;pos[i*3+2]=Math.sin(a)*rr;
+  var cc=c1.clone().lerp(c2,(rr-.75)/1.7);col[i*3]=cc.r;col[i*3+1]=cc.g;col[i*3+2]=cc.b;}
+var g=new THREE.BufferGeometry();
+g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+g.setAttribute('color',new THREE.BufferAttribute(col,3));
+var disk=new THREE.Points(g,new THREE.PointsMaterial({size:.03,vertexColors:true,transparent:true,opacity:.9}));
+scene.add(disk);var pa=g.attributes.position;
+(function loop(){for(var i=0;i<N;i++){rad[i].a+=.01/rad[i].r;
+  pa.array[i*3]=Math.cos(rad[i].a)*rad[i].r;pa.array[i*3+2]=Math.sin(rad[i].a)*rad[i].r;}
+  pa.needsUpdate=true;rnd.render(scene,cam);requestAnimationFrame(loop);})();
+<\/script>`,
+
+particleField:
+`<!-- Drifting Particle Field (Three.js) -->
+<div id="pf" style="width:100%;height:200px"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script>
+var el=document.getElementById('pf'),w=el.clientWidth||300,h=200;
+var scene=new THREE.Scene();
+var cam=new THREE.PerspectiveCamera(60,w/h,.1,100);cam.position.z=4;
+var rnd=new THREE.WebGLRenderer({antialias:true,alpha:true});
+rnd.setSize(w,h);rnd.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(rnd.domElement);
+var N=900,pos=new Float32Array(N*3);
+for(var i=0;i<N*3;i++)pos[i]=(Math.random()-.5)*6;
+var g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+var pts=new THREE.Points(g,new THREE.PointsMaterial({color:0x8b5cf6,size:.035}));scene.add(pts);
+(function loop(){pts.rotation.y+=.0015;pts.rotation.x+=.001;rnd.render(scene,cam);requestAnimationFrame(loop);})();
+<\/script>`,
+
+warp3d:
+`<!-- 3D Starfield Warp (Three.js) -->
+<div id="wp" style="width:100%;height:200px"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script>
+var el=document.getElementById('wp'),w=el.clientWidth||300,h=200;
+var scene=new THREE.Scene();
+var cam=new THREE.PerspectiveCamera(70,w/h,.1,100);cam.position.z=0;
+var rnd=new THREE.WebGLRenderer({antialias:true,alpha:true});
+rnd.setSize(w,h);rnd.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(rnd.domElement);
+var N=600,pos=new Float32Array(N*3);
+for(var i=0;i<N;i++){pos[i*3]=(Math.random()-.5)*6;pos[i*3+1]=(Math.random()-.5)*6;pos[i*3+2]=-Math.random()*60;}
+var g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+var pts=new THREE.Points(g,new THREE.PointsMaterial({color:0xffffff,size:.08}));scene.add(pts);
+var pa=g.attributes.position;
+(function loop(){for(var i=0;i<N;i++){pa.array[i*3+2]+=.4;
+  if(pa.array[i*3+2]>1){pa.array[i*3+2]=-60;pa.array[i*3]=(Math.random()-.5)*6;pa.array[i*3+1]=(Math.random()-.5)*6;}}
+  pa.needsUpdate=true;rnd.render(scene,cam);requestAnimationFrame(loop);})();
+<\/script>`,
+
+dnaHelix:
+`<!-- DNA Helix (Three.js) -->
+<div id="dna" style="width:100%;height:200px"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script>
+var el=document.getElementById('dna'),w=el.clientWidth||300,h=200;
+var scene=new THREE.Scene();
+var cam=new THREE.PerspectiveCamera(55,w/h,.1,100);cam.position.z=5;
+var rnd=new THREE.WebGLRenderer({antialias:true,alpha:true});
+rnd.setSize(w,h);rnd.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(rnd.domElement);
+var grp=new THREE.Group();scene.add(grp);
+var sg=new THREE.SphereGeometry(.09,16,16);
+var m1=new THREE.MeshBasicMaterial({color:0x4c8dff}),m2=new THREE.MeshBasicMaterial({color:0xec4899});
+for(var i=0;i<34;i++){var a=i*.5,y=i*.14-2.3;
+  var s1=new THREE.Mesh(sg,m1);s1.position.set(Math.cos(a)*.6,y,Math.sin(a)*.6);grp.add(s1);
+  var s2=new THREE.Mesh(sg,m2);s2.position.set(Math.cos(a+Math.PI)*.6,y,Math.sin(a+Math.PI)*.6);grp.add(s2);}
+(function loop(){grp.rotation.y+=.02;rnd.render(scene,cam);requestAnimationFrame(loop);})();
+<\/script>`,
+
+wireGlobe:
+`<!-- Wireframe Globe (Three.js) -->
+<div id="wg" style="width:100%;height:200px"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script>
+var el=document.getElementById('wg'),w=el.clientWidth||300,h=200;
+var scene=new THREE.Scene();
+var cam=new THREE.PerspectiveCamera(55,w/h,.1,100);cam.position.z=3.4;
+var rnd=new THREE.WebGLRenderer({antialias:true,alpha:true});
+rnd.setSize(w,h);rnd.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(rnd.domElement);
+var geo=new THREE.IcosahedronGeometry(1.3,3),grp=new THREE.Group();
+grp.add(new THREE.LineSegments(new THREE.WireframeGeometry(geo),new THREE.LineBasicMaterial({color:0x4c8dff,transparent:true,opacity:.45})));
+grp.add(new THREE.Points(geo,new THREE.PointsMaterial({color:0x8b5cf6,size:.05})));
+scene.add(grp);
+(function loop(){grp.rotation.y+=.005;grp.rotation.x+=.002;rnd.render(scene,cam);requestAnimationFrame(loop);})();
+<\/script>`,
+
+torusKnot:
+`<!-- Glowing Torus Knot (Three.js) -->
+<div id="tk" style="width:100%;height:200px"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script>
+var el=document.getElementById('tk'),w=el.clientWidth||300,h=200;
+var scene=new THREE.Scene();
+var cam=new THREE.PerspectiveCamera(55,w/h,.1,100);cam.position.z=3;
+var rnd=new THREE.WebGLRenderer({antialias:true,alpha:true});
+rnd.setSize(w,h);rnd.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(rnd.domElement);
+scene.add(new THREE.AmbientLight(0x334466,1));
+var l1=new THREE.PointLight(0x4c8dff,1.2);l1.position.set(4,3,4);scene.add(l1);
+var l2=new THREE.PointLight(0xec4899,.9);l2.position.set(-4,-2,2);scene.add(l2);
+var mesh=new THREE.Mesh(new THREE.TorusKnotGeometry(.7,.24,140,18),
+  new THREE.MeshStandardMaterial({color:0x9fd0ff,metalness:.55,roughness:.2,emissive:0x0d2148}));
+scene.add(mesh);
+(function loop(){mesh.rotation.x+=.01;mesh.rotation.y+=.014;rnd.render(scene,cam);requestAnimationFrame(loop);})();
+<\/script>`,
+
+crystal:
+`<!-- Rotating Crystal (Three.js) -->
+<div id="cr" style="width:100%;height:200px"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script>
+var el=document.getElementById('cr'),w=el.clientWidth||300,h=200;
+var scene=new THREE.Scene();
+var cam=new THREE.PerspectiveCamera(55,w/h,.1,100);cam.position.z=3.2;
+var rnd=new THREE.WebGLRenderer({antialias:true,alpha:true});
+rnd.setSize(w,h);rnd.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(rnd.domElement);
+scene.add(new THREE.AmbientLight(0x223355,1));
+var l1=new THREE.PointLight(0x66aaff,1.4);l1.position.set(3,3,4);scene.add(l1);
+var l2=new THREE.PointLight(0xffffff,.6);l2.position.set(-3,-3,2);scene.add(l2);
+var mesh=new THREE.Mesh(new THREE.IcosahedronGeometry(1.25,0),
+  new THREE.MeshStandardMaterial({color:0x8fbaff,metalness:.7,roughness:.12,flatShading:true}));
+scene.add(mesh);
+(function loop(){mesh.rotation.x+=.008;mesh.rotation.y+=.012;rnd.render(scene,cam);requestAnimationFrame(loop);})();
+<\/script>`,
+
+morphBlob:
+`<!-- Morphing Blob (Three.js) -->
+<div id="mb" style="width:100%;height:200px"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script>
+var el=document.getElementById('mb'),w=el.clientWidth||300,h=200;
+var scene=new THREE.Scene();
+var cam=new THREE.PerspectiveCamera(55,w/h,.1,100);cam.position.z=3.2;
+var rnd=new THREE.WebGLRenderer({antialias:true,alpha:true});
+rnd.setSize(w,h);rnd.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(rnd.domElement);
+scene.add(new THREE.AmbientLight(0x334466,1));
+var l1=new THREE.PointLight(0x4c8dff,1.3);l1.position.set(4,3,4);scene.add(l1);
+var l2=new THREE.PointLight(0x8b5cf6,.9);l2.position.set(-4,-2,3);scene.add(l2);
+var geo=new THREE.IcosahedronGeometry(1.1,4);
+var base=geo.attributes.position.array.slice(0);
+var mesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:0x6aa6ff,metalness:.3,roughness:.35}));
+scene.add(mesh);var pa=geo.attributes.position,t=0;
+(function loop(){t+=.02;for(var i=0;i<pa.count;i++){
+  var x=base[i*3],y=base[i*3+1],z=base[i*3+2];
+  var d=1+.16*Math.sin(3*x+t)*Math.sin(3*y+t)*Math.sin(3*z+t);
+  pa.array[i*3]=x*d;pa.array[i*3+1]=y*d;pa.array[i*3+2]=z*d;}
+  pa.needsUpdate=true;geo.computeVertexNormals();
+  mesh.rotation.y+=.006;rnd.render(scene,cam);requestAnimationFrame(loop);})();
+<\/script>`,
+
+waveOcean:
+`<!-- Wave Ocean Grid (Three.js) -->
+<div id="wo" style="width:100%;height:200px"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script>
+var el=document.getElementById('wo'),w=el.clientWidth||300,h=200;
+var scene=new THREE.Scene();
+var cam=new THREE.PerspectiveCamera(55,w/h,.1,100);cam.position.set(0,1.7,2.6);cam.lookAt(0,0,0);
+var rnd=new THREE.WebGLRenderer({antialias:true,alpha:true});
+rnd.setSize(w,h);rnd.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(rnd.domElement);
+var geo=new THREE.PlaneGeometry(4,4,44,44);
+var mesh=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0x4c8dff,wireframe:true}));
+mesh.rotation.x=-Math.PI/2;scene.add(mesh);
+var pa=geo.attributes.position,base=pa.array.slice(0),t=0;
+(function loop(){t+=.04;for(var i=0;i<pa.count;i++){
+  var x=base[i*3],y=base[i*3+1];pa.array[i*3+2]=Math.sin(x*1.6+t)*.22+Math.cos(y*1.6+t)*.22;}
+  pa.needsUpdate=true;rnd.render(scene,cam);requestAnimationFrame(loop);})();
+<\/script>`,
+
+cubeWave:
+`<!-- Cube Wave Grid (Three.js) -->
+<div id="cw" style="width:100%;height:200px"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
+<script>
+var el=document.getElementById('cw'),w=el.clientWidth||300,h=200;
+var scene=new THREE.Scene();
+var cam=new THREE.PerspectiveCamera(55,w/h,.1,100);cam.position.set(2.4,2.4,2.4);cam.lookAt(0,0,0);
+var rnd=new THREE.WebGLRenderer({antialias:true,alpha:true});
+rnd.setSize(w,h);rnd.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(rnd.domElement);
+scene.add(new THREE.AmbientLight(0x334466,1));
+var l=new THREE.PointLight(0x4c8dff,1.3);l.position.set(4,6,4);scene.add(l);
+var gg=8,gap=.34,geoC=new THREE.BoxGeometry(.24,.24,.24),mat=new THREE.MeshStandardMaterial({color:0x6aa6ff,metalness:.3,roughness:.4});
+var cubes=[];
+for(var i=0;i<gg;i++)for(var j=0;j<gg;j++){var m=new THREE.Mesh(geoC,mat);
+  m.position.set((i-gg/2)*gap,0,(j-gg/2)*gap);m.userData.p=(i+j)*.4;scene.add(m);cubes.push(m);}
+var t=0;
+(function loop(){t+=.06;for(var k=0;k<cubes.length;k++){var s=1+Math.abs(Math.sin(t+cubes[k].userData.p))*3.2;
+  cubes[k].scale.y=s;cubes[k].position.y=(s*.24-.24)/2;}rnd.render(scene,cam);requestAnimationFrame(loop);})();
+<\/script>`
+
+};
+
+var CATALOG=[
+  {cat:'Particles', key:'particleSphere',name:'Particle Sphere'},
+  {cat:'Particles', key:'blackHole',     name:'Black Hole Disk'},
+  {cat:'Particles', key:'particleField', name:'Drifting Particle Field'},
+  {cat:'Particles', key:'warp3d',        name:'3D Starfield Warp'},
+  {cat:'Particles', key:'dnaHelix',      name:'DNA Helix'},
+
+  {cat:'Geometry', key:'wireGlobe', name:'Wireframe Globe'},
+  {cat:'Geometry', key:'torusKnot', name:'Glowing Torus Knot'},
+  {cat:'Geometry', key:'crystal',   name:'Rotating Crystal'},
+  {cat:'Geometry', key:'morphBlob', name:'Morphing Blob'},
+
+  {cat:'Surfaces', key:'waveOcean', name:'Wave Ocean Grid'},
+  {cat:'Surfaces', key:'cubeWave',  name:'Cube Wave Grid'}
+];
+
+/* ---------- RENDER ---------- */
+var cats=[];CATALOG.forEach(function(i){if(cats.indexOf(i.cat)<0)cats.push(i.cat);});
+document.getElementById('total').textContent=CATALOG.length;
+
+var chipsEl=document.getElementById('chips');
+['All'].concat(cats).forEach(function(c,idx){
+  var b=document.createElement('button');b.className='chip'+(idx===0?' active':'');b.textContent=c;
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.chip').forEach(function(x){x.classList.remove('active');});
+    b.classList.add('active');activeCat=c;applyFilter();});
+  chipsEl.appendChild(b);
+});
+
+var sectionsEl=document.getElementById('sections');
+cats.forEach(function(c){
+  var items=CATALOG.filter(function(i){return i.cat===c;});
+  var sec=document.createElement('section');sec.className='cat';
+  sec.innerHTML='<div class="cat-head"><h2>'+c+'</h2><span class="count">'+items.length+'</span></div>';
+  var grid=document.createElement('div');grid.className='grid';
+  items.forEach(function(i){
+    var card=document.createElement('article');card.className='item';card.dataset.name=i.name.toLowerCase();card.dataset.cat=c;
+    var fw=document.createElement('div');fw.className='frame-wrap';
+    var f=document.createElement('iframe');f.className='frame';f.title=i.name;f.loading='lazy';
+    f.setAttribute('sandbox','allow-scripts');f.srcdoc=SHELL+S[i.key];
+    var rep=document.createElement('button');rep.className='replay';rep.type='button';rep.textContent='↻ replay';
+    fw.appendChild(f);fw.appendChild(rep);
+    (function(frame,key){rep.addEventListener('click',function(ev){ev.stopPropagation();frame.srcdoc=SHELL+S[key];});})(f,i.key);
+    var foot=document.createElement('div');foot.className='foot';
+    var meta=document.createElement('div');meta.innerHTML='<span class="name">'+i.name+'</span><span class="cat-tag">'+c+'</span>';
+    var copy=document.createElement('button');copy.className='copy';copy.textContent='Copy';
+    (function(key,btn){btn.addEventListener('click',function(){doCopy(S[key],btn);});})(i.key,copy);
+    foot.appendChild(meta);foot.appendChild(copy);
+    card.appendChild(fw);card.appendChild(foot);grid.appendChild(card);
+  });
+  sec.appendChild(grid);sectionsEl.appendChild(sec);
+});
+
+/* ---------- FILTER + SEARCH ---------- */
+var activeCat='All',query='';
+var emptyEl=document.getElementById('empty');
+function applyFilter(){
+  var any=false;
+  document.querySelectorAll('section.cat').forEach(function(sec){
+    var sv=false;
+    sec.querySelectorAll('.item').forEach(function(card){
+      var okC=activeCat==='All'||card.dataset.cat===activeCat;
+      var okQ=!query||card.dataset.name.indexOf(query)>-1;
+      var show=okC&&okQ;card.style.display=show?'':'none';if(show){sv=true;any=true;}
+    });
+    sec.style.display=sv?'':'none';
+  });
+  emptyEl.style.display=any?'none':'block';
+}
+var searchEl=document.getElementById('search');
+searchEl.addEventListener('input',function(){query=this.value.trim().toLowerCase();applyFilter();});
+document.addEventListener('keydown',function(e){if(e.key==='/'&&document.activeElement!==searchEl){e.preventDefault();searchEl.focus();}});
+
+/* ---------- COPY ---------- */
+function doCopy(text,btn){
+  var done=function(){btn.classList.add('done');var old=btn.textContent;btn.textContent='Copied ✓';
+    showToast();setTimeout(function(){btn.classList.remove('done');btn.textContent=old;},1400);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(function(){fb(text,done);});
+  }else fb(text,done);
+}
+function fb(text,done){var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}ta.remove();}
+var toastEl=document.getElementById('toast'),toastT;
+function showToast(){toastEl.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){toastEl.classList.remove('show');},1600);}
+</script>
+</body>
+</html>
