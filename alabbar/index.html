@@ -46,7 +46,7 @@
   .brand .mark{width:48px;height:48px;flex:0 0 auto;object-fit:contain}
   .brand .bt{display:flex;flex-direction:column;align-items:flex-start}
   .brand h1{font-size:18px;line-height:1.05;margin:0;font-weight:700;color:var(--magenta)}
-  .brand .ar{font-size:14px;color:var(--magenta);font-weight:600;direction:rtl;text-align:left;opacity:.92}
+  .brand .ar{font-size:16px;color:var(--magenta);font-weight:600;direction:rtl;text-align:left;opacity:.92}
   .segmented{margin-left:auto;display:flex;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px}
   .segmented button{padding:9px 15px;border-radius:9px;font-size:14px;font-weight:600;color:var(--muted);position:relative}
   .segmented button.active{background:var(--magenta);color:#fff}
@@ -227,7 +227,7 @@
   .setrow .sthumb img{width:100%;height:100%;object-fit:cover}
   .setrow .nm{flex:1;min-width:0}
   .setrow .nm .en{font-size:15px;font-weight:600}
-  .setrow .nm .ar{font-size:11.5px;color:var(--muted);direction:rtl;text-align:left}
+  .setrow .nm .ar{font-size:14px;color:var(--muted);direction:rtl;text-align:left}
   .setrow .imgbtns{display:flex;flex-direction:row;flex-wrap:wrap;gap:5px}
   .setrow .imgbtns button{font-size:11.5px;font-weight:600;border:1px solid var(--line);border-radius:8px;padding:6px 9px;background:var(--bg);white-space:nowrap}
   .setrow .imgbtns button.rm{color:var(--danger);border-color:#E9BDB7}
@@ -290,6 +290,24 @@
   .perfseg{display:flex;gap:4px;margin:2px 0 8px;flex-wrap:wrap}
   .perfseg button{font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:6px 11px;background:var(--surface)}
   .perfseg button.active{background:var(--magenta);color:#fff}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+  .blink{animation:blink 1s ease-in-out infinite}
+  .alert-pill{display:none;flex:1 0 100%;order:9;margin-top:6px;background:#FCEFED;border:1px solid #E9C4BF;color:var(--danger);font-weight:700;font-size:13px;padding:10px 12px;border-radius:10px;text-align:center;cursor:pointer}
+  .alert-pill.show{display:block}
+  #stmtBody h4{font-size:13px;margin:16px 0 6px;font-weight:700}
+  .stmt-h{border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:10px}
+  .stmt-nm{font-size:18px;font-weight:700}
+  .stmt-p{font-size:12.5px;color:var(--muted)}
+  .stmt-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .stmt-kpis>div{background:var(--bg);border-radius:10px;padding:9px}
+  .stmt-kpis span{display:block;font-size:11px;color:var(--muted)}
+  .stmt-kpis b{font-size:15px}
+  .stmt-t{width:100%;border-collapse:collapse;margin-top:4px}
+  .stmt-t th{text-align:left;font-size:11px;color:var(--muted);border-bottom:1px solid var(--line);padding:5px 4px}
+  .stmt-t th.r,.stmt-t td.r{text-align:right}
+  .stmt-t td{font-size:12.5px;padding:6px 4px;border-bottom:1px solid var(--line)}
+  .stmt-empty{color:var(--muted);font-size:12.5px;padding:8px 2px}
+  .perfrow{cursor:pointer}.perfrow:hover{background:var(--bg)}
   .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:11px;font-size:13.5px;font-weight:600;opacity:0;transition:.2s;z-index:90;pointer-events:none;max-width:88%;text-align:center}
   .toast.show{opacity:1;transform:translateX(-50%)}
 
@@ -307,6 +325,9 @@
     #slipPrint,#slipPrint *{visibility:visible}
     #slipPrint{position:absolute;left:0;top:0;width:100%}
     .slip{width:100%;max-width:320px}
+    body.printing-stmt #slipPrint,body.printing-stmt #slipPrint *{visibility:hidden}
+    body.printing-stmt #stmtPrint,body.printing-stmt #stmtPrint *{visibility:visible}
+    body.printing-stmt #stmtPrint{position:absolute;left:0;top:0;width:100%}
     @page{margin:6mm}
   }
 </style>
@@ -344,6 +365,7 @@
       <div class="who"><div class="u" id="whoName">—</div><div class="r" id="whoRole"></div></div>
       <button class="logout-btn" id="logoutBtn">Log out</button>
     </div>
+    <button class="alert-pill" id="alertPill"></button>
   </header>
 
   <main>
@@ -533,6 +555,28 @@
   </div>
 </div>
 
+<!-- Advance -->
+<div class="overlay" id="advOverlay">
+  <div class="sheet" style="max-width:380px">
+    <div class="sheet-head"><h3 id="advTitle">Advance</h3><button class="sheet-close" id="advClose">&times;</button></div>
+    <div class="rsrow">Current advance balance: <b id="advBal" class="tabnum">0 SAR</b></div>
+    <div class="perfseg" id="advType" style="margin-top:12px"><button data-t="advance" class="active">Advance given</button><button data-t="repayment">Repayment received</button></div>
+    <label class="rslabel">Amount (SAR)<input id="advAmt" type="number" step="1" min="0" inputmode="decimal"></label>
+    <label class="rslabel" style="margin-top:12px">Note (optional)<input id="advNote" type="text"></label>
+    <div class="login-err" id="advErr"></div>
+    <button class="btn primary" id="advSave" style="margin-top:14px">Save</button>
+  </div>
+</div>
+
+<!-- Statement -->
+<div class="overlay" id="stmtOverlay">
+  <div class="sheet" style="max-width:520px">
+    <div class="sheet-head"><h3 id="stmtTitle">Statement</h3><button class="sheet-close" id="stmtClose">&times;</button></div>
+    <div id="stmtPrint"><div id="stmtBody"></div></div>
+    <div class="slip-actions"><button class="btn ghost" id="stmtCsv">Download CSV</button><button class="btn primary" id="stmtPrintBtn">Print / PDF</button></div>
+  </div>
+</div>
+
 <!-- Slip -->
 <div class="overlay" id="slipOverlay">
   <div class="sheet" style="max-width:360px">
@@ -579,9 +623,11 @@ save(LS_PROD,products);
 let sales=load(LS_SALES,[]);
 sales.forEach(s=>{if(!s.status)s.status="completed";});
 let staff=load(LS_STAFF,null);if(!staff){staff=SEED_STAFF.map(s=>({...s}));save(LS_STAFF,staff);}
+staff.forEach(s=>{if(!s.advances)s.advances=[];});save(LS_STAFF,staff);
 const CORRECTION_WINDOW=30*60*1000;
 function activeStaff(){return staff.filter(s=>s.active!==false);}
 function staffById(id){return staff.find(s=>s.id===id);}
+function advBalance(s){return (s.advances||[]).reduce((t,a)=>t+(a.type==="advance"?a.amount:-a.amount),0);}
 let cart=[];let currentUser=null;
 let filterState={mode:"today",from:null,to:null};
 
@@ -764,6 +810,7 @@ $("#slipOverlay").addEventListener("click",e=>{if(e.target.id==="slipOverlay")e.
 function requestCancel(code){
   const s=saleByCode(code);if(!s||s.status!=="completed")return;
   if(currentUser.role==="admin"){adminCancel(code);return;}
+  if(currentUser.role==="pos"&&s.byId!==currentUser.byId){toast("You can only cancel your own sales");return;}
   s.status="cancel_requested";s.reqBy=currentUser.name;s.reqById=currentUser.byId;s.cancelReqAt=new Date().toISOString();delete s.cancelRejected;save(LS_SALES,sales);
   toast("Cancel request sent to owner ✓");renderOrdersSheet();refreshBadges();
 }
@@ -776,6 +823,7 @@ function doCancel(code){
   s.status="cancelled";s.cancelledBy=currentUser.by;s.cancelledAt=new Date().toISOString();delete s.cancelReq;delete s.cancelRejected;
   save(LS_SALES,sales);save(LS_PROD,products);refreshAll();
 }
+function restoreSale(code){const s=saleByCode(code);if(!s||s.status!=="cancelled")return;askConfirm("Restore "+code+"? Stock will be deducted again.",()=>{s.lines.forEach(l=>{const p=prod(l.id);if(p){p.stock=+(p.stock-l.weight).toFixed(2);addLedger(p,"sale",l.weight,new Date().toISOString(),code);}});s.status="completed";delete s.cancelledBy;delete s.cancelledAt;delete s.cancelRejected;save(LS_SALES,sales);save(LS_PROD,products);refreshAll();toast(code+" restored");});}
 function refreshAll(){renderGrid();if($("#view-sales").classList.contains("active"))renderSales();if($("#view-stock").classList.contains("active"))renderStock();renderOrdersSheet();refreshBadges();}
 
 /* Orders shared render */
@@ -787,24 +835,37 @@ function orderActions(s,mode){
     return `<button class="obtn req" data-act="request" data-code="${s.code}">${s.cancelRejected?"Request again":"Request cancel"}</button>`;
   }
   if(s.status==="cancel_requested"){if(admin)return `<button class="obtn approve" data-act="approve" data-code="${s.code}">Approve</button><button class="obtn reject" data-act="reject" data-code="${s.code}">Reject</button>`;return '';}
+  if(s.status==="cancelled"&&admin)return `<button class="obtn" data-act="restore" data-code="${s.code}" style="color:var(--fresh);border-color:#BFE0A0">Restore</button>`;
   return '';
 }
 function orderRowHTML(s,mode,showDate){
   const when=showDate?fmtDate(s.time)+" "+fmtTime(s.time):fmtTime(s.time);
   return `<div class="ord ${s.status==="cancelled"?"cancelled":""}"><div class="oinfo"><div class="otop"><span class="ocode">${s.code}</span><span class="otime tabnum">${when}</span>${statusChip(s)}</div><div class="oitems">${s.lines.length} item${s.lines.length>1?"s":""} · <span class="tabnum">${money(s.total)} SAR</span>${s.by?` · by ${s.by}`:""}</div></div><div class="oact">${orderActions(s,mode)}</div></div>`;
 }
-function bindOrderActions(c){c.querySelectorAll("[data-act]").forEach(b=>b.addEventListener("click",()=>{const code=b.dataset.code,a=b.dataset.act;if(a==="request")requestCancel(code);else if(a==="admincancel")adminCancel(code);else if(a==="approve")approveCancel(code);else if(a==="reject")rejectCancel(code);}));}
-function renderOrdersSheet(){const list=todaySales().slice().reverse();const box=$("#ordersSheetList");box.innerHTML=list.length?list.map(s=>orderRowHTML(s,"pos",false)).join(""):'<div class="orders-empty">No orders yet today.</div>';bindOrderActions(box);}
+function bindOrderActions(c){c.querySelectorAll("[data-act]").forEach(b=>b.addEventListener("click",()=>{const code=b.dataset.code,a=b.dataset.act;if(a==="request")requestCancel(code);else if(a==="admincancel")adminCancel(code);else if(a==="approve")approveCancel(code);else if(a==="reject")rejectCancel(code);else if(a==="restore")restoreSale(code);}));}
+function renderOrdersSheet(){
+  const mine=currentUser.role==="pos";
+  if(mine){let ch=false;sales.forEach(s=>{if(s.reqById===currentUser.byId&&(s.cancelRejected||s.status==="cancelled")&&!s.reqSeen){s.reqSeen=true;ch=true;}});if(ch)save(LS_SALES,sales);}
+  const list=todaySales().filter(s=>!mine||s.byId===currentUser.byId).slice().reverse();
+  const box=$("#ordersSheetList");box.innerHTML=list.length?list.map(s=>orderRowHTML(s,"pos",false)).join(""):'<div class="orders-empty">No orders yet today.</div>';bindOrderActions(box);refreshBadges();
+}
 $("#ordersBtn").addEventListener("click",()=>{renderOrdersSheet();$("#ordersOverlay").classList.add("show");});
 $("#ordersClose").addEventListener("click",()=>$("#ordersOverlay").classList.remove("show"));
 $("#ordersOverlay").addEventListener("click",e=>{if(e.target.id==="ordersOverlay")e.currentTarget.classList.remove("show");});
 
 /* Badges */
 function refreshBadges(){
-  if(!currentUser)return;
-  const pend=pendingCancels().length,sb=$("#salesBadge");sb.textContent=pend;sb.classList.toggle("show",pend>0&&currentUser.role==="admin");
-  const low=lowStockItems().length,neg=negativeItems().length,kb=$("#stockBadge");kb.textContent=low;kb.classList.toggle("show",low>0&&currentUser.role==="admin");kb.classList.toggle("amber",neg===0);kb.classList.toggle("red",neg>0);
-  const cnt=todaySales().length,od=$("#ordersDot");od.textContent=cnt;od.classList.toggle("show",cnt>0);
+  if(!currentUser)return;const admin=currentUser.role==="admin";
+  const pend=pendingCancels().length,sb=$("#salesBadge");sb.textContent=pend;sb.classList.toggle("show",pend>0&&admin);sb.classList.toggle("blink",pend>0&&admin);
+  const low=lowStockItems().length,neg=negativeItems().length,kb=$("#stockBadge");kb.textContent=low;kb.classList.toggle("show",low>0&&admin);kb.classList.toggle("amber",neg===0);kb.classList.toggle("red",neg>0);
+  const myOrders=admin?todaySales():todaySales().filter(s=>s.byId===currentUser.byId);
+  const od=$("#ordersDot");od.textContent=myOrders.length;od.classList.toggle("show",myOrders.length>0);
+  const unseen=admin?0:sales.filter(s=>s.reqById===currentUser.byId&&(s.cancelRejected||s.status==="cancelled")&&!s.reqSeen).length;
+  od.classList.toggle("blink",unseen>0);
+  const pill=$("#alertPill");
+  if(admin&&pend>0){pill.textContent="⚠ "+pend+" cancel request"+(pend>1?"s":"")+" — tap to review";pill.className="alert-pill blink show";pill.onclick=()=>goView("sales");}
+  else if(!admin&&unseen>0){pill.textContent="ℹ Your cancel request was answered — tap to see Orders";pill.className="alert-pill blink show";pill.onclick=()=>{renderOrdersSheet();$("#ordersOverlay").classList.add("show");};}
+  else{pill.className="alert-pill";pill.onclick=null;}
 }
 
 /* Filter bar */
@@ -997,18 +1058,59 @@ $("#staffOverlay").addEventListener("click",e=>{if(e.target.id==="staffOverlay")
 function perfRange(){const T=todayKey();if(perfPeriod==="today")return[T,T];if(perfPeriod==="week")return[addDays(T,-6),T];if(perfPeriod==="month")return[monthStart(),T];return["0000-00-00","9999-99-99"];}
 function renderStaffMgmt(){
   const list=$("#staffList");
-  list.innerHTML=`<button class="addprod" id="addStaffBtn">+ Add sales staff</button>`+staff.map(s=>`<div class="staffrow ${s.active===false?'inactive':''}"><div class="snm">${s.name}</div><div class="spw">pw: ${s.password}</div><div class="rowacts"><button class="sedit" data-id="${s.id}">Edit</button><button class="stoggle ${s.active===false?'off':'on'}" data-id="${s.id}">${s.active===false?'Inactive':'Active'}</button></div></div>`).join("");
+  list.innerHTML=`<button class="addprod" id="addStaffBtn">+ Add sales staff</button>`+staff.map(s=>{const bal=advBalance(s);return `<div class="staffrow ${s.active===false?'inactive':''}"><div class="snm">${s.name}<div class="spw">pw: ${s.password} · advance <b class="tabnum" style="color:${bal>0?'var(--danger)':'var(--muted)'}">${money(bal)} SAR</b></div></div><div class="rowacts"><button class="sedit" data-id="${s.id}">Edit</button><button class="sadv" data-id="${s.id}">Advance</button><button class="stoggle ${s.active===false?'off':'on'}" data-id="${s.id}">${s.active===false?'Inactive':'Active'}</button></div></div>`;}).join("");
   $("#addStaffBtn").addEventListener("click",()=>openStaffForm(null));
   list.querySelectorAll(".sedit").forEach(b=>b.addEventListener("click",()=>openStaffForm(b.dataset.id)));
+  list.querySelectorAll(".sadv").forEach(b=>b.addEventListener("click",()=>openAdvance(b.dataset.id)));
   list.querySelectorAll(".stoggle").forEach(b=>b.addEventListener("click",()=>{const s=staffById(b.dataset.id);s.active=s.active===false;save(LS_STAFF,staff);renderStaffMgmt();toast(s.active?"Staff active":"Staff inactive");}));
   const[a,b]=perfRange();const rs=sales.filter(x=>x.status!=="cancelled"&&x.day>=a&&x.day<=b);
   const agg={};rs.forEach(x=>{const k=x.byId||"?";if(!agg[k])agg[k]={name:x.by||"—",orders:0,sar:0,kg:0};agg[k].orders++;agg[k].sar+=x.total;agg[k].kg+=x.lines.reduce((t,l)=>t+l.weight,0);});
   const cxl={};sales.filter(x=>x.day>=a&&x.day<=b&&x.reqById).forEach(x=>{cxl[x.reqById]=(cxl[x.reqById]||0)+1;});
   const rows=Object.entries(agg).sort((x,y)=>y[1].sar-x[1].sar);
-  $("#perfBody").innerHTML=rows.length?rows.map(([id,d])=>`<tr><td class="nm">${d.name}</td><td class="r tabnum">${d.orders}</td><td class="r tabnum">${money(d.sar)}</td><td class="r tabnum">${kg(d.kg)}</td><td class="r tabnum">${cxl[id]||0}</td></tr>`).join(""):'<tr><td colspan="5" style="color:var(--muted);padding:16px;text-align:center">No sales in this period.</td></tr>';
+  $("#perfBody").innerHTML=rows.length?rows.map(([id,d])=>`<tr class="perfrow" data-id="${id}"><td class="nm">${d.name} ›</td><td class="r tabnum">${d.orders}</td><td class="r tabnum">${money(d.sar)}</td><td class="r tabnum">${kg(d.kg)}</td><td class="r tabnum">${cxl[id]||0}</td></tr>`).join(""):'<tr><td colspan="5" style="color:var(--muted);padding:16px;text-align:center">No sales in this period.</td></tr>';
+  $("#perfBody").querySelectorAll(".perfrow").forEach(r=>r.addEventListener("click",()=>openStatement(r.dataset.id)));
   $("#perfSeg").querySelectorAll("button").forEach(x=>x.classList.toggle("active",x.dataset.p===perfPeriod));
 }
 $("#perfSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;perfPeriod=b.dataset.p;renderStaffMgmt();});
+
+/* Advance / borrow */
+let advStaffId=null,advType="advance";
+function openAdvance(id){advStaffId=id;advType="advance";const s=staffById(id);$("#advTitle").textContent="Advance / repayment — "+s.name;$("#advBal").textContent=money(advBalance(s))+" SAR";$("#advAmt").value="";$("#advNote").value="";$("#advErr").textContent="";document.querySelectorAll("#advType button").forEach(x=>x.classList.toggle("active",x.dataset.t==="advance"));$("#advOverlay").classList.add("show");setTimeout(()=>$("#advAmt").focus(),60);}
+$("#advType").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;advType=b.dataset.t;document.querySelectorAll("#advType button").forEach(x=>x.classList.toggle("active",x===b));});
+$("#advSave").addEventListener("click",()=>{const s=staffById(advStaffId);const amt=+(parseFloat($("#advAmt").value)||0).toFixed(2);if(amt<=0){$("#advErr").textContent="Enter an amount.";return;}s.advances.push({type:advType,amount:amt,at:new Date().toISOString(),note:$("#advNote").value.trim()});save(LS_STAFF,staff);$("#advOverlay").classList.remove("show");renderStaffMgmt();toast(advType==="advance"?"Advance recorded":"Repayment recorded");});
+$("#advClose").addEventListener("click",()=>$("#advOverlay").classList.remove("show"));
+$("#advOverlay").addEventListener("click",e=>{if(e.target.id==="advOverlay")e.currentTarget.classList.remove("show");});
+
+/* Staff statement + CSV/Print */
+function openStatement(id){
+  const s=staffById(id);const nm=s?s.name:(id==="admin"?"Owner":id);
+  const[a,b]=perfRange();const label={today:"Today",week:"This week",month:"This month",all:"All time"}[perfPeriod];
+  const mine=sales.filter(x=>x.byId===id&&x.day>=a&&x.day<=b).slice().sort((p,q)=>p.time.localeCompare(q.time));
+  const active=mine.filter(x=>x.status!=="cancelled");
+  const totSar=active.reduce((t,x)=>t+x.total,0),totKg=active.reduce((t,x)=>t+x.lines.reduce((u,l)=>u+l.weight,0),0);
+  const cancelled=mine.filter(x=>x.status==="cancelled");
+  const pa={};active.forEach(x=>x.lines.forEach(l=>{if(!pa[l.id])pa[l.id]={en:l.en,kg:0,sar:0};pa[l.id].kg+=l.weight;pa[l.id].sar+=l.amount;}));
+  const prows=Object.values(pa).sort((x,y)=>y.sar-x.sar);
+  const adv=s?(s.advances||[]):[];const bal=s?advBalance(s):0;
+  $("#stmtTitle").textContent="Statement — "+nm;
+  $("#stmtBody").innerHTML=`
+    <div class="stmt-h"><div class="stmt-nm">${nm}</div><div class="stmt-p">Al Abbar Meats · ${label} · ${a===b?a:a+" → "+b}</div></div>
+    <div class="stmt-kpis"><div><span>Orders</span><b class="tabnum">${active.length}</b></div><div><span>Sales</span><b class="tabnum">${money(totSar)}</b></div><div><span>Weight kg</span><b class="tabnum">${kg(totKg)}</b></div><div><span>Cancelled</span><b class="tabnum">${cancelled.length}</b></div></div>
+    <h4>Sales by product</h4>${prows.length?`<table class="stmt-t"><tr><th>Item</th><th class="r">kg</th><th class="r">SAR</th></tr>${prows.map(x=>`<tr><td>${x.en}</td><td class="r tabnum">${kg(x.kg)}</td><td class="r tabnum">${money(x.sar)}</td></tr>`).join("")}</table>`:'<div class="stmt-empty">No sales.</div>'}
+    <h4>Invoices</h4>${mine.length?`<table class="stmt-t"><tr><th>Code</th><th>Date/time</th><th class="r">SAR</th><th>Status</th></tr>${mine.map(x=>`<tr><td>${x.code}</td><td>${fmtDate(x.time)} ${fmtTime(x.time)}</td><td class="r tabnum">${money(x.total)}</td><td>${x.status==="cancelled"?"Cancelled":x.status==="cancel_requested"?"Cancel req":"Completed"}</td></tr>`).join("")}</table>`:'<div class="stmt-empty">No invoices.</div>'}
+    ${s?`<h4>Advance / borrow — balance <span style="color:${bal>0?'var(--danger)':'var(--muted)'}">${money(bal)} SAR</span></h4>${adv.length?`<table class="stmt-t"><tr><th>Date/time</th><th>Type</th><th>Note</th><th class="r">SAR</th></tr>${adv.map(x=>`<tr><td>${fmtDate(x.at)} ${fmtTime(x.at)}</td><td>${x.type==="advance"?"Advance":"Repayment"}</td><td>${x.note||""}</td><td class="r tabnum">${x.type==="advance"?"+":"−"}${money(x.amount)}</td></tr>`).join("")}</table>`:'<div class="stmt-empty">No advance records.</div>'}`:""}`;
+  $("#stmtOverlay").classList.add("show");
+  $("#stmtCsv").onclick=()=>{
+    const R=[["Al Abbar Meats — Statement"],["Staff",nm],["Period",label,a,b],[],["Orders",active.length],["Sales SAR",money(totSar)],["Weight kg",kg(totKg)],["Cancelled",cancelled.length],[],["Invoices"],["Code","Date","Time","SAR","Status"]];
+    mine.forEach(x=>R.push([x.code,fmtDate(x.time),fmtTime(x.time),money(x.total),x.status]));
+    if(s){R.push([],["Advance / borrow — balance",money(bal)],["Date","Time","Type","Note","SAR"]);adv.forEach(x=>R.push([fmtDate(x.at),fmtTime(x.at),x.type,x.note||"",(x.type==="advance"?"":"-")+money(x.amount)]));}
+    const csv=R.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\r\n");
+    const blob=new Blob([csv],{type:"text/csv"});const url=URL.createObjectURL(blob);const el=document.createElement("a");el.href=url;el.download="statement-"+nm.replace(/\s+/g,"_")+"-"+perfPeriod+".csv";document.body.appendChild(el);el.click();el.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast("CSV downloaded");
+  };
+}
+$("#stmtClose").addEventListener("click",()=>$("#stmtOverlay").classList.remove("show"));
+$("#stmtOverlay").addEventListener("click",e=>{if(e.target.id==="stmtOverlay")e.currentTarget.classList.remove("show");});
+$("#stmtPrintBtn").addEventListener("click",()=>{document.body.classList.add("printing-stmt");window.print();setTimeout(()=>document.body.classList.remove("printing-stmt"),600);});
 
 /* init */
 (function init(){
