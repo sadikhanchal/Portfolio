@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Al Abbar Meats — POS</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#D80850">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Al Abbar POS">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1226,6 +1234,7 @@ $("#catOverlay").addEventListener("click",e=>{if(e.target.id==="catOverlay")e.cu
 function renderAdmin(){$("#admName").value=adminAcc.name;$("#admPass").value=adminAcc.password;$("#admSave").onclick=()=>{const nm=$("#admName").value.trim(),pw=$("#admPass").value.trim();if(!nm){toast("Name required");return;}if(!pw){toast("Password required");return;}adminAcc.name=nm;adminAcc.password=pw;save(LS_ADMIN,adminAcc);if(currentUser&&currentUser.role==="admin"){currentUser.name=nm;currentUser.by=nm;}toast("Admin account updated");};}
 
 /* init */
+if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});}
 (function init(){
   const sess=load(LS_SESSION,null);
   if(sess&&sess.role==="admin"){currentUser={role:"admin",name:adminAcc.name,by:adminAcc.name,byId:"admin"};showApp();}
