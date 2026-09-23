@@ -77,6 +77,8 @@ body {
 /* Stat row */
 .stat-row { display: flex; gap: 10px; }
 .stat-box { flex: 1; background: var(--card); border-radius: var(--radius); padding: 14px 8px; text-align: center; border: 1px solid #d9e4f0; }
+.stat-box-click { cursor: pointer; }
+.stat-box-click:active { background: #eef2f7; }
 .stat-num { font-size: 22px; font-weight: 800; color: var(--blue); }
 .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
@@ -90,6 +92,8 @@ body {
 .pending-flag { color: var(--amber); font-weight: 600; }
 .vacation-banner { cursor: pointer; border-left: 4px solid var(--amber); font-size: 13px; }
 .badge { font-size: 11px; padding: 3px 9px; border-radius: 999px; font-weight: 600; }
+.status-breakdown { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; align-items: flex-start; }
+.status-breakdown .badge { display: inline-block; }
 .badge-vacant { background: #fbe2b8; color: var(--amber); }
 .badge-full { background: #c9ecd9; color: var(--green); }
 .badge-empty { background: #dde1e6; color: var(--grey); }
@@ -4808,16 +4812,18 @@ function roomStatus(room) {
 function buildingStats(buildingId) {
   const rooms = roomsForBuilding(buildingId);
   let staff = 0, capacity = 0, vacant = 0, overRooms = 0, overStaff = 0, pending = 0, onVacation = 0;
+  const byStatus = { empty: 0, partial: 0, full: 0, over: 0 };
   rooms.forEach(r => {
     staff += occupantCount(r); capacity += (r.capacity || 0); vacant += vacantCount(r);
     const over = overCount(r);
     if (over > 0) { overRooms++; overStaff += over; }
+    byStatus[roomStatus(r)]++;
     (r.occupants || []).forEach(o => {
       if (o.status && o.status.startsWith('Not found')) pending++;
       if (o.status === 'On Vacation') onVacation++;
     });
   });
-  return { rooms: rooms.length, staff, capacity, vacant, overRooms, overStaff, pending, onVacation };
+  return { rooms: rooms.length, staff, capacity, vacant, overRooms, overStaff, pending, onVacation, byStatus };
 }
 function allOccupantsFlat() {
   const out = [];
@@ -4999,6 +5005,7 @@ function render() {
   if (name === 'reconcile' && !can('verify')) { goto('/dashboard'); return; }
   if (name === 'dashboard') renderDashboard(view);
   else if (name === 'vacation') renderVacationList(view);
+  else if (name === 'rooms') renderRoomStatusList(view, arg);
   else if (name === 'building') renderBuildingDetail(view, arg);
   else if (name === 'room') renderRoomDetail(view, arg);
   else if (name === 'search') renderSearch(view);
@@ -5011,23 +5018,35 @@ function render() {
 function renderDashboard(view) {
   view.innerHTML = '';
   const buildings = Object.values(state.buildings).sort((a, b) => naturalCompare(a.id, b.id));
+  const statusLabels = { empty: 'Empty', partial: 'Open', full: 'Full', over: 'Over' };
+  const statusBadgeCls = { empty: 'badge-empty', partial: 'badge-vacant', full: 'badge-full', over: 'badge-over' };
   let totalStaff = 0, totalVacant = 0, totalRooms = 0, totalVacation = 0;
   const cards = buildings.map(b => {
     const s = buildingStats(b.id);
     totalStaff += s.staff; totalVacant += s.vacant; totalRooms += s.rooms; totalVacation += s.onVacation;
     const stale = isStale(b.lastVerified);
-    let badgeCls = 'badge-full', badgeText = 'Full';
-    if (s.overRooms > 0) { badgeCls = 'badge-over'; badgeText = 'Over-equipped'; }
-    else if (s.staff === 0) { badgeCls = 'badge-empty'; badgeText = 'Empty'; }
-    else if (s.vacant > 0) { badgeCls = 'badge-vacant'; badgeText = s.vacant + ' open'; }
+    const activeStatuses = Object.entries(s.byStatus).filter(([, v]) => v > 0);
+    let topBadge = null;
+    if (activeStatuses.length === 1) {
+      const [status] = activeStatuses[0];
+      const text = status === 'partial' ? (s.vacant + ' open') : status === 'over' ? 'Over-equipped' : statusLabels[status];
+      topBadge = el('div', { class: 'badge ' + statusBadgeCls[status] }, [text]);
+    }
     const cardChildren = [
       el('div', { class: 'building-card-top' }, [
         el('div', { class: 'building-name' }, [b.name]),
-        el('div', { class: 'badge ' + badgeCls }, [badgeText]),
+        topBadge,
       ]),
       el('div', { class: 'building-meta' }, [s.rooms + ' Rooms — ' + s.staff + ' Staff / ' + s.capacity]),
-      el('div', { class: 'building-meta ' + (stale ? 'verify-stale' : 'muted') }, ['Last verified: ' + fmtDate(b.lastVerified)]),
     ];
+    // Rooms in this one building are in more than one state — a single
+    // badge can't tell the whole story, so list every state that applies.
+    if (activeStatuses.length > 1) {
+      cardChildren.push(el('div', { class: 'status-breakdown' }, activeStatuses.map(([status, count]) =>
+        el('div', { class: 'badge ' + statusBadgeCls[status] }, [count + ' ' + statusLabels[status]])
+      )));
+    }
+    cardChildren.push(el('div', { class: 'building-meta ' + (stale ? 'verify-stale' : 'muted') }, ['Last verified: ' + fmtDate(b.lastVerified)]));
     if (s.pending > 0) cardChildren.push(el('div', { class: 'building-meta pending-flag' }, [s.pending + ' Staff pending verification']));
     return el('div', { class: 'card building-card', onclick: () => goto('/building/' + b.id) }, cardChildren);
   });
@@ -5043,14 +5062,14 @@ function renderDashboard(view) {
     el('div', { class: 'stat-row' }, [
       statBox(totalStaff, 'Total Staff'),
       statBox(totalRooms, 'Rooms'),
-      statBox(totalVacant, 'Vacant Spaces'),
+      statBox(totalVacant, 'Vacant Spaces', () => goto('/rooms/partial')),
     ]),
   ]));
   view.appendChild(el('div', { class: 'section' }, [
     el('div', { class: 'stat-row' }, [
-      statBox(fullRooms, 'Full Rooms'),
-      statBox(emptyRooms, 'Empty Rooms'),
-      statBox(overRooms2, 'Over-equipped'),
+      statBox(fullRooms, 'Full Rooms', () => goto('/rooms/full')),
+      statBox(emptyRooms, 'Empty Rooms', () => goto('/rooms/empty')),
+      statBox(overRooms2, 'Over-equipped', () => goto('/rooms/over')),
     ]),
   ]));
   if (totalVacation > 0) {
@@ -5066,8 +5085,28 @@ function renderDashboard(view) {
     el('div', { class: 'card-grid' }, cards),
   ]));
 }
-function statBox(num, label) {
-  return el('div', { class: 'stat-box' }, [el('div', { class: 'stat-num' }, [String(num)]), el('div', { class: 'stat-label' }, [label])]);
+function statBox(num, label, onclick) {
+  return el('div', { class: 'stat-box' + (onclick ? ' stat-box-click' : ''), onclick: onclick || null }, [el('div', { class: 'stat-num' }, [String(num)]), el('div', { class: 'stat-label' }, [label])]);
+}
+function renderRoomStatusList(view, status) {
+  view.innerHTML = '';
+  const labels = { empty: 'Empty Rooms', partial: 'Rooms With Space', full: 'Full Rooms', over: 'Over-equipped Rooms' };
+  view.appendChild(el('div', { class: 'section' }, [
+    backBtn('/dashboard'),
+    el('div', { class: 'page-title' }, [labels[status] || 'Rooms']),
+  ]));
+  const buildings = Object.values(state.buildings).sort((a, b) => naturalCompare(a.id, b.id));
+  const container = el('div', { class: 'section' });
+  let any = false;
+  buildings.forEach(b => {
+    const rooms = roomsForBuilding(b.id).filter(r => roomStatus(r) === status);
+    if (!rooms.length) return;
+    any = true;
+    container.appendChild(el('div', { class: 'section-title' }, [b.name]));
+    container.appendChild(el('div', { class: 'room-grid' }, rooms.map(r => roomChip(r))));
+  });
+  if (!any) container.appendChild(el('div', { class: 'muted' }, ['None right now.']));
+  view.appendChild(container);
 }
 function renderVacationList(view) {
   view.innerHTML = '';
@@ -5346,7 +5385,7 @@ async function exportExcel() {
   buildings.forEach(b => {
     const ws = wb.addWorksheet(b.id, { views: [{ state: 'frozen', ySplit: 4 }] });
     ws.columns = [{ width: 12 }, { width: 18 }, { width: 28 }, { width: 16 }, { width: 22 }];
-    if (logoId) ws.addImage(logoId, { tl: { col: 0.05, row: 0.05 }, ext: { width: 54, height: 49 } });
+    if (logoId) ws.addImage(logoId, { tl: { col: 0, row: 0 }, ext: { width: 54, height: 49 } });
     ws.mergeCells('B1:E1');
     ws.getCell('B1').value = 'OZA STAFF ACCOMMODATION REGISTER';
     ws.getCell('B1').font = { bold: true, size: 14, color: { argb: 'FF0952A1' } };
@@ -5416,6 +5455,7 @@ function printRegister(buildingId) {
     'table{width:100%;border-collapse:collapse;margin-bottom:6px;}' +
     'th{background:#0952a1;color:#fff;text-align:left;padding:6px 8px;font-size:11px;}' +
     'td{border-bottom:1px solid #e2e6ec;padding:5px 8px;font-size:11.5px;}' +
+    'td.room-cell{text-align:center;vertical-align:middle;font-weight:700;}' +
     'tr:nth-child(even) td{background:#f7f8fa;}' +
     '.vacant{color:#9aa3ad;font-style:italic;}' +
     '.footer{margin-top:26px;padding-top:8px;border-top:1px solid #e2e6ec;color:#9aa3ad;font-size:10px;display:flex;justify-content:space-between;}' +
@@ -5426,9 +5466,11 @@ function printRegister(buildingId) {
     if (!b) return;
     html += '<h2>' + b.name + '</h2><table><tr><th>Room</th><th>ID / Iqama No.</th><th>Name</th><th>Mobile</th><th>Status</th></tr>';
     roomsForBuilding(b.id).forEach(r => {
-      if (!(r.occupants || []).length) { html += '<tr><td>' + r.roomNo + '</td><td colspan="4" class="vacant">Vacant</td></tr>'; return; }
+      if (!(r.occupants || []).length) { html += '<tr><td class="room-cell">' + r.roomNo + '</td><td colspan="4" class="vacant">Vacant</td></tr>'; return; }
+      const n = r.occupants.length;
       r.occupants.forEach((o, i) => {
-        html += '<tr><td>' + (i === 0 ? r.roomNo : '') + '</td><td>' + (o.iqama || '') + '</td><td>' + (o.name || '') + '</td><td>' + (o.mobile || '') + '</td><td>' + (o.status || '') + '</td></tr>';
+        html += '<tr>' + (i === 0 ? '<td class="room-cell" rowspan="' + n + '">' + r.roomNo + '</td>' : '') +
+          '<td>' + (o.iqama || '') + '</td><td>' + (o.name || '') + '</td><td>' + (o.mobile || '') + '</td><td>' + (o.status || '') + '</td></tr>';
       });
     });
     html += '</table>';
@@ -5469,6 +5511,26 @@ function renderSettings(view) {
   ]));
 
   // ---- Recent activity (fetched once, appended when ready) ----
+  const rangeSelect = el('select', { class: 'input-inline' }, [
+    el('option', { value: '7' }, ['Older than 7 days']),
+    el('option', { value: '30' }, ['Older than 30 days']),
+    el('option', { value: '90' }, ['Older than 90 days']),
+    el('option', { value: 'all' }, ['Everything']),
+  ]);
+  view.appendChild(el('div', { class: 'section' }, [
+    el('div', { class: 'section-title' }, ['Clear Activity Log']),
+    el('div', { class: 'muted small' }, ['This log grows with every change — clear old entries now and then so it does not become a huge list.']),
+    rangeSelect,
+    el('button', {
+      class: 'btn btn-outline btn-block', onclick: async () => {
+        const val = rangeSelect.value;
+        const label = val === 'all' ? 'the entire activity log' : 'entries older than ' + val + ' days';
+        if (!confirm('Delete ' + label + '? This cannot be undone.')) return;
+        await clearAudit(val === 'all' ? null : parseInt(val, 10));
+        render();
+      },
+    }, ['Clear']),
+  ]));
   const activitySection = el('div', { class: 'section' }, [
     el('div', { class: 'section-title' }, ['Recent Activity']),
     el('div', { class: 'muted small' }, ['Loading…']),
@@ -5486,6 +5548,19 @@ function renderSettings(view) {
       ]));
     });
   }).catch(e => { console.error(e); activitySection.appendChild(el('div', { class: 'muted small' }, ['Could not load activity.'])); });
+}
+async function clearAudit(days) {
+  let query = db.collection('audit');
+  if (days !== null) query = query.where('ts', '<', new Date(Date.now() - days * 24 * 3600 * 1000));
+  const snap = await query.get();
+  if (snap.empty) { toast('Nothing to clear'); return; }
+  const docs = snap.docs;
+  for (let i = 0; i < docs.length; i += 400) {
+    const batch = db.batch();
+    docs.slice(i, i + 400).forEach(d => batch.delete(d.ref));
+    await batch.commit();
+  }
+  toast(docs.length + ' activity entries cleared');
 }
 
 function userRow(u) {
