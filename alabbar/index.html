@@ -10,7 +10,7 @@
 <style>
   :root{
     color-scheme: light;
-    --magenta:#D80850;--magenta-dk:#B00644;--lime:#8FBF1E;
+    --magenta:#D80850;--magenta-dk:#B00644;--lime:#8FBF1E;--lime-dk:#6F980F;
     --ink:#1C1218;--muted:#7A6F74;--line:#EAE2E6;--bg:#F7F3F4;--surface:#FFFFFF;
     --fresh:#5A8F12;--frozen:#3E7CA6;--danger:#C0392B;--amber:#B8791A;
     --cat-mutton:#B0324A;--cat-beef:#7A3B22;--cat-veal:#C76E8B;--cat-fish:#1F7FA6;
@@ -34,14 +34,15 @@
   .login-field label{font-size:12.5px;color:var(--muted);font-weight:600}
   .login-field input{width:100%;padding:14px;border:1px solid var(--line);border-radius:12px;font-size:16px;margin-top:5px;background:#fff}
   .login-field select{width:100%;padding:14px;border:1px solid var(--line);border-radius:12px;font-size:16px;margin-top:5px;background:#fff}
-  .login-field input:focus{outline:none;border-color:var(--magenta);box-shadow:0 0 0 3px rgba(216,8,80,.12)}
+  .login-field input:focus,.login-field select:focus{outline:none;border-color:var(--lime-dk);box-shadow:0 0 0 3px rgba(143,191,30,.18)}
   .login-err{color:var(--danger);font-size:13px;margin-top:11px;min-height:17px;font-weight:600}
-  .login-btn{width:100%;padding:15px;border-radius:12px;font-weight:700;font-size:16px;background:var(--magenta);color:#fff;margin-top:6px}
+  .login-btn{width:100%;padding:15px;border-radius:12px;font-weight:700;font-size:16px;background:var(--magenta);color:#fff;margin-top:6px;box-shadow:0 3px 0 var(--lime-dk)}
+  .login-btn:active{transform:translateY(1px);box-shadow:0 2px 0 var(--lime-dk)}
 
   /* Shell */
   #app{display:none;flex-direction:column;height:100%}
   #app.show{display:flex}
-  header.top{display:flex;align-items:center;gap:12px;padding:9px 14px;background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;flex-wrap:wrap}
+  header.top{display:flex;align-items:center;gap:12px;padding:9px 14px;background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;flex-wrap:wrap;box-shadow:inset 0 -2px 0 rgba(143,191,30,.22)}
   .brand{display:flex;align-items:center;gap:11px;min-width:0}
   .brand .mark{width:48px;height:48px;flex:0 0 auto;object-fit:contain}
   .brand .bt{display:flex;flex-direction:column;align-items:flex-start}
@@ -49,7 +50,7 @@
   .brand .ar{font-size:16px;color:var(--magenta);font-weight:600;direction:rtl;text-align:left;opacity:.92}
   .segmented{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px}
   .rightgroup{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .userlabel{font-size:13px;font-weight:700;color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:7px 12px}
+  .userlabel{font-size:13px;font-weight:700;color:var(--lime-dk);background:#F4F8E7;border:1px solid #D9E6B3;border-radius:9px;padding:7px 12px}
   .segmented button{padding:9px 15px;border-radius:9px;font-size:14px;font-weight:600;color:var(--muted);position:relative}
   .segmented button.active{background:var(--magenta);color:#fff}
   .segmented button.hidden{display:none}
@@ -61,7 +62,11 @@
   .usermenu .who{text-align:right;line-height:1.15}
   .usermenu .who .u{font-size:13px;font-weight:700}
   .usermenu .who .r{font-size:11px;color:var(--muted)}
-  .logout-btn{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 13px;font-size:13px;font-weight:600;color:var(--ink)}
+  .logout-btn{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13px;font-weight:600;color:var(--ink);display:inline-flex;align-items:center;gap:7px}
+  .logout-btn svg{width:16px;height:16px;flex:0 0 auto}
+  .segmented button .nav-ico{display:none}
+  .bottomnav{display:none}
+  main{padding-bottom:0}
 
   main{flex:1;min-height:0;overflow:hidden}
   .view{display:none;height:100%}
@@ -85,7 +90,7 @@
   .card .price{font-weight:700;font-size:18px}
   .card .price small{font-weight:500;color:var(--muted);font-size:12px}
   .chip{font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:999px;color:#fff;align-self:flex-start}
-  .chip.fresh{background:var(--fresh)}
+  .chip.fresh{background:var(--lime-dk)}
   .chip.frozen{background:var(--frozen)}
   .card.out{opacity:.5}
 
@@ -155,7 +160,7 @@
   .obtn.reject{color:var(--muted)}
   .ostatus{font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:999px;white-space:nowrap}
   .ostatus.pending{background:#FBF0DE;color:var(--amber)}
-  .ostatus.done{background:#EAF3E0;color:var(--fresh)}
+  .ostatus.done{background:#EEF6D9;color:var(--lime-dk)}
   .ostatus.cxl{background:#FBECEA;color:var(--danger)}
   .ostatus.rej{background:#FBECEA;color:var(--danger)}
   .orders-empty{padding:34px;text-align:center;color:var(--muted);font-size:14px}
@@ -200,7 +205,7 @@
   .panel h3 .cnt{color:#fff;font-size:11px;font-weight:700;min-width:19px;height:19px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px}
   .panel h3 .cnt.red{background:var(--danger)}.panel h3 .cnt.amber{background:var(--amber)}
   .wsold{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 8px}
-  .wchip{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-size:13px}
+  .wchip{background:var(--bg);border:1px solid var(--line);border-left:3px solid var(--lime-dk);border-radius:10px;padding:8px 11px;font-size:13px}
   .wchip b{font-weight:700}.wchip span{color:var(--muted);font-size:11.5px;margin-left:4px}
   .prow{display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid var(--line)}
   .prow:last-child{border-bottom:none}
@@ -236,7 +241,7 @@
   .setrow .fld{display:flex;flex-direction:column;align-items:center;gap:2px}
   .setrow .fld label{font-size:10px;color:var(--muted)}
   .setrow input.price{width:86px;padding:9px;border:1px solid var(--line);border-radius:9px;font-size:16px;text-align:center;font-weight:600}
-  .sec-title{font-size:13px;font-weight:700;color:var(--muted);margin:6px 2px 10px}
+  .sec-title{font-size:13px;font-weight:700;color:var(--muted);margin:6px 2px 10px;padding-left:8px;border-left:3px solid var(--lime-dk)}
   .danger-zone{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
   .danger-zone button{padding:11px 16px;border-radius:11px;font-weight:600;font-size:13px;border:1px solid var(--line);background:var(--surface)}
   .danger-zone button.red{color:var(--danger);border-color:#E9BDB7}
@@ -282,6 +287,10 @@
   .restock-btn{margin-top:9px;font-size:12.5px;font-weight:700;color:#fff;background:var(--magenta);border-radius:9px;padding:9px 12px;width:100%}
   .staffrow{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;flex-wrap:wrap}
   .staffrow.inactive{opacity:.55}
+  .catrow{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;border-left:5px solid var(--cspine,#ccc)}
+  .catrow .cnm{flex:1;font-size:15px;font-weight:600}
+  .catrow .car{font-size:13px;color:var(--muted);direction:rtl;text-align:left}
+  .catrow .cchip{width:28px;height:28px;border-radius:6px;border:1px solid var(--line)}
   .staffrow .snm{flex:1;font-size:15px;font-weight:600;min-width:120px}
   .staffrow .spw{font-size:12px;color:var(--muted)}
   .perftable{width:100%;border-collapse:collapse}
@@ -310,17 +319,31 @@
   .stmt-t td{font-size:12.5px;padding:6px 4px;border-bottom:1px solid var(--line)}
   .stmt-empty{color:var(--muted);font-size:12.5px;padding:8px 2px}
   .perfrow{cursor:pointer}.perfrow:hover{background:var(--bg)}
-  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:11px;font-size:13.5px;font-weight:600;opacity:0;transition:.2s;z-index:90;pointer-events:none;max-width:88%;text-align:center}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:11px;font-size:13.5px;font-weight:600;opacity:0;transition:.2s;z-index:90;pointer-events:none;max-width:88%;text-align:center;border-left:3px solid var(--lime-dk)}
   .toast.show{opacity:1;transform:translateX(-50%)}
 
   @media(max-width:760px){
     .pos{grid-template-columns:1fr;grid-template-rows:1fr auto}
     .cart{border-left:none;border-top:1px solid var(--line);max-height:46%}
     .usermenu .who{display:none}
-    .segmented button{padding:8px 11px;font-size:13px}
     .brand h1{font-size:16px}.brand .ar{font-size:12.5px}
     .rangelabel{width:100%;margin-left:0}
     .setrow .imgbtns,.setrow .rowacts{flex-direction:column}
+    /* hide top segmented on mobile */
+    #nav{display:none !important}
+    /* bottom nav */
+    main{padding-bottom:70px}
+    .bottomnav{display:flex;position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);z-index:30;padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));justify-content:space-around}
+    .bottomnav button{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;color:var(--muted);font-size:11px;font-weight:600;position:relative}
+    .bottomnav button svg{width:24px;height:24px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .bottomnav button.active{color:var(--lime-dk,#6F980F)}
+    .bottomnav button.active svg{stroke:#6F980F;color:#6F980F}
+    .bottomnav button.active .nav-ico-fill{fill:#8FBF1E;stroke:#6F980F}
+    .bottomnav button .b-badge{position:absolute;top:2px;right:22%;min-width:16px;height:16px;border-radius:8px;color:#fff;font-size:9.5px;font-weight:700;padding:0 4px;display:none;align-items:center;justify-content:center}
+    .bottomnav button .b-badge.show{display:flex}
+    .bottomnav button .b-badge.red{background:var(--danger)}
+    .bottomnav button .b-badge.amber{background:var(--amber)}
+    .alert-pill{margin-bottom:6px}
   }
   @media print{
     body *{visibility:hidden}
@@ -365,7 +388,7 @@
         <button data-view="stock" data-admin>Stock <span class="badge amber" id="stockBadge">0</span></button>
         <button data-view="settings" data-admin>Settings</button>
       </div>
-      <button class="logout-btn" id="logoutBtn">Log out</button>
+      <button class="logout-btn" id="logoutBtn" aria-label="Log out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Log out</span></button>
     </div>
     <button class="alert-pill" id="alertPill"></button>
   </header>
@@ -446,7 +469,9 @@
       <div class="page">
         <div class="sec-title">Admin account</div>
         <div class="setrow" style="margin-bottom:16px"><div class="nm"><div class="en">Login username: <b>admin</b></div></div><div class="fld"><label>Name</label><input class="price" id="admName" type="text" style="width:110px;text-align:left"></div><div class="fld"><label>Password</label><input class="price" id="admPass" type="text" style="width:100px"></div><button class="obtn" id="admSave" style="align-self:center;height:38px">Save</button></div>
-        <div class="sec-title">Prices &amp; product images</div>
+        <div class="sec-title">Categories</div>
+        <div id="catList"></div>
+        <div class="sec-title" style="margin-top:22px">Prices &amp; product images</div>
         <div id="setList"></div>
         <div class="sec-title" style="margin-top:22px">POS sales staff</div>
         <div id="staffList"></div>
@@ -461,6 +486,24 @@
       </div>
     </section>
   </main>
+  <nav class="bottomnav" id="bottomNav" aria-label="Main navigation">
+    <button data-view="pos" class="active" aria-label="POS">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M8 15h3"/></svg>
+      <span>POS</span>
+    </button>
+    <button data-view="sales" data-admin aria-label="Sales">
+      <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><polyline points="7 15 11 11 14 14 20 8"/><polyline points="16 8 20 8 20 12"/></svg>
+      <span>Sales</span><span class="b-badge red" id="bSalesBadge">0</span>
+    </button>
+    <button data-view="stock" data-admin aria-label="Stock">
+      <svg viewBox="0 0 24 24"><path d="M21 8l-9 4-9-4 9-4 9 4z"/><path d="M3 8v8l9 4 9-4V8"/><path d="M12 12v8"/></svg>
+      <span>Stock</span><span class="b-badge amber" id="bStockBadge">0</span>
+    </button>
+    <button data-view="settings" data-admin aria-label="Settings">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v.1a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      <span>Settings</span>
+    </button>
+  </nav>
 </div>
 
 <input type="file" id="imgInput" accept="image/*" style="display:none">
@@ -518,7 +561,7 @@
     <div class="pform">
       <label>Name (English)<input id="pfEn" type="text"></label>
       <label>Name (Arabic)<input id="pfAr" type="text" dir="rtl"></label>
-      <div class="prow2"><label>Category<select id="pfCat"><option value="mutton">Mutton</option><option value="beef">Beef</option><option value="veal">Veal</option><option value="fish">Fish</option></select></label><label>Type<select id="pfType"><option value="fresh">Fresh</option><option value="frozen">Frozen</option></select></label></div>
+      <div class="prow2"><label>Category<select id="pfCat"></select></label><label>Type<select id="pfType"><option value="fresh">Fresh</option><option value="frozen">Frozen</option></select></label></div>
       <div class="prow2"><label>Price SAR/kg<input id="pfPrice" type="number" step="0.5" min="0"></label><label id="pfStockWrap">Opening stock kg<input id="pfStock" type="number" step="0.5" min="0"></label></div>
       <div class="login-err" id="pfErr"></div>
       <button class="btn primary" id="pfSave" style="margin-top:14px">Save product</button>
@@ -584,6 +627,20 @@
   </div>
 </div>
 
+<!-- Category form -->
+<div class="overlay" id="catOverlay">
+  <div class="sheet" style="max-width:380px">
+    <div class="sheet-head"><h3 id="catTitle">Add category</h3><button class="sheet-close" id="catClose">&times;</button></div>
+    <div class="pform">
+      <label>Name (English)<input id="cfEn" type="text"></label>
+      <label>Name (Arabic)<input id="cfAr" type="text" dir="rtl"></label>
+      <div class="prow2"><label>Accent color<input id="cfColor" type="color" value="#D80850" style="height:52px;padding:5px"></label><label>Background<input id="cfPh" type="color" value="#F6E7EA" style="height:52px;padding:5px"></label></div>
+      <div class="login-err" id="cfErr"></div>
+      <button class="btn primary" id="cfSave" style="margin-top:14px">Save category</button>
+    </div>
+  </div>
+</div>
+
 <!-- Slip -->
 <div class="overlay" id="slipOverlay">
   <div class="sheet" style="max-width:360px">
@@ -601,26 +658,45 @@ const SEED_STAFF=[
   {id:"st1",name:"Muhammad",password:"1111",active:true},
   {id:"st2",name:"Mansoor",password:"2222",active:true},
 ];
-const LS_PROD="alabbar_products_v2", LS_SALES="alabbar_sales_v1", LS_SESSION="alabbar_session_v1", LS_STAFF="alabbar_staff_v1", LS_ADMIN="alabbar_admin_v1";
+const LS_PROD="alabbar_products_v3", LS_SALES="alabbar_sales_v2", LS_SESSION="alabbar_session_v1", LS_STAFF="alabbar_staff_v1", LS_ADMIN="alabbar_admin_v1", LS_CATS="alabbar_cats_v2";
 function load(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f;}catch(e){return f;}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){toast("Storage full — image too large?");}}
 
 const SEED=[
- {id:"mut-bal-f",en:"Mutton Baladi",ar:"لحم ضأن بلدي",type:"fresh",cat:"mutton",price:45,stock:40,image:null},
- {id:"mut-pak-z",en:"Mutton Pakistani",ar:"لحم ضأن باكستاني",type:"frozen",cat:"mutton",price:32,stock:60,image:null},
- {id:"mut-ind-z",en:"Mutton Indian",ar:"لحم ضأن هندي",type:"frozen",cat:"mutton",price:30,stock:60,image:null},
- {id:"bef-bal-f",en:"Beef Baladi",ar:"لحم بقر بلدي",type:"fresh",cat:"beef",price:38,stock:50,image:null},
- {id:"bef-pak-z",en:"Beef Pakistani",ar:"لحم بقر باكستاني",type:"frozen",cat:"beef",price:28,stock:80,image:null},
- {id:"bef-ind-z",en:"Beef Indian",ar:"لحم بقر هندي",type:"frozen",cat:"beef",price:26,stock:80,image:null},
- {id:"bef-brz-z",en:"Beef Brazil",ar:"لحم بقر برازيلي",type:"frozen",cat:"beef",price:24,stock:80,image:null},
- {id:"vea-bal-f",en:"Veal Baladi",ar:"لحم عجل بلدي",type:"fresh",cat:"veal",price:40,stock:35,image:null},
- {id:"vea-pak-z",en:"Veal Pakistani",ar:"لحم عجل باكستاني",type:"frozen",cat:"veal",price:30,stock:45,image:null},
- {id:"vea-ind-z",en:"Veal Indian",ar:"لحم عجل هندي",type:"frozen",cat:"veal",price:28,stock:45,image:null},
- {id:"fsh-f",en:"Fish",ar:"سمك",type:"fresh",cat:"fish",price:22,stock:30,image:null},
- {id:"fsh-z",en:"Fish",ar:"سمك",type:"frozen",cat:"fish",price:18,stock:40,image:null},
+ // Mutton / Lamb
+ {id:"lmb-pak-naimi",en:"Pakistan Lamb Naimi",ar:"لحم غنم نعيمي باكستاني",type:"fresh",cat:"mutton",price:0,stock:0,image:null},
+ {id:"mut-eth",en:"Ethiopian Mutton",ar:"لحم غنم إثيوبي",type:"fresh",cat:"mutton",price:0,stock:0,image:null},
+ {id:"mut-ken",en:"Kenya Mutton",ar:"لحم غنم كيني",type:"fresh",cat:"mutton",price:0,stock:0,image:null},
+ {id:"mut-pak",en:"Pakistani Mutton",ar:"لحم غنم باكستاني",type:"fresh",cat:"mutton",price:0,stock:0,image:null},
+ // Beef
+ {id:"bef-pak-bone",en:"Chilled Bone-in Pakistani Beef",ar:"لحم بقر باكستاني مبرد بالعظم",type:"fresh",cat:"beef",price:0,stock:0,image:null},
+ {id:"bef-pak-bonless",en:"Pakistani Beef Boneless",ar:"لحم بقر باكستاني بدون عظم",type:"frozen",cat:"beef",price:0,stock:0,image:null},
+ {id:"bef-brazil",en:"Brazilian Beef",ar:"لحم بقري برازيلي",type:"frozen",cat:"beef",price:0,stock:0,image:null},
+ {id:"bef-sawakni",en:"Sawakni",ar:"لحم سواكني",type:"fresh",cat:"beef",price:0,stock:0,image:null},
+ // Veal
+ {id:"vea-baby",en:"Baby Veal",ar:"لحم عجول صغيرة",type:"frozen",cat:"veal",price:0,stock:0,image:null},
+ {id:"vea-ind-f",en:"Indian Fresh Veal",ar:"لحم عجول هندي طازج",type:"fresh",cat:"veal",price:0,stock:0,image:null},
+ {id:"vea-ind",en:"Indian Veal",ar:"لحم عجول هندي",type:"frozen",cat:"veal",price:0,stock:0,image:null},
+ // Chicken
+ {id:"chk-sadia-1000",en:"Chicken Sadia 10x1000",ar:"دجاج صاديا 10×1000",type:"frozen",cat:"chicken",price:0,stock:0,image:null},
+ {id:"chk-sadia-1100",en:"Chicken Sadia 10x1100",ar:"دجاج صاديا 10×1100",type:"frozen",cat:"chicken",price:0,stock:0,image:null},
+ {id:"chk-sadia-1200",en:"Chicken Sadia 10x1200",ar:"دجاج صاديا 10×1200",type:"frozen",cat:"chicken",price:0,stock:0,image:null},
+ // Fish & Seafood
+ {id:"fsh-white-fillet",en:"White Fish Fillet",ar:"فيليه سمك أبيض",type:"frozen",cat:"fish",price:0,stock:0,image:null},
+ {id:"shrimp-pd",en:"Shrimps PD Frozen",ar:"روبيان مقشر مجمد",type:"frozen",cat:"fish",price:0,stock:0,image:null},
+ // Others / Offal
+ {id:"bone-feet",en:"Bone-Feet",ar:"عظم وأقدام",type:"frozen",cat:"others",price:0,stock:0,image:null},
+ {id:"lamb-liver",en:"Lamb Liver",ar:"كبد غنم",type:"fresh",cat:"others",price:0,stock:0,image:null},
+ {id:"indian-frozen",en:"Indian Frozen",ar:"لحم هندي مجمد",type:"frozen",cat:"others",price:0,stock:0,image:null},
 ];
-const CATCOLOR={mutton:"var(--cat-mutton)",beef:"var(--cat-beef)",veal:"var(--cat-veal)",fish:"var(--cat-fish)"};
-const CATPH={mutton:"#F6E7EA",beef:"#F1E9E4",veal:"#F9EDF1",fish:"#E6F1F5"};
+const SEED_CATS=[
+  {id:"mutton",en:"Mutton / Lamb",ar:"لحم غنم",color:"#B0324A",ph:"#F6E7EA"},
+  {id:"beef",en:"Beef",ar:"لحم بقر",color:"#7A3B22",ph:"#F1E9E4"},
+  {id:"veal",en:"Veal",ar:"لحم عجل",color:"#C76E8B",ph:"#F9EDF1"},
+  {id:"chicken",en:"Chicken",ar:"دجاج",color:"#C89A2F",ph:"#F7EFDE"},
+  {id:"fish",en:"Fish & Seafood",ar:"سمك ومأكولات بحرية",color:"#1F7FA6",ph:"#E6F1F5"},
+  {id:"others",en:"Others / Offal",ar:"متنوع",color:"#5B6770",ph:"#E9ECEE"},
+];
 const LOW=10;
 
 let products=load(LS_PROD,null);
@@ -632,6 +708,11 @@ sales.forEach(s=>{if(!s.status)s.status="completed";});
 let staff=load(LS_STAFF,null);if(!staff){staff=SEED_STAFF.map(s=>({...s}));save(LS_STAFF,staff);}
 staff.forEach(s=>{if(!s.advances)s.advances=[];});save(LS_STAFF,staff);
 let adminAcc=load(LS_ADMIN,null);if(!adminAcc)adminAcc={...ADMIN_SEED};save(LS_ADMIN,adminAcc);
+let cats=load(LS_CATS,null);if(!cats){cats=SEED_CATS.map(c=>({...c}));save(LS_CATS,cats);}
+function catById(id){return cats.find(c=>c.id===id)||{en:id,ar:"",color:"#999",ph:"#EEE"};}
+function catColor(id){return catById(id).color;}
+function catPh(id){return catById(id).ph;}
+function catUsed(id){return products.some(p=>p.cat===id);}
 const CORRECTION_WINDOW=30*60*1000;
 function activeStaff(){return staff.filter(s=>s.active!==false);}
 function staffById(id){return staff.find(s=>s.id===id);}
@@ -699,6 +780,7 @@ function showApp(){
   $("#userLabel").textContent=isAdmin?"Admin":currentUser.name;
   $("#nav").style.display=isAdmin?"":"none";
   document.querySelectorAll("#nav [data-admin]").forEach(b=>b.classList.toggle("hidden",!isAdmin));
+  document.querySelectorAll("#bottomNav [data-admin]").forEach(b=>b.style.display=isAdmin?"":"none");
   goView(isAdmin?"sales":"pos");
   renderGrid();renderCart();refreshBadges();
   if(isAdmin){const neg=negativeItems();const low=lowStockItems();if(neg.length)setTimeout(()=>toast("⚠ "+neg.length+" item(s) OVERSOLD (negative stock) — check Stock page"),450);else if(low.length)setTimeout(()=>toast("⚠ "+low.length+" item(s) low on stock — see Stock page"),450);}
@@ -715,25 +797,27 @@ $("#logoutBtn").addEventListener("click",logout);
 function goView(v){
   if(v!=="pos"&&currentUser.role!=="admin")v="pos";
   document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("active",x.dataset.view===v));
+  document.querySelectorAll("#bottomNav button").forEach(x=>x.classList.toggle("active",x.dataset.view===v));
   document.querySelectorAll(".view").forEach(s=>s.classList.remove("active"));
   $("#view-"+v).classList.add("active");
   if(v==="sales")renderSales();
   if(v==="stock")renderStock();
-  if(v==="settings"){renderSettings();renderStaffMgmt();renderAdmin();}
+  if(v==="settings"){renderCats();renderSettings();renderStaffMgmt();renderAdmin();}
 }
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;goView(b.dataset.view);});
+$("#bottomNav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;goView(b.dataset.view);});
 
 /* POS grid */
 function thumbHTML(p){
   const pill=`<span class="stockpill ${p.stock<LOW?'low':''} tabnum">${kg(p.stock)} kg</span>`;
-  if(p.image)return `<div class="thumb" style="--ph:${CATPH[p.cat]}"><img src="${p.image}" alt="">${pill}</div>`;
-  return `<div class="thumb" style="background:${CATPH[p.cat]}"><span class="ph">No image</span>${pill}</div>`;
+  if(p.image)return `<div class="thumb" style="--ph:${catPh(p.cat)}"><img src="${p.image}" alt="">${pill}</div>`;
+  return `<div class="thumb" style="background:${catPh(p.cat)}"><span class="ph">No image</span>${pill}</div>`;
 }
 function renderGrid(){
   const g=$("#grid");g.innerHTML="";
   products.filter(p=>p.active!==false).forEach(p=>{
     const b=document.createElement("button");
-    b.className="card";b.style.setProperty("--spine",CATCOLOR[p.cat]);
+    b.className="card";b.style.setProperty("--spine",catColor(p.cat));
     b.innerHTML=`${thumbHTML(p)}
       <div class="en">${p.en}</div>
       <div class="ar">${p.ar}</div>
@@ -866,7 +950,9 @@ $("#ordersOverlay").addEventListener("click",e=>{if(e.target.id==="ordersOverlay
 function refreshBadges(){
   if(!currentUser)return;const admin=currentUser.role==="admin";
   const pend=pendingCancels().length,sb=$("#salesBadge");sb.textContent=pend;sb.classList.toggle("show",pend>0&&admin);sb.classList.toggle("blink",pend>0&&admin);
+  const bsb=$("#bSalesBadge");if(bsb){bsb.textContent=pend;bsb.classList.toggle("show",pend>0&&admin);bsb.classList.toggle("blink",pend>0&&admin);}
   const low=lowStockItems().length,neg=negativeItems().length,kb=$("#stockBadge");kb.textContent=low;kb.classList.toggle("show",low>0&&admin);kb.classList.toggle("amber",neg===0);kb.classList.toggle("red",neg>0);
+  const bkb=$("#bStockBadge");if(bkb){bkb.textContent=low;bkb.classList.toggle("show",low>0&&admin);bkb.classList.toggle("amber",neg===0);bkb.classList.toggle("red",neg>0);}
   const myOrders=admin?todaySales():todaySales().filter(s=>s.byId===currentUser.byId);
   const od=$("#ordersDot");od.textContent=myOrders.length;od.classList.toggle("show",myOrders.length>0);
   const unseen=admin?0:sales.filter(s=>s.reqById===currentUser.byId&&(s.cancelRejected||s.status==="cancelled")&&!s.reqSeen).length;
@@ -929,7 +1015,7 @@ function renderStock(){
 
 /* Settings + images */
 let imgTargetId=null;
-function catName(c){return{mutton:"Mutton",beef:"Beef",veal:"Veal",fish:"Fish"}[c]||c;}
+function catName(c){return catById(c).en;}
 function renderSettings(){
   $("#setList").innerHTML=`<button class="addprod" id="addProdBtn">+ Add product</button>`+products.map(p=>{
     const del=hasActions(p);
@@ -1007,7 +1093,8 @@ let editingId=null;
 function openProdForm(id){
   editingId=id;const p=id?prod(id):null;
   $("#prodTitle").textContent=id?"Edit product":"Add product";
-  $("#pfEn").value=p?p.en:"";$("#pfAr").value=p?p.ar:"";$("#pfCat").value=p?p.cat:"mutton";$("#pfType").value=p?p.type:"fresh";$("#pfPrice").value=p?p.price:"";
+  $("#pfCat").innerHTML=cats.map(c=>`<option value="${c.id}">${c.en}</option>`).join("");
+  $("#pfEn").value=p?p.en:"";$("#pfAr").value=p?p.ar:"";$("#pfCat").value=p?p.cat:(cats[0]&&cats[0].id||"");$("#pfType").value=p?p.type:"fresh";$("#pfPrice").value=p?p.price:"";
   $("#pfStockWrap").style.display=id?"none":"block";$("#pfStock").value="";
   $("#pfErr").textContent="";$("#prodOverlay").classList.add("show");setTimeout(()=>$("#pfEn").focus(),60);
 }
@@ -1120,6 +1207,20 @@ function openStatement(id){
 $("#stmtClose").addEventListener("click",()=>$("#stmtOverlay").classList.remove("show"));
 $("#stmtOverlay").addEventListener("click",e=>{if(e.target.id==="stmtOverlay")e.currentTarget.classList.remove("show");});
 $("#stmtPrintBtn").addEventListener("click",()=>{document.body.classList.add("printing-stmt");window.print();setTimeout(()=>document.body.classList.remove("printing-stmt"),600);});
+
+/* Categories */
+let editCatId=null;
+function renderCats(){
+  const box=$("#catList");
+  box.innerHTML=`<button class="addprod" id="addCatBtn">+ Add category</button>`+cats.map(c=>{const used=catUsed(c.id);return `<div class="catrow" style="--cspine:${c.color}"><div class="cchip" style="background:${c.ph};border-color:${c.color}"></div><div><div class="cnm">${c.en}</div><div class="car">${c.ar||""}</div></div><div class="rowacts" style="margin-left:auto"><button class="cedit" data-id="${c.id}">Edit</button><button class="cdel" data-id="${c.id}" ${used?'disabled title="In use — cannot delete"':""}>Delete</button></div></div>`;}).join("");
+  $("#addCatBtn").addEventListener("click",()=>openCatForm(null));
+  box.querySelectorAll(".cedit").forEach(b=>b.addEventListener("click",()=>openCatForm(b.dataset.id)));
+  box.querySelectorAll(".cdel").forEach(b=>b.addEventListener("click",()=>{if(b.disabled)return;const c=catById(b.dataset.id);askConfirm("Delete category "+c.en+"?",()=>{cats=cats.filter(x=>x.id!==c.id);save(LS_CATS,cats);renderCats();renderSettings();renderGrid();toast("Category deleted");});}));
+}
+function openCatForm(id){editCatId=id;const c=id?catById(id):null;$("#catTitle").textContent=id?"Edit category":"Add category";$("#cfEn").value=c?c.en:"";$("#cfAr").value=c?c.ar:"";$("#cfColor").value=c?c.color:"#D80850";$("#cfPh").value=c?c.ph:"#F6E7EA";$("#cfErr").textContent="";$("#catOverlay").classList.add("show");setTimeout(()=>$("#cfEn").focus(),60);}
+$("#cfSave").addEventListener("click",()=>{const en=$("#cfEn").value.trim(),ar=$("#cfAr").value.trim(),color=$("#cfColor").value,ph=$("#cfPh").value;if(!en){$("#cfErr").textContent="English name required.";return;}if(editCatId){const c=catById(editCatId);c.en=en;c.ar=ar;c.color=color;c.ph=ph;toast("Category updated");}else{const id="c-"+Date.now().toString(36);cats.push({id,en,ar,color,ph});toast("Category added");}save(LS_CATS,cats);$("#catOverlay").classList.remove("show");renderCats();renderSettings();renderGrid();});
+$("#catClose").addEventListener("click",()=>$("#catOverlay").classList.remove("show"));
+$("#catOverlay").addEventListener("click",e=>{if(e.target.id==="catOverlay")e.currentTarget.classList.remove("show");});
 
 /* Admin account */
 function renderAdmin(){$("#admName").value=adminAcc.name;$("#admPass").value=adminAcc.password;$("#admSave").onclick=()=>{const nm=$("#admName").value.trim(),pw=$("#admPass").value.trim();if(!nm){toast("Name required");return;}if(!pw){toast("Password required");return;}adminAcc.name=nm;adminAcc.password=pw;save(LS_ADMIN,adminAcc);if(currentUser&&currentUser.role==="admin"){currentUser.name=nm;currentUser.by=nm;}toast("Admin account updated");};}
