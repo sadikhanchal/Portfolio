@@ -249,6 +249,21 @@
   .setrow .fld{display:flex;flex-direction:column;align-items:center;gap:2px}
   .setrow .fld label{font-size:10px;color:var(--muted)}
   .setrow input.price{width:86px;padding:9px;border:1px solid var(--line);border-radius:9px;font-size:16px;text-align:center;font-weight:600}
+  .prodrow{display:grid;grid-template-columns:56px minmax(0,1fr) auto;grid-template-areas:"thumb name tog" "thumb ar ar" "act act act";gap:6px 10px;align-items:center;padding:12px}
+  .prodrow .sthumb{grid-area:thumb;align-self:start;width:56px;height:56px}
+  .prodrow .nm{grid-area:name;min-width:0;flex:none}
+  .prodrow .nm .en{font-size:15px;font-weight:700;line-height:1.3}
+  .prodrow > .toggle{grid-area:tog;justify-self:end;align-self:start;padding:5px 11px;font-size:11.5px;font-weight:700;border-radius:20px;border:1px solid var(--line);background:var(--bg);color:var(--muted);white-space:nowrap}
+  .prodrow > .toggle.on{background:#EEF6D9;border-color:#C6DE8E;color:var(--lime-dk)}
+  .prodrow > .toggle.off{background:#F3EDEE;border-color:var(--line);color:var(--muted)}
+  .prodrow .arline{grid-area:ar;font-size:13.5px;color:var(--muted);direction:rtl;text-align:left;line-height:1.3;min-width:0;align-self:start}
+  .prodrow .actline{grid-area:act;display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:6px;width:100%;overflow-x:auto;padding-top:8px;margin-top:2px;border-top:1px dashed var(--line);-webkit-overflow-scrolling:touch}
+  .prodrow .actline > button{flex:0 0 auto;padding:8px 13px;border:1px solid var(--line);background:var(--bg);border-radius:9px;font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap}
+  .prodrow .actline > button.rm,.prodrow .actline > button.del{color:var(--danger);border-color:#F0D6D9;background:#FDF5F6}
+  .prodrow .actline > button:disabled{opacity:.4}
+  .prodrow .actline .fld{display:flex;flex-direction:row;align-items:center;gap:7px;margin-left:auto;flex:0 0 auto}
+  .prodrow .actline .fld label{font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap}
+  .prodrow .actline input.price{width:88px;padding:8px 10px;border:1px solid var(--line);border-radius:9px;font-size:14px;font-weight:700;text-align:center}
   .sec-title{font-size:13px;font-weight:700;color:var(--muted);margin:6px 2px 10px;padding-left:8px;border-left:3px solid var(--lime-dk)}
   .admrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:16px}
   .admrow .admlbl{font-size:13.5px;font-weight:600;color:var(--muted);white-space:nowrap}
@@ -343,18 +358,15 @@
     .usermenu .who{display:none}
     .brand h1{font-size:16px}.brand .ar{font-size:12.5px}
     .rangelabel{width:100%;margin-left:0}
-    /* Product rows: strict 3-line layout */
-    .prodrow{display:grid;grid-template-columns:56px minmax(0,1fr);grid-template-areas:"thumb name" "thumb ar" "img img" "acts price";gap:6px 10px;padding:12px;align-items:start}
-    .prodrow .sthumb{grid-area:thumb;width:56px;height:56px;align-self:start}
-    .prodrow .nm{grid-area:name;min-width:0}
-    .prodrow .nm .en{font-size:15px;font-weight:700;line-height:1.25;white-space:normal}
-    .prodrow .nm .en span{display:inline;font-weight:500;color:var(--muted)}
-    .prodrow .nm .ar{grid-area:ar;font-size:13.5px;color:var(--muted);direction:rtl;text-align:left;margin-top:0;line-height:1.3;justify-self:start}
-    .prodrow .imgbtns{grid-area:img;flex-direction:row;flex-wrap:wrap;gap:6px;margin-top:2px}
-    .prodrow .rowacts{grid-area:acts;flex-direction:row;flex-wrap:wrap;gap:6px;align-items:center}
-    .prodrow .fld{grid-area:price;flex-direction:row;align-items:center;gap:6px;justify-self:end}
-    .prodrow .fld label{font-size:10.5px}
-    .prodrow input.price{width:90px}
+    .prodrow{grid-template-columns:52px minmax(0,1fr) auto;gap:5px 8px;padding:11px}
+    .prodrow .sthumb{width:52px;height:52px}
+    .prodrow .nm .en{font-size:14.5px}
+    .prodrow .arline{font-size:13px}
+    .prodrow .actline{gap:5px}
+    .prodrow .actline > button{padding:8px 11px;font-size:12.5px}
+    .prodrow .actline .fld{gap:5px}
+    .prodrow .actline .fld label{font-size:10.5px}
+    .prodrow .actline input.price{width:74px;padding:7px 8px;font-size:13.5px}
     /* Admin row stays inline on mobile (fields shrink) */
     .admrow{padding:10px}
     .admrow .admfld input{width:100px;font-size:13.5px;padding:7px 8px}
@@ -697,36 +709,36 @@ const SEED_STAFF=[
   {id:"st1",name:"Muhammad",password:"1111",active:true},
   {id:"st2",name:"Mansoor",password:"2222",active:true},
 ];
-const LS_PROD="alabbar_products_v3", LS_SALES="alabbar_sales_v2", LS_SESSION="alabbar_session_v1", LS_STAFF="alabbar_staff_v1", LS_ADMIN="alabbar_admin_v1", LS_CATS="alabbar_cats_v2";
+const LS_PROD="alabbar_products_v4", LS_SALES="alabbar_sales_v2", LS_SESSION="alabbar_session_v1", LS_STAFF="alabbar_staff_v1", LS_ADMIN="alabbar_admin_v1", LS_CATS="alabbar_cats_v2";
 function load(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f;}catch(e){return f;}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){toast("Storage full — image too large?");}}
 
 const SEED=[
  // Mutton / Lamb
- {id:"lmb-pak-naimi",en:"Pakistan Lamb Naimi",ar:"لحم غنم نعيمي باكستاني",type:"fresh",cat:"mutton",price:0,stock:0,image:null},
- {id:"mut-eth",en:"Ethiopian Mutton",ar:"لحم غنم إثيوبي",type:"fresh",cat:"mutton",price:0,stock:0,image:null},
- {id:"mut-ken",en:"Kenya Mutton",ar:"لحم غنم كيني",type:"fresh",cat:"mutton",price:0,stock:0,image:null},
- {id:"mut-pak",en:"Pakistani Mutton",ar:"لحم غنم باكستاني",type:"fresh",cat:"mutton",price:0,stock:0,image:null},
+ {id:"lmb-pak-naimi",en:"Pakistan Lamb Naimi",ar:"لحم غنم نعيمي باكستاني",type:"fresh",cat:"mutton",price:38,stock:46,image:null},
+ {id:"mut-eth",en:"Ethiopian Mutton",ar:"لحم غنم إثيوبي",type:"fresh",cat:"mutton",price:32,stock:44,image:null},
+ {id:"mut-ken",en:"Kenya Mutton",ar:"لحم غنم كيني",type:"fresh",cat:"mutton",price:30,stock:42,image:null},
+ {id:"mut-pak",en:"Pakistani Mutton",ar:"لحم غنم باكستاني",type:"fresh",cat:"mutton",price:34,stock:48,image:null},
  // Beef
- {id:"bef-pak-bone",en:"Chilled Bone-in Pakistani Beef",ar:"لحم بقر باكستاني مبرد بالعظم",type:"fresh",cat:"beef",price:0,stock:0,image:null},
- {id:"bef-pak-bonless",en:"Pakistani Beef Boneless",ar:"لحم بقر باكستاني بدون عظم",type:"frozen",cat:"beef",price:0,stock:0,image:null},
- {id:"bef-brazil",en:"Brazilian Beef",ar:"لحم بقري برازيلي",type:"frozen",cat:"beef",price:0,stock:0,image:null},
- {id:"bef-sawakni",en:"Sawakni",ar:"لحم سواكني",type:"fresh",cat:"beef",price:0,stock:0,image:null},
+ {id:"bef-pak-bone",en:"Chilled Bone-in Pakistani Beef",ar:"لحم بقر باكستاني مبرد بالعظم",type:"fresh",cat:"beef",price:26,stock:50,image:null},
+ {id:"bef-pak-bonless",en:"Pakistani Beef Boneless",ar:"لحم بقر باكستاني بدون عظم",type:"frozen",cat:"beef",price:29,stock:45,image:null},
+ {id:"bef-brazil",en:"Brazilian Beef",ar:"لحم بقري برازيلي",type:"frozen",cat:"beef",price:24,stock:48,image:null},
+ {id:"bef-sawakni",en:"Sawakni",ar:"لحم سواكني",type:"fresh",cat:"beef",price:33,stock:40,image:null},
  // Veal
- {id:"vea-baby",en:"Baby Veal",ar:"لحم عجول صغيرة",type:"frozen",cat:"veal",price:0,stock:0,image:null},
- {id:"vea-ind-f",en:"Indian Fresh Veal",ar:"لحم عجول هندي طازج",type:"fresh",cat:"veal",price:0,stock:0,image:null},
- {id:"vea-ind",en:"Indian Veal",ar:"لحم عجول هندي",type:"frozen",cat:"veal",price:0,stock:0,image:null},
+ {id:"vea-baby",en:"Baby Veal",ar:"لحم عجول صغيرة",type:"frozen",cat:"veal",price:31,stock:42,image:null},
+ {id:"vea-ind-f",en:"Indian Fresh Veal",ar:"لحم عجول هندي طازج",type:"fresh",cat:"veal",price:27,stock:46,image:null},
+ {id:"vea-ind",en:"Indian Veal",ar:"لحم عجول هندي",type:"frozen",cat:"veal",price:25,stock:44,image:null},
  // Chicken
- {id:"chk-sadia-1000",en:"Chicken Sadia 10x1000",ar:"دجاج صاديا 10×1000",type:"frozen",cat:"chicken",price:0,stock:0,image:null},
- {id:"chk-sadia-1100",en:"Chicken Sadia 10x1100",ar:"دجاج صاديا 10×1100",type:"frozen",cat:"chicken",price:0,stock:0,image:null},
- {id:"chk-sadia-1200",en:"Chicken Sadia 10x1200",ar:"دجاج صاديا 10×1200",type:"frozen",cat:"chicken",price:0,stock:0,image:null},
+ {id:"chk-sadia-1000",en:"Chicken Sadia 10x1000",ar:"دجاج صاديا 10×1000",type:"frozen",cat:"chicken",price:13,stock:28,image:null},
+ {id:"chk-sadia-1100",en:"Chicken Sadia 10x1100",ar:"دجاج صاديا 10×1100",type:"frozen",cat:"chicken",price:13.5,stock:25,image:null},
+ {id:"chk-sadia-1200",en:"Chicken Sadia 10x1200",ar:"دجاج صاديا 10×1200",type:"frozen",cat:"chicken",price:14,stock:22,image:null},
  // Fish & Seafood
- {id:"fsh-white-fillet",en:"White Fish Fillet",ar:"فيليه سمك أبيض",type:"frozen",cat:"fish",price:0,stock:0,image:null},
- {id:"shrimp-pd",en:"Shrimps PD Frozen",ar:"روبيان مقشر مجمد",type:"frozen",cat:"fish",price:0,stock:0,image:null},
+ {id:"fsh-white-fillet",en:"White Fish Fillet",ar:"فيليه سمك أبيض",type:"frozen",cat:"fish",price:22,stock:20,image:null},
+ {id:"shrimp-pd",en:"Shrimps PD Frozen",ar:"روبيان مقشر مجمد",type:"frozen",cat:"fish",price:39,stock:16,image:null},
  // Others / Offal
- {id:"bone-feet",en:"Bone-Feet",ar:"عظم وأقدام",type:"frozen",cat:"others",price:0,stock:0,image:null},
- {id:"lamb-liver",en:"Lamb Liver",ar:"كبد غنم",type:"fresh",cat:"others",price:0,stock:0,image:null},
- {id:"indian-frozen",en:"Indian Frozen",ar:"لحم هندي مجمد",type:"frozen",cat:"others",price:0,stock:0,image:null},
+ {id:"bone-feet",en:"Bone-Feet",ar:"عظم وأقدام",type:"frozen",cat:"others",price:10,stock:15,image:null},
+ {id:"lamb-liver",en:"Lamb Liver",ar:"كبد غنم",type:"fresh",cat:"others",price:28,stock:15,image:null},
+ {id:"indian-frozen",en:"Indian Frozen",ar:"لحم هندي مجمد",type:"frozen",cat:"others",price:24,stock:47,image:null},
 ];
 const SEED_CATS=[
   {id:"mutton",en:"Mutton / Lamb",ar:"لحم غنم",color:"#B0324A",ph:"#F6E7EA"},
@@ -1060,10 +1072,10 @@ function renderSettings(){
     const del=hasActions(p);
     return `<div class="setrow prodrow ${p.active===false?'inactive':''}" data-id="${p.id}">
       <div class="sthumb">${p.image?`<img src="${p.image}" alt="">`:"No img"}</div>
-      <div class="nm"><div class="en">${p.en} <span style="color:var(--muted);font-weight:500">${catName(p.cat)} · ${p.type==="fresh"?"Fresh":"Frozen"}</span></div><div class="ar">${p.ar}</div></div>
-      <div class="fld"><label>SAR / kg</label><input class="price" type="number" step="0.5" min="0" data-id="${p.id}" value="${p.price}"></div>
-      <div class="imgbtns"><button class="up" data-id="${p.id}">${p.image?"Change":"Add"}</button>${p.image?`<button class="adj" data-id="${p.id}">Adjust</button>`:""}${p.image?`<button class="rm" data-id="${p.id}">Remove</button>`:""}</div>
-      <div class="rowacts"><button class="edit" data-id="${p.id}">Edit</button><button class="toggle ${p.active===false?'off':'on'}" data-id="${p.id}">${p.active===false?'Inactive':'Active'}</button><button class="del" data-id="${p.id}" ${del?'disabled title="Has sales — cannot delete"':''}>Delete</button></div>
+      <div class="nm"><div class="en">${p.en} <span style="color:var(--muted);font-weight:500">${catName(p.cat)} · ${p.type==="fresh"?"Fresh":"Frozen"}</span></div></div>
+      <button class="toggle ${p.active===false?'off':'on'}" data-id="${p.id}" title="${p.active===false?'Hidden from POS':'Visible in POS'}">${p.active===false?'Inactive':'Active'}</button>
+      <div class="arline">${p.ar}</div>
+      <div class="actline"><button class="up" data-id="${p.id}">${p.image?"Change":"Add"}</button>${p.image?`<button class="adj" data-id="${p.id}">Adjust</button>`:""}${p.image?`<button class="rm" data-id="${p.id}">Remove</button>`:""}<button class="edit" data-id="${p.id}">Edit</button><button class="del" data-id="${p.id}" ${del?'disabled title="Has sales — cannot delete"':''}>Delete</button><div class="fld"><label>SAR / kg</label><input class="price" type="number" step="0.5" min="0" data-id="${p.id}" value="${p.price}"></div></div>
     </div>`;}).join("");
   const q=s=>$("#setList").querySelectorAll(s);
   $("#addProdBtn").addEventListener("click",()=>openProdForm(null));
