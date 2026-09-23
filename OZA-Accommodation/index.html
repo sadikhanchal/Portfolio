@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#0952a1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="OZA">
+<meta name="apple-mobile-web-app-title" content="OZA Staffs">
 <link rel="icon" href="icon-192.png">
 <style>
 :root {
@@ -21,41 +21,45 @@
   --muted: #6b7684;
   --border: #e2e6ec;
   --green: #1e8e5a;
-  --amber: #c97a1f;
+  --amber: #b5650c;
   --red: #c0392b;
-  --grey: #6b7684;
+  --grey: #55606c;
   --radius: 14px;
 }
 * { box-sizing: border-box; }
-html, body { height: 100%; }
+html, body { height: 100%; overflow: hidden; }
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
   background: var(--bg);
   color: var(--ink);
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-#app-root { min-height: 100%; }
-.boot-loading { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, var(--blue-dark), var(--blue)); }
+#app-root { height: 100%; }
+.boot-loading { height: 100vh; height: 100dvh; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, var(--blue-dark), var(--blue)); }
 .boot-spinner { width: 34px; height: 34px; border: 3px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: boot-spin .8s linear infinite; }
 @keyframes boot-spin { to { transform: rotate(360deg); } }
 
 /* PIN screen */
-.pin-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background: linear-gradient(180deg, var(--blue-dark), var(--blue)); }
+.pin-screen { height: 100vh; height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 24px; background: linear-gradient(180deg, var(--blue-dark), var(--blue)); overflow-y: auto; }
 .pin-card { background: var(--card); border-radius: var(--radius); padding: 32px 24px; width: 100%; max-width: 340px; text-align: center; box-shadow: 0 12px 30px rgba(0,0,0,.25); }
 .pin-logo { max-width: 190px; margin-bottom: 14px; }
 .pin-card h1 { font-size: 20px; margin: 4px 0 2px; }
 .pin-input { width: 100%; text-align: center; font-size: 28px; letter-spacing: 8px; padding: 14px; margin: 16px 0; border: 1px solid var(--border); border-radius: 10px; }
 .error-text { color: var(--red); font-size: 13px; margin-top: 8px; }
 
-/* Shell */
-.app-shell { display: flex; flex-direction: column; min-height: 100vh; }
-.topbar { display: flex; align-items: center; gap: 12px; padding: 12px 16px; padding-top: calc(12px + env(safe-area-inset-top, 0px)); background: #fff; color: var(--blue); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
+/* Shell — .app-shell owns the viewport height; .topbar and .tabbar are fixed-size
+   flex children, .view is the only part that scrolls, which lets a sticky
+   sub-header inside .view stick reliably under the topbar. */
+.app-shell { display: flex; flex-direction: column; height: 100vh; height: 100dvh; padding-top: env(safe-area-inset-top, 0px); }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #fff; color: var(--blue); border-bottom: 1px solid var(--border); flex-shrink: 0; }
 .topbar-logo { height: 42px; }
-.topbar-title { font-weight: 700; font-size: 16px; color: var(--blue); }
-.view { flex: 1; padding: 4px 14px 90px; max-width: 720px; margin: 0 auto; width: 100%; }
-.tabbar { position: fixed; bottom: 0; left: 0; right: 0; display: flex; background: #fff; border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 20; }
+.topbar-title { font-weight: 700; font-size: 16px; color: var(--blue); flex: 1; }
+.logout-btn { border: none; background: #f0f2f5; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--blue); flex-shrink: 0; }
+.logout-btn svg { width: 18px; height: 18px; }
+.view { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 14px 90px; }
+.view > * { max-width: 720px; margin-left: auto; margin-right: auto; }
+.section.sticky-header { position: sticky; top: -4px; padding: 8px 0 6px; background: var(--bg); z-index: 5; }
+.tabbar { flex-shrink: 0; display: flex; background: #fff; border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); }
 .tab-btn { flex: 1; border: none; background: none; padding: 8px 2px 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--muted); font-size: 11px; cursor: pointer; }
 .tab-btn.active { color: var(--blue); font-weight: 600; }
 .tab-icon { width: 21px; height: 21px; display: flex; align-items: center; justify-content: center; }
@@ -79,25 +83,27 @@ body {
 /* Cards */
 .card { background: var(--card); border-radius: var(--radius); padding: 14px; border: 1px solid #d9e4f0; }
 .card-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-.building-card { cursor: pointer; }
+.building-card { cursor: pointer; border: 1.5px solid #3d7dbf; }
 .building-card-top { display: flex; justify-content: space-between; align-items: center; }
 .building-name { font-weight: 700; font-size: 16px; }
 .building-meta { font-size: 13px; margin-top: 2px; }
+.pending-flag { color: var(--amber); font-weight: 600; }
+.vacation-banner { cursor: pointer; border-left: 4px solid var(--amber); font-size: 13px; }
 .badge { font-size: 11px; padding: 3px 9px; border-radius: 999px; font-weight: 600; }
-.badge-vacant { background: #fdecdc; color: var(--amber); }
-.badge-full { background: #e3f3ea; color: var(--green); }
-.badge-empty { background: #eceef1; color: var(--grey); }
-.badge-over { background: #fbe4e1; color: var(--red); }
+.badge-vacant { background: #fbe2b8; color: var(--amber); }
+.badge-full { background: #c9ecd9; color: var(--green); }
+.badge-empty { background: #dde1e6; color: var(--grey); }
+.badge-over { background: #f6c7c0; color: var(--red); }
 .verify-stale { color: var(--red); font-weight: 600; }
 .room-status-row { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
 
 /* Rooms */
 .room-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .room-chip { border-radius: 10px; padding: 10px 6px; text-align: center; cursor: pointer; border: 1px solid var(--border); }
-.room-chip-partial { background: #fdf6ec; border-color: #f3ddb3; }
-.room-chip-full { background: #eef6f0; border-color: #bfe2cb; }
-.room-chip-empty { background: #eceef1; border-color: #d7dbe1; }
-.room-chip-over { background: #fbe4e1; border-color: #f0b3ab; }
+.room-chip-partial { background: #fbe2b8; border-color: #e8b562; }
+.room-chip-full { background: #c9ecd9; border-color: #7fcda3; }
+.room-chip-empty { background: #dde1e6; border-color: #a9b1ba; }
+.room-chip-over { background: #f6c7c0; border-color: #e4897a; }
 .room-chip-no { font-size: 12px; font-weight: 700; }
 .room-chip-count { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
@@ -120,6 +126,8 @@ body {
 .icon-btn-danger { color: var(--red); }
 .reconcile-row { gap: 10px; }
 .reconcile-check { display: flex; align-items: center; flex-shrink: 0; }
+.reconcile-bulk-row { display: flex; gap: 8px; margin-top: 10px; }
+.reconcile-bulk-row .btn { flex: 1; margin-top: 0; }
 
 /* Forms / inputs */
 .field-label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 4px; }
@@ -4799,13 +4807,17 @@ function roomStatus(room) {
 }
 function buildingStats(buildingId) {
   const rooms = roomsForBuilding(buildingId);
-  let staff = 0, capacity = 0, vacant = 0, overRooms = 0, overStaff = 0;
+  let staff = 0, capacity = 0, vacant = 0, overRooms = 0, overStaff = 0, pending = 0, onVacation = 0;
   rooms.forEach(r => {
     staff += occupantCount(r); capacity += (r.capacity || 0); vacant += vacantCount(r);
     const over = overCount(r);
     if (over > 0) { overRooms++; overStaff += over; }
+    (r.occupants || []).forEach(o => {
+      if (o.status && o.status.startsWith('Not found')) pending++;
+      if (o.status === 'On Vacation') onVacation++;
+    });
   });
-  return { rooms: rooms.length, staff, capacity, vacant, overRooms, overStaff };
+  return { rooms: rooms.length, staff, capacity, vacant, overRooms, overStaff, pending, onVacation };
 }
 function allOccupantsFlat() {
   const out = [];
@@ -4857,6 +4869,7 @@ const ICONS = {
   transfer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3"/><path d="M17 17H6l3 3"/></svg>',
   trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>',
   close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  logout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>',
 };
 function icon(name) { return el('span', { class: 'icon', html: ICONS[name] || '' }); }
 
@@ -4962,6 +4975,7 @@ function renderShell() {
     el('header', { class: 'topbar' }, [
       el('img', { src: LOGO_DATA_URI, class: 'topbar-logo' }),
       el('span', { class: 'topbar-title' }, ['OZA Accommodation']),
+      el('button', { class: 'logout-btn', title: 'Log out (' + getUserName() + ')', html: ICONS.logout, onclick: () => { if (confirm('Log out?')) lock(); } }),
     ]),
     el('main', { id: 'view', class: 'view' }),
     el('nav', { class: 'tabbar' }, tabs),
@@ -4984,6 +4998,7 @@ function render() {
   if (name === 'settings' && getRole() !== 'admin') { goto('/dashboard'); return; }
   if (name === 'reconcile' && !can('verify')) { goto('/dashboard'); return; }
   if (name === 'dashboard') renderDashboard(view);
+  else if (name === 'vacation') renderVacationList(view);
   else if (name === 'building') renderBuildingDetail(view, arg);
   else if (name === 'room') renderRoomDetail(view, arg);
   else if (name === 'search') renderSearch(view);
@@ -4996,25 +5011,33 @@ function render() {
 function renderDashboard(view) {
   view.innerHTML = '';
   const buildings = Object.values(state.buildings).sort((a, b) => naturalCompare(a.id, b.id));
-  let totalStaff = 0, totalVacant = 0, totalRooms = 0;
-  let fullCount = 0, emptyCount = 0, overCount2 = 0;
+  let totalStaff = 0, totalVacant = 0, totalRooms = 0, totalVacation = 0;
   const cards = buildings.map(b => {
     const s = buildingStats(b.id);
-    totalStaff += s.staff; totalVacant += s.vacant; totalRooms += s.rooms;
+    totalStaff += s.staff; totalVacant += s.vacant; totalRooms += s.rooms; totalVacation += s.onVacation;
     const stale = isStale(b.lastVerified);
     let badgeCls = 'badge-full', badgeText = 'Full';
-    if (s.overRooms > 0) { badgeCls = 'badge-over'; badgeText = 'Over-equipped'; overCount2++; }
-    else if (s.staff === 0) { badgeCls = 'badge-empty'; badgeText = 'Empty'; emptyCount++; }
+    if (s.overRooms > 0) { badgeCls = 'badge-over'; badgeText = 'Over-equipped'; }
+    else if (s.staff === 0) { badgeCls = 'badge-empty'; badgeText = 'Empty'; }
     else if (s.vacant > 0) { badgeCls = 'badge-vacant'; badgeText = s.vacant + ' open'; }
-    else { fullCount++; }
-    return el('div', { class: 'card building-card', onclick: () => goto('/building/' + b.id) }, [
+    const cardChildren = [
       el('div', { class: 'building-card-top' }, [
         el('div', { class: 'building-name' }, [b.name]),
         el('div', { class: 'badge ' + badgeCls }, [badgeText]),
       ]),
       el('div', { class: 'building-meta' }, [s.rooms + ' Rooms — ' + s.staff + ' Staff / ' + s.capacity]),
       el('div', { class: 'building-meta ' + (stale ? 'verify-stale' : 'muted') }, ['Last verified: ' + fmtDate(b.lastVerified)]),
-    ]);
+    ];
+    if (s.pending > 0) cardChildren.push(el('div', { class: 'building-meta pending-flag' }, [s.pending + ' Staff pending verification']));
+    return el('div', { class: 'card building-card', onclick: () => goto('/building/' + b.id) }, cardChildren);
+  });
+  // room-level counts across the whole compound, for the second stat row
+  let fullRooms = 0, emptyRooms = 0, overRooms2 = 0;
+  Object.values(state.rooms).forEach(r => {
+    const st = roomStatus(r);
+    if (st === 'full') fullRooms++;
+    else if (st === 'empty') emptyRooms++;
+    else if (st === 'over') overRooms2++;
   });
   view.appendChild(el('div', { class: 'section' }, [
     el('div', { class: 'stat-row' }, [
@@ -5025,11 +5048,19 @@ function renderDashboard(view) {
   ]));
   view.appendChild(el('div', { class: 'section' }, [
     el('div', { class: 'stat-row' }, [
-      statBox(fullCount, 'Full Buildings'),
-      statBox(emptyCount, 'Empty Buildings'),
-      statBox(overCount2, 'Over-equipped'),
+      statBox(fullRooms, 'Full Rooms'),
+      statBox(emptyRooms, 'Empty Rooms'),
+      statBox(overRooms2, 'Over-equipped'),
     ]),
   ]));
+  if (totalVacation > 0) {
+    view.appendChild(el('div', { class: 'section' }, [
+      el('div', { class: 'card vacation-banner', onclick: () => goto('/vacation') }, [
+        el('div', {}, [el('b', {}, [String(totalVacation)]), ' staff currently on vacation (not on site)']),
+        el('div', { class: 'muted small' }, ['Tap to see the list and mark anyone back']),
+      ]),
+    ]));
+  }
   view.appendChild(el('div', { class: 'section' }, [
     el('div', { class: 'section-title' }, ['Buildings']),
     el('div', { class: 'card-grid' }, cards),
@@ -5038,13 +5069,34 @@ function renderDashboard(view) {
 function statBox(num, label) {
   return el('div', { class: 'stat-box' }, [el('div', { class: 'stat-num' }, [String(num)]), el('div', { class: 'stat-label' }, [label])]);
 }
+function renderVacationList(view) {
+  view.innerHTML = '';
+  view.appendChild(el('div', { class: 'section' }, [
+    backBtn('/dashboard'),
+    el('div', { class: 'page-title' }, ['Staff on Vacation']),
+    el('div', { class: 'muted' }, ['Currently away from the accommodation. Edit a person to change their status once they are back.']),
+  ]));
+  const list = allOccupantsFlat().filter(o => o.status === 'On Vacation');
+  if (!list.length) { view.appendChild(el('div', { class: 'section muted' }, ['Nobody is currently marked on vacation.'])); return; }
+  const container = el('div', { class: 'section' });
+  list.forEach(o => {
+    const b = state.buildings[o.buildingId];
+    const room = state.rooms[o.roomDocId];
+    container.appendChild(el('div', { class: 'card search-result', onclick: () => goto('/room/' + o.roomDocId) }, [
+      el('div', { class: 'occupant-name' }, [o.name]),
+      el('div', { class: 'occupant-sub muted' }, [(b ? b.name : o.buildingId) + ' · Room ' + o.roomNo]),
+      el('div', { class: 'occupant-sub muted' }, occupantSubLine(o)),
+    ]));
+  });
+  view.appendChild(container);
+}
 
 function renderBuildingDetail(view, buildingId) {
   view.innerHTML = '';
   const b = state.buildings[buildingId];
   if (!b) { view.appendChild(el('div', { class: 'section' }, ['Building not found.'])); return; }
   const rooms = roomsForBuilding(buildingId);
-  view.appendChild(el('div', { class: 'section' }, [
+  view.appendChild(el('div', { class: 'section sticky-header' }, [
     backBtn('/dashboard'),
     el('div', { class: 'page-title' }, [b.name]),
     el('div', { class: 'muted' }, [rooms.length + ' rooms · ' + b.toilets + ' toilets' + (b.hasFloors ? ' · GF/FF' : '')]),
@@ -5157,26 +5209,39 @@ function renderReconcile(view, buildingId) {
       el('div', { class: 'muted' }, ['Pick a building to walk through and tick off who is really there.']),
     ]));
     view.appendChild(el('div', { class: 'section' }, [
-      el('div', { class: 'card-grid' }, buildings.map(b => el('div', { class: 'card building-card', onclick: () => goto('/reconcile/' + b.id) }, [
-        el('div', { class: 'building-name' }, [b.name]),
-        el('div', { class: 'muted' }, ['Last verified: ' + fmtDate(b.lastVerified)]),
-      ]))),
+      el('div', { class: 'card-grid' }, buildings.map(b => {
+        const stale = isStale(b.lastVerified);
+        return el('div', {
+          class: 'card building-card', onclick: () => {
+            if (!stale && !confirm('Last verified ' + fmtDate(b.lastVerified) + ' — not due for 30 days yet. Verify anyway?')) return;
+            goto('/reconcile/' + b.id);
+          },
+        }, [
+          el('div', { class: 'building-name' }, [b.name]),
+          el('div', { class: stale ? 'verify-stale' : 'muted' }, ['Last verified: ' + fmtDate(b.lastVerified)]),
+        ]);
+      })),
     ]));
     return;
   }
   const b = state.buildings[buildingId];
   const rooms = roomsForBuilding(buildingId);
   const checks = {}; // occId -> true/false
-  view.appendChild(el('div', { class: 'section' }, [
+  const registry = []; // {cb, rowEl, occId} for bulk tick/untick
+  view.appendChild(el('div', { class: 'section sticky-header' }, [
     backBtn('/reconcile'),
     el('div', { class: 'page-title' }, ['Verify — ' + (b ? b.name : buildingId)]),
     el('div', { class: 'muted' }, ['Tick each person you actually found. Anyone still red from last time needs a re-check — edit, transfer or remove them right here.']),
+    el('div', { class: 'reconcile-bulk-row' }, [
+      el('button', { class: 'btn btn-outline', onclick: () => registry.forEach(({ cb, rowEl, occId }) => { cb.checked = true; checks[occId] = true; rowEl.classList.remove('occupant-flag'); }) }, ['Tick All Present']),
+      el('button', { class: 'btn btn-outline', onclick: () => registry.forEach(({ cb, rowEl, occId }) => { cb.checked = false; checks[occId] = false; rowEl.classList.add('occupant-flag'); }) }, ['Untick All']),
+    ]),
   ]));
   rooms.forEach(r => {
     if (!(r.occupants || []).length) return;
     const roomBlock = el('div', { class: 'card' }, [
       el('div', { class: 'room-chip-no' }, ['Room ' + r.roomNo]),
-      ...r.occupants.map(o => reconcileRow(r, o, checks)),
+      ...r.occupants.map(o => reconcileRow(r, o, checks, registry)),
     ]);
     view.appendChild(el('div', { class: 'section' }, [roomBlock]));
   });
@@ -5187,12 +5252,13 @@ function renderReconcile(view, buildingId) {
     }, ['Save Verification']),
   ]));
 }
-function reconcileRow(room, o, checks) {
+function reconcileRow(room, o, checks, registry) {
   const present = !(o.status && o.status.startsWith('Not found'));
   checks[o.id] = present;
   const rowEl = el('div', { class: 'occupant-row reconcile-row' + (present ? '' : ' occupant-flag') });
   const cb = el('input', { type: 'checkbox', checked: present ? 'true' : null });
   cb.addEventListener('change', () => { checks[o.id] = cb.checked; rowEl.classList.toggle('occupant-flag', !cb.checked); });
+  if (registry) registry.push({ cb, rowEl, occId: o.id });
   rowEl.appendChild(el('label', { class: 'reconcile-check' }, [cb]));
   rowEl.appendChild(occupantAvatar(o));
   rowEl.appendChild(el('div', { class: 'occupant-main' }, [
