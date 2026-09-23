@@ -85,9 +85,9 @@ body {
 /* Cards */
 .card { background: var(--card); border-radius: var(--radius); padding: 14px; border: 1px solid #d9e4f0; }
 .card-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-.building-card { cursor: pointer; border: 1.5px solid #3d7dbf; position: relative; padding-right: 92px; }
-.building-name { font-weight: 700; font-size: 16px; padding-right: 4px; }
-.badge-stack { position: absolute; top: 14px; right: 14px; display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+.building-card { cursor: pointer; border: 1.5px solid #3d7dbf; overflow: hidden; }
+.building-name { font-weight: 700; font-size: 16px; }
+.badge-stack { float: right; display: flex; flex-direction: column; gap: 4px; align-items: flex-end; margin-left: 10px; margin-bottom: 4px; }
 .building-meta { font-size: 13px; margin-top: 2px; }
 .pending-flag { color: var(--amber); font-weight: 600; }
 .vacation-banner { cursor: pointer; border-left: 4px solid var(--amber); font-size: 13px; }
