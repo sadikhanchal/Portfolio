@@ -1,6 +1,6 @@
 {
-  "name": "Al Abbar Meats — POS",
-  "short_name": "Al Abbar POS",
+  "name": "Al Abbar Meats",
+  "short_name": "Al Abbar",
   "description": "Fresh & Frozen Meat & Fish POS for Al Abbar Meats, KSA",
   "start_url": "./index.html",
   "scope": "./",

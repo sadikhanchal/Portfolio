@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#D80850">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Al Abbar POS">
+<meta name="apple-mobile-web-app-title" content="Al Abbar">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=2">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=2">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2">
@@ -103,14 +103,14 @@
   .card.out{opacity:.5}
 
   /* Cart */
-  .cart{background:var(--surface);border-left:1px solid var(--line);display:flex;flex-direction:column;height:100%}
+  .cart{background:var(--surface);border-left:1px solid var(--line);display:flex;flex-direction:column;height:100%;min-height:0}
   .cart-top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px}
   .cart-top h2{margin:0;font-size:16px;font-weight:700}
   .cart-top h2 span{color:var(--muted);font-weight:500}
   .orders-link{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:8px 12px;font-size:13px;font-weight:600;color:var(--ink)}
   .orders-link .dot{background:var(--danger);color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:none;align-items:center;justify-content:center;padding:0 4px}
   .orders-link .dot.show{display:flex}
-  .lines{flex:1;overflow:auto;padding:0 10px}
+  .lines{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding:0 10px;-webkit-overflow-scrolling:touch}
   .line{display:flex;gap:10px;align-items:center;padding:11px 6px;border-bottom:1px solid var(--line)}
   .line .info{flex:1;min-width:0}
   .line .nm{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -331,12 +331,30 @@
   .toast.show{opacity:1;transform:translateX(-50%)}
 
   @media(max-width:760px){
-    .pos{grid-template-columns:1fr;grid-template-rows:1fr auto}
-    .cart{border-left:none;border-top:1px solid var(--line);max-height:46%}
+    .pos{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) minmax(220px,42vh);height:100%}
+    .cart{border-left:none;border-top:1px solid var(--line);height:100%;max-height:none;min-height:0;overflow:hidden}
     .usermenu .who{display:none}
     .brand h1{font-size:16px}.brand .ar{font-size:12.5px}
     .rangelabel{width:100%;margin-left:0}
-    .setrow .imgbtns,.setrow .rowacts{flex-direction:column}
+    /* Settings rows: 2-column grid, wrap cleanly */
+    .setrow{display:grid;grid-template-columns:60px 1fr;grid-template-areas:"thumb name" "acts acts" "img img" "price price";gap:8px 10px;padding:12px}
+    .setrow .sthumb{grid-area:thumb;width:56px;height:56px}
+    .setrow .nm{grid-area:name;min-width:0}
+    .setrow .nm .en{font-size:15px;line-height:1.25}
+    .setrow .nm .ar{font-size:14px;line-height:1.3;margin-top:2px}
+    .setrow .rowacts{grid-area:acts;flex-direction:row;flex-wrap:wrap;gap:6px}
+    .setrow .imgbtns{grid-area:img;flex-direction:row;flex-wrap:wrap;gap:6px}
+    .setrow .fld{grid-area:price;flex-direction:row;align-items:center;gap:8px}
+    .setrow input.price{width:110px}
+    /* Admin account row: put fields inline in grid instead of overflowing */
+    .setrow[style*="margin-bottom:16px"]{grid-template-areas:"name name" "img img" "price price" "acts acts"}
+    /* Staff & category rows */
+    .staffrow,.catrow{padding:12px}
+    .staffrow .rowacts,.catrow .rowacts{margin-left:0;flex-wrap:wrap}
+    /* Stock cells */
+    .stockcell input{width:100%}
+    /* Product form 2-cols -> stack */
+    .pform .prow2{flex-direction:column;gap:0}
     /* hide top segmented on mobile */
     #nav{display:none !important}
     /* bottom nav */
@@ -703,7 +721,7 @@ const SEED_CATS=[
   {id:"veal",en:"Veal",ar:"لحم عجل",color:"#C76E8B",ph:"#F9EDF1"},
   {id:"chicken",en:"Chicken",ar:"دجاج",color:"#C89A2F",ph:"#F7EFDE"},
   {id:"fish",en:"Fish & Seafood",ar:"سمك ومأكولات بحرية",color:"#1F7FA6",ph:"#E6F1F5"},
-  {id:"others",en:"Others / Offal",ar:"متنوع",color:"#5B6770",ph:"#E9ECEE"},
+  {id:"others",en:"Others",ar:"متنوع",color:"#5B6770",ph:"#E9ECEE"},
 ];
 const LOW=10;
 

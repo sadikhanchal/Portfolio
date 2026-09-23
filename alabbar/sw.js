@@ -1,5 +1,5 @@
 // Al Abbar POS — offline service worker
-const CACHE = "alabbar-v13";
+const CACHE = "alabbar-v14";
 // Icons deliberately NOT precached so a logo swap picks up on next load.
 const ASSETS = [
   "./",
