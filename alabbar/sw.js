@@ -1,14 +1,10 @@
 // Al Abbar POS — offline service worker
-const CACHE = "alabbar-v11";
+const CACHE = "alabbar-v13";
+// Icons deliberately NOT precached so a logo swap picks up on next load.
 const ASSETS = [
   "./",
   "./index.html",
-  "./manifest.json",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png",
-  "./icons/icon-512-maskable.png",
-  "./icons/apple-touch-icon.png",
-  "./icons/favicon-32.png"
+  "./manifest.json"
 ];
 
 self.addEventListener("install", e => {
@@ -26,6 +22,11 @@ self.addEventListener("fetch", e => {
   const req = e.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
+  // Icons: network-first, never let SW pin an old version.
+  if (url.pathname.includes("/icons/")) {
+    e.respondWith(fetch(req).catch(() => caches.match(req)));
+    return;
+  }
   // Network-first for the HTML page (so updates land quickly), cache-first for the rest.
   if (req.mode === "navigate" || (req.destination === "document")) {
     e.respondWith(
