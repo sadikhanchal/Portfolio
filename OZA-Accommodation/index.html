@@ -86,14 +86,13 @@ body {
 .card { background: var(--card); border-radius: var(--radius); padding: 14px; border: 1px solid #d9e4f0; }
 .card-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
 .building-card { cursor: pointer; border: 1.5px solid #3d7dbf; }
-.building-card-top { display: flex; justify-content: space-between; align-items: center; }
+.building-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
 .building-name { font-weight: 700; font-size: 16px; }
 .building-meta { font-size: 13px; margin-top: 2px; }
 .pending-flag { color: var(--amber); font-weight: 600; }
 .vacation-banner { cursor: pointer; border-left: 4px solid var(--amber); font-size: 13px; }
 .badge { font-size: 11px; padding: 3px 9px; border-radius: 999px; font-weight: 600; }
-.status-breakdown { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; align-items: flex-start; }
-.status-breakdown .badge { display: inline-block; }
+.badge-stack { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; flex-shrink: 0; }
 .badge-vacant { background: #fbe2b8; color: var(--amber); }
 .badge-full { background: #c9ecd9; color: var(--green); }
 .badge-empty { background: #dde1e6; color: var(--grey); }
@@ -5026,26 +5025,22 @@ function renderDashboard(view) {
     totalStaff += s.staff; totalVacant += s.vacant; totalRooms += s.rooms; totalVacation += s.onVacation;
     const stale = isStale(b.lastVerified);
     const activeStatuses = Object.entries(s.byStatus).filter(([, v]) => v > 0);
-    let topBadge = null;
-    if (activeStatuses.length === 1) {
-      const [status] = activeStatuses[0];
-      const text = status === 'partial' ? (s.vacant + ' open') : status === 'over' ? 'Over-equipped' : statusLabels[status];
-      topBadge = el('div', { class: 'badge ' + statusBadgeCls[status] }, [text]);
-    }
+    // All status badges live in one right-aligned stack next to the name —
+    // one badge when every room agrees, several stacked when they don't —
+    // never a separate block on the left.
+    const badgeStack = el('div', { class: 'badge-stack' }, activeStatuses.map(([status, count]) => {
+      const text = activeStatuses.length === 1
+        ? (status === 'partial' ? (s.vacant + ' open') : status === 'over' ? 'Over-equipped' : statusLabels[status])
+        : (count + ' ' + statusLabels[status]);
+      return el('div', { class: 'badge ' + statusBadgeCls[status] }, [text]);
+    }));
     const cardChildren = [
       el('div', { class: 'building-card-top' }, [
         el('div', { class: 'building-name' }, [b.name]),
-        topBadge,
+        badgeStack,
       ]),
       el('div', { class: 'building-meta' }, [s.rooms + ' Rooms — ' + s.staff + ' Staff / ' + s.capacity]),
     ];
-    // Rooms in this one building are in more than one state — a single
-    // badge can't tell the whole story, so list every state that applies.
-    if (activeStatuses.length > 1) {
-      cardChildren.push(el('div', { class: 'status-breakdown' }, activeStatuses.map(([status, count]) =>
-        el('div', { class: 'badge ' + statusBadgeCls[status] }, [count + ' ' + statusLabels[status]])
-      )));
-    }
     cardChildren.push(el('div', { class: 'building-meta ' + (stale ? 'verify-stale' : 'muted') }, ['Last verified: ' + fmtDate(b.lastVerified)]));
     if (s.pending > 0) cardChildren.push(el('div', { class: 'building-meta pending-flag' }, [s.pending + ' Staff pending verification']));
     return el('div', { class: 'card building-card', onclick: () => goto('/building/' + b.id) }, cardChildren);
@@ -5145,6 +5140,28 @@ function renderBuildingDetail(view, buildingId) {
       ? el('button', { class: 'btn btn-outline btn-block', onclick: () => openAddOccupantModal(buildingId) }, ['+ Add Staff to a Room'])
       : el('div', { class: 'muted small' }, ['View only — you can browse rooms and staff but not make changes.']),
   ]));
+  if (can('edit')) {
+    const bulkInp = el('input', { type: 'number', min: '1', class: 'input-inline', placeholder: 'e.g. 3' });
+    const bulkBtn = el('button', { class: 'btn btn-primary btn-block' }, ['Apply to All Rooms in ' + b.name]);
+    bulkBtn.addEventListener('click', async () => {
+      const cap = parseInt(bulkInp.value, 10);
+      if (!cap || cap < 1) { toast('Enter a valid number first', true); return; }
+      if (!confirm('Set capacity to ' + cap + ' for all ' + rooms.length + ' rooms in ' + b.name + '? Any room you already customised individually gets overwritten too.')) return;
+      const batch = db.batch();
+      rooms.forEach(r => batch.set(db.collection('rooms').doc(r.id), { capacity: cap }, { merge: true }));
+      try {
+        await batch.commit();
+        logAudit('Bulk capacity set', b.name + ' — all ' + rooms.length + ' rooms → ' + cap);
+        toast('Capacity set to ' + cap + ' for all ' + rooms.length + ' rooms');
+      } catch (e) { console.error(e); toast('Could not save — check your connection and try again', true); }
+    });
+    view.appendChild(el('div', { class: 'section' }, [
+      el('div', { class: 'section-title' }, ['Bulk Set Room Capacity']),
+      el('div', { class: 'muted small' }, ['Sets every room in this building at once — then open just the exceptions (e.g. a room with a bunk bed) and adjust that one room only.']),
+      bulkInp,
+      bulkBtn,
+    ]));
+  }
   const grid = el('div', { class: 'room-grid' }, rooms.map(r => roomChip(r)));
   view.appendChild(el('div', { class: 'section' }, [el('div', { class: 'section-title' }, ['Rooms']), grid]));
 }
@@ -5178,8 +5195,15 @@ function renderRoomDetail(view, docId) {
     can('edit')
       ? (() => {
           const inp = el('input', { type: 'number', min: '1', class: 'input-inline', value: String(r.capacity || 1) });
-          inp.addEventListener('change', () => updateRoomCapacity(docId, parseInt(inp.value, 10) || 1));
-          return inp;
+          const saveBtn = el('button', { class: 'btn btn-primary', style: 'margin-top:8px;' }, ['Save Capacity']);
+          // A plain change/blur listener isn't reliable here — on mobile, typing
+          // a number then immediately tapping Back can navigate away before the
+          // blur ever fires, silently discarding the edit. An explicit button
+          // makes the save a deliberate tap that always fires.
+          const save = () => updateRoomCapacity(docId, parseInt(inp.value, 10) || 1);
+          saveBtn.addEventListener('click', save);
+          inp.addEventListener('change', save);
+          return el('div', {}, [inp, saveBtn]);
         })()
       : el('div', { class: 'input-inline', style: 'background:#f4f6f9;' }, [String(r.capacity || 1)]),
   ]));
@@ -5789,7 +5813,8 @@ function updateRoomCapacity(docId, cap) {
   const room = state.rooms[docId];
   db.collection('rooms').doc(docId).set({ capacity: cap }, { merge: true }).then(() => {
     logAudit('Changed room capacity', (room ? 'Room ' + room.roomNo : docId) + ' → ' + cap);
-  });
+    toast('Capacity saved: ' + cap);
+  }).catch(e => { console.error(e); toast('Could not save — check your connection and try again', true); });
 }
 
 // ---------- Seed / import ----------
