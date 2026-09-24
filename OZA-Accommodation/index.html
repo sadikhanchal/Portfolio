@@ -5585,19 +5585,34 @@ async function clearAudit(days) {
 
 function userRow(u) {
   const codeInp = el('input', { type: 'text', class: 'input-inline', value: u.code || '' });
+  const roleSelect = el('select', { class: 'input-inline' }, [
+    el('option', { value: 'admin', selected: u.role === 'admin' ? 'true' : null }, ['Admin']),
+    el('option', { value: 'staff', selected: u.role === 'staff' ? 'true' : null }, ['Staff']),
+    el('option', { value: 'viewer', selected: u.role === 'viewer' ? 'true' : null }, ['Viewer']),
+  ]);
   const perms = u.permissions || {};
   const permBoxes = {};
   ['verify', 'edit', 'transfer', 'delete'].forEach(p => {
     permBoxes[p] = el('input', { type: 'checkbox', checked: perms[p] ? 'true' : null });
   });
-  const permRow = u.role === 'staff'
-    ? el('div', { class: 'perm-row' }, ['verify', 'edit', 'transfer', 'delete'].map(p =>
-        el('label', { class: 'perm-chip' }, [permBoxes[p], ' ' + p[0].toUpperCase() + p.slice(1)])))
-    : el('div', { class: 'muted small' }, [u.role === 'admin' ? 'Full access + Settings.' : 'Read-only.']);
+  function buildPermRow(role) {
+    if (role === 'staff') {
+      return el('div', { class: 'perm-row' }, ['verify', 'edit', 'transfer', 'delete'].map(p =>
+        el('label', { class: 'perm-chip' }, [permBoxes[p], ' ' + p[0].toUpperCase() + p.slice(1)])));
+    }
+    return el('div', { class: 'muted small' }, [role === 'admin' ? 'Full access + Settings.' : 'Read-only.']);
+  }
+  const permRowContainer = el('div', {}, [buildPermRow(u.role)]);
+  roleSelect.addEventListener('change', () => {
+    permRowContainer.innerHTML = '';
+    permRowContainer.appendChild(buildPermRow(roleSelect.value));
+  });
   const saveBtn = el('button', { class: 'btn btn-outline', onclick: async () => {
+    const admins = Object.values(state.users).filter(x => x.role === 'admin');
+    if (u.role === 'admin' && roleSelect.value !== 'admin' && admins.length <= 1) { toast('Cannot change the only Admin\'s role', true); return; }
     const newPerms = {};
     ['verify', 'edit', 'transfer', 'delete'].forEach(p => { newPerms[p] = !!permBoxes[p].checked; });
-    await db.collection('users').doc(u.id).set({ code: codeInp.value.trim() || u.code, permissions: newPerms }, { merge: true });
+    await db.collection('users').doc(u.id).set({ code: codeInp.value.trim() || u.code, role: roleSelect.value, permissions: newPerms }, { merge: true });
     toast(u.name + ' updated');
   } }, ['Save']);
   const delBtn = el('button', { class: 'icon-btn icon-btn-danger', title: 'Delete user', html: ICONS.trash, onclick: async () => {
@@ -5614,7 +5629,8 @@ function userRow(u) {
       delBtn,
     ]),
     el('label', { class: 'field-label' }, ['Code']), codeInp,
-    permRow,
+    el('label', { class: 'field-label' }, ['Role']), roleSelect,
+    permRowContainer,
     saveBtn,
   ]);
 }
