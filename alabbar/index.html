@@ -92,6 +92,7 @@
   .card .thumb .ph{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.3px}
   .card .stockpill{position:absolute;top:6px;right:6px;background:rgba(28,18,24,.72);color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;backdrop-filter:blur(2px)}
   .card .stockpill.low{background:var(--danger)}
+  .card .originbadge{position:absolute;bottom:6px;left:6px;background:rgba(255,255,255,.92);color:var(--ink);font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;box-shadow:0 1px 3px rgba(0,0,0,.18)}
   .card .en{font-weight:700;font-size:16px;line-height:1.2}
   .card .ar{font-size:14px;color:var(--muted);margin-top:2px;direction:rtl;text-align:left}
   .card .foot{margin-top:8px;display:flex;align-items:flex-end;justify-content:space-between}
@@ -283,6 +284,16 @@
   .danger-zone{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
   .danger-zone button{padding:11px 16px;border-radius:11px;font-weight:600;font-size:13px;border:1px solid var(--line);background:var(--surface)}
   .danger-zone button.red{color:var(--danger);border-color:#E9BDB7}
+  .backupbox{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .bkrow{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+  .bkrow .filelbl{cursor:pointer}
+  .toggle-row{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;margin-bottom:8px}
+  .toggle-row input{width:17px;height:17px}
+  .bktimewrap{margin-bottom:10px}
+  .bktimewrap label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:600}
+  .bktimewrap input[type="time"]{padding:7px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px;font-weight:600}
+  .bkstatus{font-size:12.5px;color:var(--muted);line-height:1.5}
+  #bkReconnect{margin-top:8px;color:var(--danger);border-color:#E9BDB7}
 
   .histlink{margin-top:9px;font-size:12px;font-weight:600;color:var(--magenta);background:none;padding:2px 0}
   .hrow{display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--line)}
@@ -538,6 +549,18 @@
         <div class="perfseg" id="perfSeg"><button data-p="today" class="active">Today</button><button data-p="week">Week</button><button data-p="month">Month</button><button data-p="all">All</button><button data-p="custom">Custom</button></div>
         <div class="customrange" id="perfRange" style="display:none;margin:0 0 10px"><input type="date" id="perfFrom"><span>→</span><input type="date" id="perfTo"></div>
         <div class="panel" style="padding:2px 14px 8px"><table class="perftable"><thead><tr><th>Staff</th><th class="r">Orders</th><th class="r">Sales SAR</th><th class="r">kg</th><th class="r">Cancels</th></tr></thead><tbody id="perfBody"></tbody></table></div>
+        <div class="sec-title" style="margin-top:22px">Backup &amp; Restore</div>
+        <div class="backupbox">
+          <div class="bkrow">
+            <button class="btn primary" id="bkDownloadNow">Download backup now</button>
+            <label class="obtn filelbl" for="bkRestoreFile">Restore from file</label>
+            <input type="file" id="bkRestoreFile" accept="application/json" style="display:none">
+          </div>
+          <label class="toggle-row"><input type="checkbox" id="bkAutoEnable">Auto backup daily</label>
+          <div class="bktimewrap"><label>Time <input type="time" id="bkAutoTime" value="22:00"></label></div>
+          <div class="bkstatus" id="bkStatus"></div>
+          <button class="obtn" id="bkReconnect" style="display:none">Reconnect backup file</button>
+        </div>
         <div class="danger-zone">
           <button class="red" id="resetDay">Reset today's sales</button>
           <button class="red" id="resetAll">Reset everything</button>
@@ -622,6 +645,7 @@
       <label>Name (English)<input id="pfEn" type="text"></label>
       <label>Name (Arabic)<input id="pfAr" type="text" dir="rtl"></label>
       <div class="prow2"><label>Category<select id="pfCat"></select></label><label>Type<select id="pfType"><option value="fresh">Fresh</option><option value="frozen">Frozen</option></select></label></div>
+      <label>Country / origin (optional)<input id="pfCountry" type="text" placeholder="e.g. Pakistan, Brazil"></label>
       <div class="prow2"><label>Price SAR/kg<input id="pfPrice" type="number" step="0.5" min="0"></label><label id="pfStockWrap">Opening stock kg<input id="pfStock" type="number" step="0.5" min="0"></label></div>
       <div class="login-err" id="pfErr"></div>
       <button class="btn primary" id="pfSave" style="margin-top:14px">Save product</button>
@@ -718,36 +742,36 @@ const SEED_STAFF=[
   {id:"st1",name:"Muhammad",password:"1111",active:true},
   {id:"st2",name:"Mansoor",password:"2222",active:true},
 ];
-const LS_PROD="alabbar_products_v4", LS_SALES="alabbar_sales_v2", LS_SESSION="alabbar_session_v1", LS_STAFF="alabbar_staff_v1", LS_ADMIN="alabbar_admin_v1", LS_CATS="alabbar_cats_v2";
+const LS_PROD="alabbar_products_v4", LS_SALES="alabbar_sales_v2", LS_SESSION="alabbar_session_v1", LS_STAFF="alabbar_staff_v1", LS_ADMIN="alabbar_admin_v1", LS_CATS="alabbar_cats_v2", LS_BACKUP="alabbar_backup_cfg_v1";
 function load(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f;}catch(e){return f;}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){toast("Storage full — image too large?");}}
 
 const SEED=[
  // Mutton / Lamb
- {id:"lmb-pak-naimi",en:"Pakistan Lamb Naimi",ar:"لحم غنم نعيمي باكستاني",type:"fresh",cat:"mutton",price:38,stock:46,image:null},
- {id:"mut-eth",en:"Ethiopian Mutton",ar:"لحم غنم إثيوبي",type:"fresh",cat:"mutton",price:32,stock:44,image:null},
- {id:"mut-ken",en:"Kenya Mutton",ar:"لحم غنم كيني",type:"fresh",cat:"mutton",price:30,stock:42,image:null},
- {id:"mut-pak",en:"Pakistani Mutton",ar:"لحم غنم باكستاني",type:"fresh",cat:"mutton",price:34,stock:48,image:null},
+ {id:"lmb-pak-naimi",en:"Pakistan Lamb Naimi",ar:"لحم غنم نعيمي باكستاني",type:"fresh",cat:"mutton",price:38,stock:46,image:null,country:"Pakistan"},
+ {id:"mut-eth",en:"Ethiopian Mutton",ar:"لحم غنم إثيوبي",type:"fresh",cat:"mutton",price:32,stock:44,image:null,country:"Ethiopia"},
+ {id:"mut-ken",en:"Kenya Mutton",ar:"لحم غنم كيني",type:"fresh",cat:"mutton",price:30,stock:42,image:null,country:"Kenya"},
+ {id:"mut-pak",en:"Pakistani Mutton",ar:"لحم غنم باكستاني",type:"fresh",cat:"mutton",price:34,stock:48,image:null,country:"Pakistan"},
  // Beef
- {id:"bef-pak-bone",en:"Chilled Bone-in Pakistani Beef",ar:"لحم بقر باكستاني مبرد بالعظم",type:"fresh",cat:"beef",price:26,stock:50,image:null},
- {id:"bef-pak-bonless",en:"Pakistani Beef Boneless",ar:"لحم بقر باكستاني بدون عظم",type:"frozen",cat:"beef",price:29,stock:45,image:null},
- {id:"bef-brazil",en:"Brazilian Beef",ar:"لحم بقري برازيلي",type:"frozen",cat:"beef",price:24,stock:48,image:null},
- {id:"bef-sawakni",en:"Sawakni",ar:"لحم سواكني",type:"fresh",cat:"beef",price:33,stock:40,image:null},
+ {id:"bef-pak-bone",en:"Chilled Bone-in Pakistani Beef",ar:"لحم بقر باكستاني مبرد بالعظم",type:"fresh",cat:"beef",price:26,stock:50,image:null,country:"Pakistan"},
+ {id:"bef-pak-bonless",en:"Pakistani Beef Boneless",ar:"لحم بقر باكستاني بدون عظم",type:"frozen",cat:"beef",price:29,stock:45,image:null,country:"Pakistan"},
+ {id:"bef-brazil",en:"Brazilian Beef",ar:"لحم بقري برازيلي",type:"frozen",cat:"beef",price:24,stock:48,image:null,country:"Brazil"},
+ {id:"bef-sawakni",en:"Sawakni",ar:"لحم سواكني",type:"fresh",cat:"beef",price:33,stock:40,image:null,country:"Sudan"},
  // Veal
- {id:"vea-baby",en:"Baby Veal",ar:"لحم عجول صغيرة",type:"frozen",cat:"veal",price:31,stock:42,image:null},
- {id:"vea-ind-f",en:"Indian Fresh Veal",ar:"لحم عجول هندي طازج",type:"fresh",cat:"veal",price:27,stock:46,image:null},
- {id:"vea-ind",en:"Indian Veal",ar:"لحم عجول هندي",type:"frozen",cat:"veal",price:25,stock:44,image:null},
+ {id:"vea-baby",en:"Baby Veal",ar:"لحم عجول صغيرة",type:"frozen",cat:"veal",price:31,stock:42,image:null,country:""},
+ {id:"vea-ind-f",en:"Indian Fresh Veal",ar:"لحم عجول هندي طازج",type:"fresh",cat:"veal",price:27,stock:46,image:null,country:"India"},
+ {id:"vea-ind",en:"Indian Veal",ar:"لحم عجول هندي",type:"frozen",cat:"veal",price:25,stock:44,image:null,country:"India"},
  // Chicken
- {id:"chk-sadia-1000",en:"Chicken Sadia 10x1000",ar:"دجاج صاديا 10×1000",type:"frozen",cat:"chicken",price:13,stock:28,image:null},
- {id:"chk-sadia-1100",en:"Chicken Sadia 10x1100",ar:"دجاج صاديا 10×1100",type:"frozen",cat:"chicken",price:13.5,stock:25,image:null},
- {id:"chk-sadia-1200",en:"Chicken Sadia 10x1200",ar:"دجاج صاديا 10×1200",type:"frozen",cat:"chicken",price:14,stock:22,image:null},
+ {id:"chk-sadia-1000",en:"Chicken Sadia 10x1000",ar:"دجاج صاديا 10×1000",type:"frozen",cat:"chicken",price:13,stock:28,image:null,country:"Brazil"},
+ {id:"chk-sadia-1100",en:"Chicken Sadia 10x1100",ar:"دجاج صاديا 10×1100",type:"frozen",cat:"chicken",price:13.5,stock:25,image:null,country:"Brazil"},
+ {id:"chk-sadia-1200",en:"Chicken Sadia 10x1200",ar:"دجاج صاديا 10×1200",type:"frozen",cat:"chicken",price:14,stock:22,image:null,country:"Brazil"},
  // Fish & Seafood
- {id:"fsh-white-fillet",en:"White Fish Fillet",ar:"فيليه سمك أبيض",type:"frozen",cat:"fish",price:22,stock:20,image:null},
- {id:"shrimp-pd",en:"Shrimps PD Frozen",ar:"روبيان مقشر مجمد",type:"frozen",cat:"fish",price:39,stock:16,image:null},
+ {id:"fsh-white-fillet",en:"White Fish Fillet",ar:"فيليه سمك أبيض",type:"frozen",cat:"fish",price:22,stock:20,image:null,country:""},
+ {id:"shrimp-pd",en:"Shrimps PD Frozen",ar:"روبيان مقشر مجمد",type:"frozen",cat:"fish",price:39,stock:16,image:null,country:""},
  // Others / Offal
- {id:"bone-feet",en:"Bone-Feet",ar:"عظم وأقدام",type:"frozen",cat:"others",price:10,stock:15,image:null},
- {id:"lamb-liver",en:"Lamb Liver",ar:"كبد غنم",type:"fresh",cat:"others",price:28,stock:15,image:null},
- {id:"indian-frozen",en:"Indian Frozen",ar:"لحم هندي مجمد",type:"frozen",cat:"others",price:24,stock:47,image:null},
+ {id:"bone-feet",en:"Bone-Feet",ar:"عظم وأقدام",type:"frozen",cat:"others",price:10,stock:15,image:null,country:""},
+ {id:"lamb-liver",en:"Lamb Liver",ar:"كبد غنم",type:"fresh",cat:"others",price:28,stock:15,image:null,country:""},
+ {id:"indian-frozen",en:"Indian Frozen",ar:"لحم هندي مجمد",type:"frozen",cat:"others",price:24,stock:47,image:null,country:"India"},
 ];
 const SEED_CATS=[
   {id:"mutton",en:"Mutton / Lamb",ar:"لحم غنم",color:"#B0324A",ph:"#F6E7EA"},
@@ -761,7 +785,16 @@ const LOW=10;
 
 let products=load(LS_PROD,null);
 if(!products)products=SEED.map(p=>({...p}));
-products.forEach(p=>{if(p.image===undefined)p.image=null;if(p.active===undefined)p.active=true;if(!p.ledger){p.opening=p.stock;p.ledger=[{type:"opening",qty:p.stock,at:new Date().toISOString(),balance:p.stock,ref:null}];}});
+products.forEach(p=>{if(p.image===undefined)p.image=null;if(p.active===undefined)p.active=true;if(!p.ledger){p.opening=p.stock;p.ledger=[{type:"opening",qty:p.stock,at:new Date().toISOString(),balance:p.stock,ref:null}];}
+  const seed=SEED.find(s=>s.id===p.id);
+  if(seed){if(!p.image&&seed.image)p.image=seed.image;if(p.country===undefined)p.country=seed.country||"";}
+  else if(p.country===undefined)p.country="";
+});
+if(!localStorage.getItem("alabbar_icon_revert_v1")){
+  const revertIds=["lmb-pak-naimi","mut-eth","mut-ken","mut-pak","bef-pak-bone","bef-pak-bonless","bef-brazil","bef-sawakni","vea-baby","vea-ind-f","vea-ind","chk-sadia-1000","chk-sadia-1100","chk-sadia-1200","fsh-white-fillet","shrimp-pd","bone-feet","lamb-liver","indian-frozen"];
+  products.forEach(p=>{if(revertIds.includes(p.id))p.image=null;});
+  localStorage.setItem("alabbar_icon_revert_v1","1");
+}
 save(LS_PROD,products);
 let sales=load(LS_SALES,[]);
 sales.forEach(s=>{if(!s.status)s.status="completed";});
@@ -769,6 +802,8 @@ let staff=load(LS_STAFF,null);if(!staff){staff=SEED_STAFF.map(s=>({...s}));save(
 staff.forEach(s=>{if(!s.advances)s.advances=[];});save(LS_STAFF,staff);
 let adminAcc=load(LS_ADMIN,null);if(!adminAcc)adminAcc={...ADMIN_SEED};save(LS_ADMIN,adminAcc);
 let cats=load(LS_CATS,null);if(!cats){cats=SEED_CATS.map(c=>({...c}));save(LS_CATS,cats);}
+let backupCfg=load(LS_BACKUP,null);if(!backupCfg)backupCfg={enabled:false,mode:"download",time:"22:00",lastDate:null,fileName:null,needsReconnect:false};
+function saveBackupCfg(){save(LS_BACKUP,backupCfg);}
 function catById(id){return cats.find(c=>c.id===id)||{en:id,ar:"",color:"#999",ph:"#EEE"};}
 function catColor(id){return catById(id).color;}
 function catPh(id){return catById(id).ph;}
@@ -862,7 +897,7 @@ function goView(v){
   $("#view-"+v).classList.add("active");
   if(v==="sales")renderSales();
   if(v==="stock")renderStock();
-  if(v==="settings"){renderCats();renderSettings();renderStaffMgmt();renderAdmin();}
+  if(v==="settings"){renderCats();renderSettings();renderStaffMgmt();renderAdmin();renderBackupStatus();}
 }
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;goView(b.dataset.view);});
 $("#bottomNav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;goView(b.dataset.view);});
@@ -870,12 +905,17 @@ $("#bottomNav").addEventListener("click",e=>{const b=e.target.closest("button");
 /* POS grid */
 function thumbHTML(p){
   const pill=`<span class="stockpill ${p.stock<LOW?'low':''} tabnum">${kg(p.stock)} kg</span>`;
-  if(p.image)return `<div class="thumb" style="--ph:${catPh(p.cat)}"><img src="${p.image}" alt="">${pill}</div>`;
-  return `<div class="thumb" style="background:${catPh(p.cat)}"><span class="ph">No image</span>${pill}</div>`;
+  const cap=p.country?`<span class="originbadge">${p.country}</span>`:"";
+  if(p.image)return `<div class="thumb" style="--ph:${catPh(p.cat)}"><img src="${p.image}" alt="">${pill}${cap}</div>`;
+  return `<div class="thumb" style="background:${catPh(p.cat)}"><span class="ph">No image</span>${pill}${cap}</div>`;
 }
 function renderGrid(){
   const g=$("#grid");g.innerHTML="";
-  products.filter(p=>p.active!==false).forEach(p=>{
+  const list=products.filter(p=>p.active!==false).slice().sort((a,b)=>{
+    const ai=cats.findIndex(c=>c.id===a.cat),bi=cats.findIndex(c=>c.id===b.cat);
+    return ai-bi;
+  });
+  list.forEach(p=>{
     const b=document.createElement("button");
     b.className="card";b.style.setProperty("--spine",catColor(p.cat));
     b.innerHTML=`${thumbHTML(p)}
@@ -1166,15 +1206,15 @@ function openProdForm(id){
   editingId=id;const p=id?prod(id):null;
   $("#prodTitle").textContent=id?"Edit product":"Add product";
   $("#pfCat").innerHTML=cats.map(c=>`<option value="${c.id}">${c.en}</option>`).join("");
-  $("#pfEn").value=p?p.en:"";$("#pfAr").value=p?p.ar:"";$("#pfCat").value=p?p.cat:(cats[0]&&cats[0].id||"");$("#pfType").value=p?p.type:"fresh";$("#pfPrice").value=p?p.price:"";
+  $("#pfEn").value=p?p.en:"";$("#pfAr").value=p?p.ar:"";$("#pfCat").value=p?p.cat:(cats[0]&&cats[0].id||"");$("#pfType").value=p?p.type:"fresh";$("#pfPrice").value=p?p.price:"";$("#pfCountry").value=p?(p.country||""):"";
   $("#pfStockWrap").style.display=id?"none":"block";$("#pfStock").value="";
   $("#pfErr").textContent="";$("#prodOverlay").classList.add("show");setTimeout(()=>$("#pfEn").focus(),60);
 }
 $("#pfSave").addEventListener("click",()=>{
-  const en=$("#pfEn").value.trim(),ar=$("#pfAr").value.trim(),cat=$("#pfCat").value,type=$("#pfType").value,price=parseFloat($("#pfPrice").value)||0;
+  const en=$("#pfEn").value.trim(),ar=$("#pfAr").value.trim(),cat=$("#pfCat").value,type=$("#pfType").value,price=parseFloat($("#pfPrice").value)||0,country=$("#pfCountry").value.trim();
   if(!en){$("#pfErr").textContent="English name is required.";return;}
-  if(editingId){const p=prod(editingId);p.en=en;p.ar=ar;p.cat=cat;p.type=type;p.price=price;toast("Product updated");}
-  else{const stock=Math.max(0,parseFloat($("#pfStock").value)||0);const id="p-"+Date.now().toString(36);products.push({id,en,ar,cat,type,price,stock,image:null,active:true,opening:stock,ledger:[{type:"opening",qty:stock,at:new Date().toISOString(),balance:stock,ref:null}]});toast("Product added");}
+  if(editingId){const p=prod(editingId);p.en=en;p.ar=ar;p.cat=cat;p.type=type;p.price=price;p.country=country;toast("Product updated");}
+  else{const stock=Math.max(0,parseFloat($("#pfStock").value)||0);const id="p-"+Date.now().toString(36);products.push({id,en,ar,cat,type,price,stock,image:null,country,active:true,opening:stock,ledger:[{type:"opening",qty:stock,at:new Date().toISOString(),balance:stock,ref:null}]});toast("Product added");}
   save(LS_PROD,products);$("#prodOverlay").classList.remove("show");renderSettings();renderGrid();refreshBadges();
 });
 $("#prodClose").addEventListener("click",()=>$("#prodOverlay").classList.remove("show"));
@@ -1294,6 +1334,96 @@ $("#cfSave").addEventListener("click",()=>{const en=$("#cfEn").value.trim(),ar=$
 $("#catClose").addEventListener("click",()=>$("#catOverlay").classList.remove("show"));
 $("#catOverlay").addEventListener("click",e=>{if(e.target.id==="catOverlay")e.currentTarget.classList.remove("show");});
 
+/* Backup & Restore */
+function collectBackupData(){return{schema:1,exportedAt:new Date().toISOString(),products,sales,staff,cats,adminAcc};}
+function backupBlob(){return new Blob([JSON.stringify(collectBackupData(),null,2)],{type:"application/json"});}
+function backupFilename(){const d=new Date();const pad=n=>String(n).padStart(2,"0");return `alabbar_backup_${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()}.${pad(d.getHours())}.${pad(d.getMinutes())}.json`;}
+function downloadBackupFile(filename){const blob=backupBlob();const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);}
+function idbOpen(){return new Promise((res,rej)=>{const r=indexedDB.open("alabbar_fsdb",1);r.onupgradeneeded=()=>r.result.createObjectStore("handles");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
+async function idbSetHandle(h){const db=await idbOpen();return new Promise((res,rej)=>{const tx=db.transaction("handles","readwrite");tx.objectStore("handles").put(h,"backupFile");tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
+async function idbGetHandle(){const db=await idbOpen();return new Promise((res,rej)=>{const tx=db.transaction("handles","readonly");const rq=tx.objectStore("handles").get("backupFile");rq.onsuccess=()=>res(rq.result||null);rq.onerror=()=>rej(rq.error);});}
+async function setupAutoBackupFile(){
+  if(!("showSaveFilePicker" in window)){backupCfg.mode="download";saveBackupCfg();return true;}
+  try{
+    const handle=await window.showSaveFilePicker({suggestedName:"alabbar_backup_auto.json",types:[{description:"JSON backup",accept:{"application/json":[".json"]}}]});
+    await idbSetHandle(handle);
+    const w=await handle.createWritable();await w.write(backupBlob());await w.close();
+    backupCfg.mode="fsapi";backupCfg.fileName=handle.name;backupCfg.needsReconnect=false;backupCfg.lastDate=todayKey();saveBackupCfg();
+    return true;
+  }catch(err){
+    if(err.name==="AbortError")return false;
+    backupCfg.mode="download";saveBackupCfg();return true;
+  }
+}
+async function reconnectBackup(){
+  const handle=await idbGetHandle();
+  if(!handle){const ok=await setupAutoBackupFile();if(ok)toast("Reconnected");renderBackupStatus();return;}
+  try{
+    const perm=await handle.requestPermission({mode:"readwrite"});
+    if(perm==="granted"){
+      const w=await handle.createWritable();await w.write(backupBlob());await w.close();
+      backupCfg.lastDate=todayKey();backupCfg.needsReconnect=false;backupCfg.fileName=handle.name;saveBackupCfg();renderBackupStatus();toast("Backup reconnected");
+    }else{toast("Permission not granted");}
+  }catch(e){toast("Couldn't reconnect — pick the file again");await setupAutoBackupFile();renderBackupStatus();}
+}
+async function checkAutoBackup(){
+  if(!backupCfg.enabled)return;
+  const today=todayKey();
+  if(backupCfg.lastDate===today)return;
+  const d=new Date();const nowHM=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+  if(nowHM<backupCfg.time)return;
+  if(backupCfg.mode==="fsapi"){
+    try{
+      const handle=await idbGetHandle();
+      if(!handle){backupCfg.needsReconnect=true;saveBackupCfg();renderBackupStatus();return;}
+      const perm=await handle.queryPermission({mode:"readwrite"});
+      if(perm!=="granted"){backupCfg.needsReconnect=true;saveBackupCfg();renderBackupStatus();return;}
+      const w=await handle.createWritable();await w.write(backupBlob());await w.close();
+      backupCfg.lastDate=today;backupCfg.needsReconnect=false;saveBackupCfg();renderBackupStatus();
+    }catch(e){backupCfg.needsReconnect=true;saveBackupCfg();renderBackupStatus();}
+  }else{
+    downloadBackupFile(backupFilename());
+    backupCfg.lastDate=today;saveBackupCfg();renderBackupStatus();
+  }
+}
+function renderBackupStatus(){
+  $("#bkAutoEnable").checked=backupCfg.enabled;
+  $("#bkAutoTime").value=backupCfg.time;
+  const last=backupCfg.lastDate?backupCfg.lastDate:"not yet";
+  let msg="";
+  if(!backupCfg.enabled)msg="Auto backup is off.";
+  else if(backupCfg.mode==="fsapi")msg=`Overwrites "${backupCfg.fileName||'the chosen file'}" daily on this device. Last backup: ${last}.`;
+  else msg=`Downloads a new dated file to Downloads each day (this browser can't overwrite in place). Last backup: ${last}.`;
+  $("#bkStatus").textContent=msg;
+  $("#bkReconnect").style.display=backupCfg.needsReconnect?"inline-block":"none";
+}
+$("#bkDownloadNow").addEventListener("click",()=>{downloadBackupFile(backupFilename());toast("Backup downloaded");});
+$("#bkAutoEnable").addEventListener("change",async e=>{
+  if(e.target.checked){
+    const ok=await setupAutoBackupFile();
+    if(!ok){e.target.checked=false;return;}
+    backupCfg.enabled=true;saveBackupCfg();renderBackupStatus();
+    toast(backupCfg.mode==="fsapi"?"Auto backup set up":"Auto backup enabled");
+  }else{backupCfg.enabled=false;saveBackupCfg();renderBackupStatus();}
+});
+$("#bkAutoTime").addEventListener("change",e=>{backupCfg.time=e.target.value;saveBackupCfg();});
+$("#bkReconnect").addEventListener("click",reconnectBackup);
+$("#bkRestoreFile").addEventListener("change",e=>{
+  const file=e.target.files&&e.target.files[0];if(!file)return;
+  const rd=new FileReader();
+  rd.onload=ev=>{
+    let data;try{data=JSON.parse(ev.target.result);}catch(err){toast("Invalid backup file");return;}
+    if(!data||!Array.isArray(data.products)||!Array.isArray(data.sales)){toast("This doesn't look like a valid backup file");return;}
+    const pc=data.products.length,sc=data.sales.length,stc=(data.staff||[]).length;
+    askConfirm(`Restore backup from ${data.exportedAt?fmtDate(data.exportedAt)+" "+fmtTime(data.exportedAt):"unknown date"}? This replaces current data — ${pc} products, ${sc} sales, ${stc} staff.`,()=>{
+      products=data.products;sales=data.sales||[];if(data.staff)staff=data.staff;if(data.cats)cats=data.cats;if(data.adminAcc)adminAcc=data.adminAcc;
+      save(LS_PROD,products);save(LS_SALES,sales);save(LS_STAFF,staff);save(LS_CATS,cats);save(LS_ADMIN,adminAcc);
+      toast("Backup restored — reloading");setTimeout(()=>location.reload(),700);
+    });
+  };
+  rd.readAsText(file);e.target.value="";
+});
+
 /* Admin account */
 function renderAdmin(){$("#admName").value=adminAcc.name;$("#admPass").value=adminAcc.password;$("#admSave").onclick=()=>{const nm=$("#admName").value.trim(),pw=$("#admPass").value.trim();if(!nm){toast("Name required");return;}if(!pw){toast("Password required");return;}adminAcc.name=nm;adminAcc.password=pw;save(LS_ADMIN,adminAcc);if(currentUser&&currentUser.role==="admin"){currentUser.name=nm;currentUser.by=nm;}toast("Admin account updated");};}
 
@@ -1304,6 +1434,8 @@ if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.s
   if(sess&&sess.role==="admin"){currentUser={role:"admin",name:adminAcc.name,by:adminAcc.name,byId:"admin"};showApp();}
   else if(sess&&sess.role==="pos"){const st=staffById(sess.staffId);if(st&&st.active!==false){currentUser={role:"pos",name:st.name,staffId:st.id,by:st.name,byId:st.id};showApp();}else setTimeout(()=>$("#luser").focus(),60);}
   else setTimeout(()=>$("#luser").focus(),60);
+  checkAutoBackup();
+  setInterval(checkAutoBackup,5*60*1000);
 })();
 </script>
 </body>
