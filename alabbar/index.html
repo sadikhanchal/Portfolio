@@ -1483,12 +1483,23 @@ function renderCloudStatus(){
 function parseCloudCfg(txt){
   txt=(txt||"").trim();
   if(!txt)throw new Error("Paste your Firebase config first.");
-  const m=txt.match(/\{[\s\S]*\}/);
-  if(!m)throw new Error("That doesn't look like a Firebase config.");
+  if(txt.indexOf("apiKey")===-1)throw new Error("Paste the whole firebaseConfig object (the block with apiKey, projectId, appId), not just one line.");
+  const ai=txt.indexOf("apiKey");
+  let start=txt.lastIndexOf("{",ai);
+  if(start===-1)throw new Error("Could not find the config braces { }.");
+  let depth=0,end=-1;
+  for(let i=start;i<txt.length;i++){
+    const ch=txt[i];
+    if(ch==="{")depth++;
+    else if(ch==="}"){depth--;if(depth===0){end=i;break;}}
+  }
+  if(end===-1)throw new Error("The config looks cut off — copy the whole block including the closing brace.");
+  const body=txt.slice(start,end+1);
   let obj;
-  try{obj=JSON.parse(m[0]);}
-  catch(e){try{obj=(new Function("return ("+m[0]+")"))();}catch(e2){throw new Error("Could not read that config — copy the whole firebaseConfig object.");}}
-  if(!obj||!obj.projectId||!obj.apiKey)throw new Error("Config is missing apiKey or projectId.");
+  try{obj=JSON.parse(body);}
+  catch(e){try{obj=(new Function("return ("+body+")"))();}catch(e2){throw new Error("Could not read that config — copy it exactly as Firebase shows it.");}}
+  if(!obj||!obj.apiKey)throw new Error("Config is missing apiKey.");
+  if(!obj.projectId)throw new Error("Config is missing projectId.");
   return obj;
 }
 $("#cloudEnable").addEventListener("change",async e=>{
