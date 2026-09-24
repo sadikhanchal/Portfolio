@@ -5579,21 +5579,35 @@ function renderSettings(view) {
   ]));
   const activitySection = el('div', { class: 'section' }, [
     el('div', { class: 'section-title' }, ['Recent Activity']),
-    el('div', { class: 'muted small' }, ['Loading…']),
   ]);
+  const activityList = el('div', {});
+  const loadMoreWrap = el('div', {});
+  activitySection.appendChild(activityList);
+  activitySection.appendChild(loadMoreWrap);
   view.appendChild(activitySection);
-  db.collection('audit').orderBy('ts', 'desc').limit(30).get().then(snap => {
-    activitySection.innerHTML = '';
-    activitySection.appendChild(el('div', { class: 'section-title' }, ['Recent Activity']));
-    if (snap.empty) { activitySection.appendChild(el('div', { class: 'muted small' }, ['Nothing logged yet.'])); return; }
-    snap.forEach(doc => {
-      const a = doc.data();
-      activitySection.appendChild(el('div', { class: 'activity-row' }, [
-        el('div', { class: 'activity-line' }, [el('b', {}, [a.user || 'Unknown']), ' — ' + (a.action || '')]),
-        el('div', { class: 'muted small' }, [(a.detail || '') + (a.ts ? '  ·  ' + fmtDateTime(a.ts) : '')]),
-      ]));
-    });
-  }).catch(e => { console.error(e); activitySection.appendChild(el('div', { class: 'muted small' }, ['Could not load activity.'])); });
+  let lastDoc = null;
+  function loadActivityPage(first) {
+    let query = db.collection('audit').orderBy('ts', 'desc').limit(30);
+    if (lastDoc) query = query.startAfter(lastDoc);
+    loadMoreWrap.innerHTML = '';
+    loadMoreWrap.appendChild(el('div', { class: 'muted small' }, ['Loading…']));
+    query.get().then(snap => {
+      loadMoreWrap.innerHTML = '';
+      if (first && snap.empty) { activityList.appendChild(el('div', { class: 'muted small' }, ['Nothing logged yet.'])); return; }
+      snap.forEach(doc => {
+        const a = doc.data();
+        activityList.appendChild(el('div', { class: 'activity-row' }, [
+          el('div', { class: 'activity-line' }, [el('b', {}, [a.user || 'Unknown']), ' — ' + (a.action || '')]),
+          el('div', { class: 'muted small' }, [(a.detail || '') + (a.ts ? '  ·  ' + fmtDateTime(a.ts) : '')]),
+        ]));
+        lastDoc = doc;
+      });
+      if (snap.size === 30) {
+        loadMoreWrap.appendChild(el('button', { class: 'btn btn-outline btn-block', onclick: () => loadActivityPage(false) }, ['Load 30 More']));
+      }
+    }).catch(e => { console.error(e); loadMoreWrap.appendChild(el('div', { class: 'muted small' }, ['Could not load activity.'])); });
+  }
+  loadActivityPage(true);
 }
 async function clearAudit(days) {
   let query = db.collection('audit');
@@ -5735,7 +5749,7 @@ function openAddOccupantModal(buildingId, presetRoomNo) {
     const room = state.rooms[roomDoc];
     const occ = [...(room.occupants || []), { id: uid(), name: nameInp.value.trim(), iqama: iqamaInp.value.trim(), mobile: mobileInp.value.trim(), status: null }];
     await db.collection('rooms').doc(roomDoc).set({ occupants: occ }, { merge: true });
-    logAudit('Added staff', nameInp.value.trim() + ' → Room ' + roomSelect.value);
+    logAudit('Added staff', nameInp.value.trim() + ' → ' + (state.buildings[buildingId] ? state.buildings[buildingId].name : buildingId) + ' Room ' + roomSelect.value);
     toast('Added ' + nameInp.value.trim());
     closeModal();
   });
@@ -5815,7 +5829,7 @@ function openEditOccupantModal(room, o) {
     }
     const occ = (room.occupants || []).map(x => x.id === o.id ? { ...x, name: nameInp.value.trim(), iqama: iqamaInp.value.trim(), mobile: mobileInp.value.trim(), status: finalStatus || null, photo: photoData } : x);
     await db.collection('rooms').doc(room.id).set({ occupants: occ }, { merge: true });
-    logAudit('Edited staff', nameInp.value.trim() + ' — Room ' + room.roomNo);
+    logAudit('Edited staff', nameInp.value.trim() + ' — ' + (state.buildings[room.buildingId] ? state.buildings[room.buildingId].name : room.buildingId) + ' Room ' + room.roomNo);
     toast('Saved');
     closeModal();
   });
@@ -5854,7 +5868,7 @@ function openTransferModal(room, o) {
     const toOcc = [...(toRoom.occupants || []), { ...o, status: null }];
     batch.set(db.collection('rooms').doc(newDoc), { occupants: toOcc }, { merge: true });
     await batch.commit();
-    logAudit('Transferred staff', o.name + ' — Room ' + room.roomNo + ' → ' + (state.buildings[newBuildingId] ? state.buildings[newBuildingId].name : newBuildingId) + ' Room ' + newRoomNo);
+    logAudit('Transferred staff', o.name + ' — ' + (state.buildings[room.buildingId] ? state.buildings[room.buildingId].name : room.buildingId) + ' Room ' + room.roomNo + ' → ' + (state.buildings[newBuildingId] ? state.buildings[newBuildingId].name : newBuildingId) + ' Room ' + newRoomNo);
     toast('Moved ' + o.name);
     closeModal();
     goto('/room/' + newDoc);
@@ -5870,7 +5884,7 @@ function confirmRemoveOccupant(room, o) {
   if (!confirm('Remove ' + o.name + ' from this room?')) return;
   const occ = (room.occupants || []).filter(x => x.id !== o.id);
   db.collection('rooms').doc(room.id).set({ occupants: occ }, { merge: true }).then(() => {
-    logAudit('Removed staff', o.name + ' — Room ' + room.roomNo);
+    logAudit('Removed staff', o.name + ' — ' + (state.buildings[room.buildingId] ? state.buildings[room.buildingId].name : room.buildingId) + ' Room ' + room.roomNo);
     toast('Removed');
   });
 }
@@ -5878,7 +5892,7 @@ function confirmRemoveOccupant(room, o) {
 function updateRoomCapacity(docId, cap) {
   const room = state.rooms[docId];
   db.collection('rooms').doc(docId).set({ capacity: cap }, { merge: true }).then(() => {
-    logAudit('Changed room capacity', (room ? 'Room ' + room.roomNo : docId) + ' → ' + cap);
+    logAudit('Changed room capacity', (room ? (state.buildings[room.buildingId] ? state.buildings[room.buildingId].name : room.buildingId) + ' Room ' + room.roomNo : docId) + ' → ' + cap);
     toast('Capacity saved: ' + cap);
   }).catch(e => { console.error(e); toast('Could not save — check your connection and try again', true); });
 }
