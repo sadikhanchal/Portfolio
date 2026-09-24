@@ -51,7 +51,7 @@ body {
    flex children, .view is the only part that scrolls, which lets a sticky
    sub-header inside .view stick reliably under the topbar. */
 .app-shell { display: flex; flex-direction: column; height: 100vh; height: 100dvh; padding-top: env(safe-area-inset-top, 0px); }
-.topbar { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #fff; color: var(--blue); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.topbar { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #fff; color: var(--blue); border-bottom: 1px solid var(--border); box-shadow: 0 2px 6px rgba(20,30,50,.06); flex-shrink: 0; z-index: 3; }
 .topbar-logo { height: 42px; }
 .topbar-title { font-weight: 700; font-size: 16px; color: var(--blue); flex: 1; }
 .logout-btn { border: none; background: #f0f2f5; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--blue); flex-shrink: 0; }
@@ -76,36 +76,37 @@ body {
 
 /* Stat row */
 .stat-row { display: flex; gap: 10px; }
-.stat-box { flex: 1; background: var(--card); border-radius: var(--radius); padding: 14px 8px; text-align: center; border: 1px solid #d9e4f0; }
-.stat-box-click { cursor: pointer; }
-.stat-box-click:active { background: #eef2f7; }
+.stat-box { flex: 1; background: linear-gradient(180deg, #ffffff, #f5f9fd); border-radius: var(--radius); padding: 14px 8px; text-align: center; border: 1px solid #dbe6f2; box-shadow: 0 2px 6px rgba(9,82,161,.08), 0 1px 0 rgba(255,255,255,.6) inset; }
+.stat-box-click { cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; }
+.stat-box-click:active { transform: translateY(1px); box-shadow: 0 1px 3px rgba(9,82,161,.10); }
 .stat-num { font-size: 22px; font-weight: 800; color: var(--blue); }
 .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
 /* Cards */
-.card { background: var(--card); border-radius: var(--radius); padding: 14px; border: 1px solid #d9e4f0; }
+.card { background: linear-gradient(180deg, #ffffff, #fbfcfe); border-radius: var(--radius); padding: 14px; border: 1px solid #d9e4f0; box-shadow: 0 2px 6px rgba(20,30,50,.06); }
 .card-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-.building-card { cursor: pointer; border: 1.5px solid #3d7dbf; overflow: hidden; }
+.building-card { cursor: pointer; border: 1.5px solid #a9c8e8; overflow: hidden; box-shadow: 0 4px 12px rgba(9,82,161,.10), 0 1px 0 rgba(255,255,255,.7) inset; transition: transform .12s ease, box-shadow .12s ease; }
+.building-card:active { transform: translateY(1px); box-shadow: 0 2px 6px rgba(9,82,161,.10); }
 .building-name { font-weight: 700; font-size: 16px; }
 .badge-stack { float: right; display: flex; flex-direction: column; gap: 4px; align-items: flex-end; margin-left: 10px; margin-bottom: 4px; }
 .building-meta { font-size: 13px; margin-top: 2px; }
 .pending-flag { color: var(--amber); font-weight: 600; }
 .vacation-banner { cursor: pointer; border-left: 4px solid var(--amber); font-size: 13px; }
-.badge { font-size: 11px; padding: 3px 9px; border-radius: 999px; font-weight: 600; }
-.badge-vacant { background: #fbe2b8; color: var(--amber); }
-.badge-full { background: #c9ecd9; color: var(--green); }
-.badge-empty { background: #dde1e6; color: var(--grey); }
-.badge-over { background: #f6c7c0; color: var(--red); }
+.badge { font-size: 11px; padding: 3px 9px; border-radius: 999px; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.badge-vacant { background: linear-gradient(180deg, #fdedd2, #fbe2b8); color: var(--amber); }
+.badge-full { background: linear-gradient(180deg, #dbf3e6, #c9ecd9); color: var(--green); }
+.badge-empty { background: linear-gradient(180deg, #e7eaee, #dde1e6); color: var(--grey); }
+.badge-over { background: linear-gradient(180deg, #fad6d0, #f6c7c0); color: var(--red); }
 .verify-stale { color: var(--red); font-weight: 600; }
 .room-status-row { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
 
 /* Rooms */
 .room-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.room-chip { border-radius: 10px; padding: 10px 6px; text-align: center; cursor: pointer; border: 1px solid var(--border); }
-.room-chip-partial { background: #fbe2b8; border-color: #e8b562; }
-.room-chip-full { background: #c9ecd9; border-color: #7fcda3; }
-.room-chip-empty { background: #dde1e6; border-color: #a9b1ba; }
-.room-chip-over { background: #f6c7c0; border-color: #e4897a; }
+.room-chip { border-radius: 10px; padding: 10px 6px; text-align: center; cursor: pointer; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(20,30,50,.07); }
+.room-chip-partial { background: linear-gradient(180deg, #fdefd6, #fbe2b8); border-color: #e8b562; }
+.room-chip-full { background: linear-gradient(180deg, #dbf3e6, #c9ecd9); border-color: #7fcda3; }
+.room-chip-empty { background: linear-gradient(180deg, #e7eaee, #dde1e6); border-color: #a9b1ba; }
+.room-chip-over { background: linear-gradient(180deg, #fad6d0, #f6c7c0); border-color: #e4897a; }
 .room-chip-no { font-size: 12px; font-weight: 700; }
 .room-chip-count { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
@@ -5107,7 +5108,7 @@ function renderVacationList(view) {
   view.appendChild(el('div', { class: 'section' }, [
     backBtn('/dashboard'),
     el('div', { class: 'page-title' }, ['Staff on Vacation']),
-    el('div', { class: 'muted' }, ['Currently away from the accommodation. Edit a person to change their status once they are back.']),
+    el('div', { class: 'muted' }, ['Away from the accommodation.']),
   ]));
   const list = allOccupantsFlat().filter(o => o.status === 'On Vacation');
   if (!list.length) { view.appendChild(el('div', { class: 'section muted' }, ['Nobody is currently marked on vacation.'])); return; }
@@ -5137,7 +5138,7 @@ function renderBuildingDetail(view, buildingId) {
   view.appendChild(el('div', { class: 'section' }, [
     can('edit')
       ? el('button', { class: 'btn btn-outline btn-block', onclick: () => openAddOccupantModal(buildingId) }, ['+ Add Staff to a Room'])
-      : el('div', { class: 'muted small' }, ['View only — you can browse rooms and staff but not make changes.']),
+      : el('div', { class: 'muted small' }, ['View only.']),
   ]));
   if (can('edit')) {
     const bulkInp = el('input', { type: 'number', min: '1', class: 'input-inline', placeholder: 'e.g. 3' });
@@ -5156,7 +5157,7 @@ function renderBuildingDetail(view, buildingId) {
     });
     view.appendChild(el('div', { class: 'section' }, [
       el('div', { class: 'section-title' }, ['Bulk Set Room Capacity']),
-      el('div', { class: 'muted small' }, ['Sets every room in this building at once — then open just the exceptions (e.g. a room with a bunk bed) and adjust that one room only.']),
+      el('div', { class: 'muted small' }, ['Applies to every room in this building.']),
       bulkInp,
       bulkBtn,
     ]));
@@ -5190,7 +5191,7 @@ function renderRoomDetail(view, docId) {
     ]),
   ]));
   view.appendChild(el('div', { class: 'section' }, [
-    el('label', { class: 'field-label' }, ['Room capacity — how many people this room can actually hold']),
+    el('label', { class: 'field-label' }, ['Room capacity']),
     can('edit')
       ? (() => {
           const inp = el('input', { type: 'number', min: '1', class: 'input-inline', value: String(r.capacity || 1) });
@@ -5268,7 +5269,7 @@ function renderReconcile(view, buildingId) {
     const buildings = Object.values(state.buildings).sort((a, b) => naturalCompare(a.id, b.id));
     view.appendChild(el('div', { class: 'section' }, [
       el('div', { class: 'page-title' }, ['Physical Verify']),
-      el('div', { class: 'muted' }, ['Pick a building to walk through and tick off who is really there.']),
+      el('div', { class: 'muted' }, ['Pick a building to verify.']),
     ]));
     view.appendChild(el('div', { class: 'section' }, [
       el('div', { class: 'card-grid' }, buildings.map(b => {
@@ -5293,7 +5294,7 @@ function renderReconcile(view, buildingId) {
   view.appendChild(el('div', { class: 'section sticky-header' }, [
     backBtn('/reconcile'),
     el('div', { class: 'page-title' }, ['Verify — ' + (b ? b.name : buildingId)]),
-    el('div', { class: 'muted' }, ['Tick each person you actually found. Anyone still red from last time needs a re-check — edit, transfer or remove them right here.']),
+    el('div', { class: 'muted' }, ['Tick who\'s actually here.']),
     el('div', { class: 'reconcile-bulk-row' }, [
       el('button', { class: 'btn btn-outline', onclick: () => registry.forEach(({ cb, rowEl, occId }) => { cb.checked = true; checks[occId] = true; rowEl.classList.remove('occupant-flag'); }) }, ['Tick All Present']),
       el('button', { class: 'btn btn-outline', onclick: () => registry.forEach(({ cb, rowEl, occId }) => { cb.checked = false; checks[occId] = false; rowEl.classList.add('occupant-flag'); }) }, ['Untick All']),
@@ -5370,7 +5371,6 @@ function renderExport(view) {
   ]));
   view.appendChild(el('div', { class: 'section' }, [
     el('button', { class: 'btn btn-primary btn-block', onclick: exportExcel }, ['Download Excel (.xlsx)']),
-    el('div', { class: 'muted small' }, ['One sheet per building, same layout as the original register.']),
   ]));
   view.appendChild(el('div', { class: 'section' }, [
     el('button', { class: 'btn btn-outline btn-block', onclick: () => printRegister(null) }, ['Print / Save Full Register as PDF']),
@@ -5514,9 +5514,7 @@ function renderSettings(view) {
   const users = Object.values(state.users).sort((a, b) => (a.role === 'admin' ? -1 : 1) - (b.role === 'admin' ? -1 : 1));
   view.appendChild(el('div', { class: 'section' }, [
     el('div', { class: 'section-title' }, ['Users & Access']),
-    el('div', { class: 'muted small' }, [
-      'Admin sees this page and has full access. Staff have full access to rooms/staff but no Settings. Viewer is read-only — good for management: hand out the same app link with the Viewer code and they can check headcounts, room space and where someone is staying, nothing more.',
-    ]),
+    el('div', { class: 'muted small' }, ['Admin: full access + Settings. Staff: full access, no Settings. Viewer: read-only.']),
     el('div', { class: 'user-list' }, users.map(u => userRow(u))),
   ]));
   view.appendChild(el('div', { class: 'section' }, [
@@ -5530,7 +5528,7 @@ function renderSettings(view) {
   view.appendChild(el('div', { class: 'section danger-zone' }, [
     el('div', { class: 'section-title' }, ['Danger Zone']),
     el('button', { class: 'btn btn-danger btn-block', onclick: confirmReimport }, ['Re-import Original Register']),
-    el('div', { class: 'muted small' }, ['Only use this once, to load the starting data. Running it again overwrites any changes made in the app.']),
+    el('div', { class: 'muted small' }, ['Overwrites all current data. Use with care.']),
   ]));
 
   // ---- Recent activity (fetched once, appended when ready) ----
@@ -5542,7 +5540,6 @@ function renderSettings(view) {
   ]);
   view.appendChild(el('div', { class: 'section' }, [
     el('div', { class: 'section-title' }, ['Clear Activity Log']),
-    el('div', { class: 'muted small' }, ['This log grows with every change — clear old entries now and then so it does not become a huge list.']),
     rangeSelect,
     el('button', {
       class: 'btn btn-outline btn-block', onclick: async () => {
@@ -5596,7 +5593,7 @@ function userRow(u) {
   const permRow = u.role === 'staff'
     ? el('div', { class: 'perm-row' }, ['verify', 'edit', 'transfer', 'delete'].map(p =>
         el('label', { class: 'perm-chip' }, [permBoxes[p], ' ' + p[0].toUpperCase() + p.slice(1)])))
-    : el('div', { class: 'muted small' }, [u.role === 'admin' ? 'Full access, sees Settings.' : 'Read-only — no edit/transfer/delete/verify.']);
+    : el('div', { class: 'muted small' }, [u.role === 'admin' ? 'Full access + Settings.' : 'Read-only.']);
   const saveBtn = el('button', { class: 'btn btn-outline', onclick: async () => {
     const newPerms = {};
     ['verify', 'edit', 'transfer', 'delete'].forEach(p => { newPerms[p] = !!permBoxes[p].checked; });
