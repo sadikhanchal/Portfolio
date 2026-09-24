@@ -54,9 +54,13 @@ body {
    flex children, .view is the only part that scrolls, which lets a sticky
    sub-header inside .view stick reliably under the topbar. */
 .app-shell { display: flex; flex-direction: column; height: 100vh; height: 100dvh; padding-top: env(safe-area-inset-top, 0px); }
-.topbar { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #fff; color: var(--blue); border-bottom: 1px solid var(--border); box-shadow: 0 2px 6px rgba(20,30,50,.06); flex-shrink: 0; z-index: 3; }
-.topbar-logo { height: 42px; }
-.topbar-title { font-weight: 700; font-size: 16px; color: var(--blue); flex: 1; }
+.topbar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #fff; color: var(--blue); border-bottom: 1px solid var(--border); box-shadow: 0 2px 6px rgba(20,30,50,.06); flex-shrink: 0; z-index: 3; }
+.topbar-logo { height: 34px; flex-shrink: 0; }
+.topbar-title { font-weight: 700; font-size: 13px; line-height: 1.25; color: var(--blue); }
+.topbar-title div:first-child { font-size: 14px; }
+.topbar-title div:last-child { font-weight: 500; color: var(--muted); font-size: 11px; }
+.topbar-spacer { flex: 1; }
+.topbar-user { font-size: 12px; font-weight: 600; color: var(--ink); max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
 .logout-btn { border: none; background: #f0f2f5; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--blue); flex-shrink: 0; }
 .logout-btn svg { width: 18px; height: 18px; }
 .view { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 14px 90px; }
@@ -4755,12 +4759,14 @@ const state = {
   buildings: {},      // id -> {id,name,hasFloors,declaredRooms,toilets,lastVerified,verifiedBy}
   rooms: {},          // docId -> {id,buildingId,roomNo,floor,capacity,occupants:[],lastVerified,verifiedBy}
   users: {},          // docId -> {id,name,code,role,permissions}
+  statusOptions: ['On Vacation'], // grows as people add custom status notes
   ready: false,
   authReady: false,
 };
 
 let unsubBuildings = null;
 let unsubRooms = null;
+let unsubStatusOptions = null;
 let unsubUsers = null;
 
 // ---------- Utilities ----------
@@ -4898,7 +4904,7 @@ function getUid() { return sessionStorage.getItem('oza_uid') || ''; }
 function getPerms() { try { return JSON.parse(sessionStorage.getItem('oza_perms') || '{}'); } catch (e) { return {}; } }
 function can(action) {
   const role = getRole();
-  if (role === 'admin') return true;
+  if (role === 'admin' || role === 'superadmin') return true;
   if (role === 'viewer') return false;
   return !!getPerms()[action]; // 'staff' role: per-user permission flags
 }
@@ -4989,11 +4995,13 @@ function renderShell() {
   ];
   if (can('verify')) tabs.push(tabBtn('reconcile', 'Verify', 'verify'));
   tabs.push(tabBtn('export', 'Export', 'export'));
-  if (getRole() === 'admin') tabs.push(tabBtn('settings', 'More', 'settings'));
+  if (getRole() === 'admin' || getRole() === 'superadmin') tabs.push(tabBtn('settings', 'More', 'settings'));
   root.appendChild(el('div', { class: 'app-shell' }, [
     el('header', { class: 'topbar' }, [
       el('img', { src: LOGO_DATA_URI, class: 'topbar-logo' }),
-      el('span', { class: 'topbar-title' }, ['OZA Accommodation']),
+      el('div', { class: 'topbar-title' }, [el('div', {}, ['OZA']), el('div', {}, ['Staff Accommodation'])]),
+      el('div', { class: 'topbar-spacer' }),
+      el('div', { class: 'topbar-user' }, [getUserName()]),
       el('button', { class: 'logout-btn', title: 'Log out (' + getUserName() + ')', html: ICONS.logout, onclick: () => { if (confirm('Log out?')) lock(); } }),
     ]),
     el('main', { id: 'view', class: 'view' }),
@@ -5014,7 +5022,7 @@ function render() {
   renderShell();
   const view = $('#view');
   const { name, arg } = currentRoute();
-  if (name === 'settings' && getRole() !== 'admin') { goto('/dashboard'); return; }
+  if (name === 'settings' && getRole() !== 'admin' && getRole() !== 'superadmin') { goto('/dashboard'); return; }
   if (name === 'reconcile' && !can('verify')) { goto('/dashboard'); return; }
   if (name === 'dashboard') renderDashboard(view);
   else if (name === 'vacation') renderVacationList(view);
@@ -5525,15 +5533,19 @@ function renderSettings(view) {
   view.appendChild(el('div', { class: 'section' }, [el('div', { class: 'page-title' }, ['More']), el('div', { class: 'muted' }, ['Only visible to Admin.'])]));
 
   // ---- Users & permissions ----
-  const users = Object.values(state.users).sort((a, b) => (a.role === 'admin' ? -1 : 1) - (b.role === 'admin' ? -1 : 1));
+  const iAmSuper = getRole() === 'superadmin';
+  const myUid = getUid();
+  const users = Object.values(state.users)
+    .filter(u => iAmSuper || !(u.role === 'admin' || u.role === 'superadmin') || u.id === myUid)
+    .sort((a, b) => (a.role !== 'staff' && a.role !== 'viewer' ? -1 : 1) - (b.role !== 'staff' && b.role !== 'viewer' ? -1 : 1));
   view.appendChild(el('div', { class: 'section' }, [
     el('div', { class: 'section-title' }, ['Users & Access']),
     el('div', { class: 'muted small' }, ['Admin: full access + Settings. Staff: full access, no Settings. Viewer: read-only.']),
-    el('div', { class: 'user-list' }, users.map(u => userRow(u))),
+    el('div', { class: 'user-list' }, users.map(u => userRow(u, iAmSuper))),
   ]));
   view.appendChild(el('div', { class: 'section' }, [
     el('div', { class: 'section-title' }, ['Add a User']),
-    addUserForm(),
+    addUserForm(iAmSuper),
   ]));
 
   view.appendChild(el('div', { class: 'section' }, [
@@ -5597,13 +5609,17 @@ async function clearAudit(days) {
   toast(docs.length + ' activity entries cleared');
 }
 
-function userRow(u) {
+function userRow(u, iAmSuper) {
+  const isProtected = u.role === 'admin' || u.role === 'superadmin';
+  const isSelf = u.id === getUid();
+  const nameInp = el('input', { type: 'text', class: 'input-inline', value: u.name || '' });
   const codeInp = el('input', { type: 'text', class: 'input-inline', value: u.code || '' });
-  const roleSelect = el('select', { class: 'input-inline' }, [
-    el('option', { value: 'admin', selected: u.role === 'admin' ? 'true' : null }, ['Admin']),
-    el('option', { value: 'staff', selected: u.role === 'staff' ? 'true' : null }, ['Staff']),
-    el('option', { value: 'viewer', selected: u.role === 'viewer' ? 'true' : null }, ['Viewer']),
-  ]);
+  const roleOptions = iAmSuper ? ['admin', 'staff', 'viewer'] : ['staff', 'viewer'];
+  const roleLabels = { admin: 'Admin', staff: 'Staff', viewer: 'Viewer' };
+  const canEditRole = iAmSuper || !isProtected;
+  const roleSelect = canEditRole
+    ? el('select', { class: 'input-inline' }, roleOptions.map(r => el('option', { value: r, selected: u.role === r ? 'true' : null }, [roleLabels[r]])))
+    : null;
   const perms = u.permissions || {};
   const permBoxes = {};
   ['verify', 'edit', 'transfer', 'delete'].forEach(p => {
@@ -5614,49 +5630,54 @@ function userRow(u) {
       return el('div', { class: 'perm-row' }, ['verify', 'edit', 'transfer', 'delete'].map(p =>
         el('label', { class: 'perm-chip' }, [permBoxes[p], ' ' + p[0].toUpperCase() + p.slice(1)])));
     }
-    return el('div', { class: 'muted small' }, [role === 'admin' ? 'Full access + Settings.' : 'Read-only.']);
+    return el('div', { class: 'muted small' }, [role === 'admin' || role === 'superadmin' ? 'Full access + Settings.' : 'Read-only.']);
   }
   const permRowContainer = el('div', {}, [buildPermRow(u.role)]);
-  roleSelect.addEventListener('change', () => {
+  if (roleSelect) roleSelect.addEventListener('change', () => {
     permRowContainer.innerHTML = '';
     permRowContainer.appendChild(buildPermRow(roleSelect.value));
   });
   const saveBtn = el('button', { class: 'btn btn-outline', onclick: async () => {
-    const admins = Object.values(state.users).filter(x => x.role === 'admin');
-    if (u.role === 'admin' && roleSelect.value !== 'admin' && admins.length <= 1) { toast('Cannot change the only Admin\'s role', true); return; }
+    const newRole = roleSelect ? roleSelect.value : u.role;
+    const admins = Object.values(state.users).filter(x => x.role === 'admin' || x.role === 'superadmin');
+    if (isProtected && newRole !== u.role && admins.length <= 1) { toast('Cannot change the only Admin\'s role', true); return; }
     const newPerms = {};
     ['verify', 'edit', 'transfer', 'delete'].forEach(p => { newPerms[p] = !!permBoxes[p].checked; });
-    await db.collection('users').doc(u.id).set({ code: codeInp.value.trim() || u.code, role: roleSelect.value, permissions: newPerms }, { merge: true });
-    toast(u.name + ' updated');
+    await db.collection('users').doc(u.id).set({ name: nameInp.value.trim() || u.name, code: codeInp.value.trim() || u.code, role: newRole, permissions: newPerms }, { merge: true });
+    toast((nameInp.value.trim() || u.name) + ' updated');
   } }, ['Save']);
   const delBtn = el('button', { class: 'icon-btn icon-btn-danger', title: 'Delete user', html: ICONS.trash, onclick: async () => {
-    const admins = Object.values(state.users).filter(x => x.role === 'admin');
+    if (u.role === 'superadmin') { toast('Cannot delete the Super Admin', true); return; }
+    const admins = Object.values(state.users).filter(x => x.role === 'admin' || x.role === 'superadmin');
     if (u.role === 'admin' && admins.length <= 1) { toast('Cannot delete the only Admin', true); return; }
-    if (u.id === getUid()) { toast('Cannot delete the account you are logged in as', true); return; }
+    if (isSelf) { toast('Cannot delete the account you are logged in as', true); return; }
     if (!confirm('Remove user "' + u.name + '"?')) return;
     await db.collection('users').doc(u.id).delete();
     toast('User removed');
   } });
   return el('div', { class: 'card user-card' }, [
     el('div', { class: 'user-card-top' }, [
-      el('div', {}, [el('div', { class: 'occupant-name' }, [u.name + (u.id === getUid() ? ' (you)' : '')]), el('span', { class: 'badge badge-' + (u.role === 'admin' ? 'full' : u.role === 'viewer' ? 'empty' : 'vacant') }, [u.role])]),
+      el('div', {}, [el('div', { class: 'occupant-name' }, [u.name + (isSelf ? ' (you)' : '')]), el('span', { class: 'badge badge-' + (isProtected ? 'full' : u.role === 'viewer' ? 'empty' : 'vacant') }, [u.role])]),
       delBtn,
     ]),
+    el('label', { class: 'field-label' }, ['Name']), nameInp,
     el('label', { class: 'field-label' }, ['Code']), codeInp,
-    el('label', { class: 'field-label' }, ['Role']), roleSelect,
+    el('label', { class: 'field-label' }, ['Role']),
+    roleSelect || el('div', { class: 'input-inline', style: 'background:#f4f6f9;' }, [roleLabels[u.role] || u.role]),
     permRowContainer,
     saveBtn,
   ]);
 }
 
-function addUserForm() {
+function addUserForm(iAmSuper) {
   const nameInp = el('input', { type: 'text', class: 'input-inline', placeholder: 'Name' });
   const codeInp = el('input', { type: 'text', class: 'input-inline', placeholder: 'Code (PIN)' });
-  const roleSelect = el('select', { class: 'input-inline' }, [
-    el('option', { value: 'staff' }, ['Staff — full room/staff access']),
-    el('option', { value: 'viewer' }, ['Viewer — read only']),
-    el('option', { value: 'admin' }, ['Admin — full access + Settings']),
-  ]);
+  const roleOptions = [
+    { v: 'staff', t: 'Staff — full room/staff access' },
+    { v: 'viewer', t: 'Viewer — read only' },
+  ];
+  if (iAmSuper) roleOptions.push({ v: 'admin', t: 'Admin — full access + Settings' });
+  const roleSelect = el('select', { class: 'input-inline' }, roleOptions.map(o => el('option', { value: o.v }, [o.t])));
   const permBoxes = {};
   const permRow = el('div', { class: 'perm-row' }, ['verify', 'edit', 'transfer', 'delete'].map(p => {
     permBoxes[p] = el('input', { type: 'checkbox', checked: 'true' });
@@ -5757,7 +5778,19 @@ function openEditOccupantModal(room, o) {
   const nameInp = el('input', { type: 'text', class: 'input-inline', value: o.name || '' });
   const iqamaInp = el('input', { type: 'text', class: 'input-inline', value: o.iqama || '' });
   const mobileInp = el('input', { type: 'text', class: 'input-inline', value: o.mobile || '' });
-  const statusInp = el('input', { type: 'text', class: 'input-inline', value: o.status || '', placeholder: 'e.g. On Vacation' });
+  const statusSelect = el('select', { class: 'input-inline' });
+  const newStatusInp = el('input', { type: 'text', class: 'input-inline', placeholder: 'New status name' });
+  newStatusInp.style.display = 'none';
+  function refreshStatusOptions() {
+    statusSelect.innerHTML = '';
+    statusSelect.appendChild(el('option', { value: '' }, ['— None —']));
+    const opts = state.statusOptions.slice();
+    if (o.status && !opts.includes(o.status)) opts.push(o.status);
+    opts.forEach(s => statusSelect.appendChild(el('option', { value: s, selected: s === (o.status || '') ? 'true' : null }, [s])));
+    statusSelect.appendChild(el('option', { value: '__new__' }, ['+ Add new status…']));
+  }
+  refreshStatusOptions();
+  statusSelect.addEventListener('change', () => { newStatusInp.style.display = statusSelect.value === '__new__' ? '' : 'none'; });
   let photoData = o.photo || null;
   const preview = el('img', { class: 'photo-preview', src: photoData || '' });
   preview.style.display = photoData ? '' : 'none';
@@ -5773,7 +5806,14 @@ function openEditOccupantModal(room, o) {
   const removePhotoBtn = el('button', { class: 'btn btn-outline', onclick: () => { photoData = null; preview.style.display = 'none'; preview.src = ''; } }, ['Remove Photo']);
   const saveBtn = el('button', { class: 'btn btn-primary btn-block' }, ['Save Changes']);
   saveBtn.addEventListener('click', async () => {
-    const occ = (room.occupants || []).map(x => x.id === o.id ? { ...x, name: nameInp.value.trim(), iqama: iqamaInp.value.trim(), mobile: mobileInp.value.trim(), status: statusInp.value.trim() || null, photo: photoData } : x);
+    let finalStatus = statusSelect.value;
+    if (finalStatus === '__new__') {
+      finalStatus = newStatusInp.value.trim();
+      if (finalStatus && !state.statusOptions.includes(finalStatus)) {
+        db.collection('settings').doc('statusOptions').set({ options: firebase.firestore.FieldValue.arrayUnion(finalStatus) }, { merge: true }).catch(e => console.error(e));
+      }
+    }
+    const occ = (room.occupants || []).map(x => x.id === o.id ? { ...x, name: nameInp.value.trim(), iqama: iqamaInp.value.trim(), mobile: mobileInp.value.trim(), status: finalStatus || null, photo: photoData } : x);
     await db.collection('rooms').doc(room.id).set({ occupants: occ }, { merge: true });
     logAudit('Edited staff', nameInp.value.trim() + ' — Room ' + room.roomNo);
     toast('Saved');
@@ -5783,7 +5823,7 @@ function openEditOccupantModal(room, o) {
     el('label', { class: 'field-label' }, ['Name']), nameInp,
     el('label', { class: 'field-label' }, ['Iqama / ID No.']), iqamaInp,
     el('label', { class: 'field-label' }, ['Mobile']), mobileInp,
-    el('label', { class: 'field-label' }, ['Status note']), statusInp,
+    el('label', { class: 'field-label' }, ['Status note']), statusSelect, newStatusInp,
     el('label', { class: 'field-label' }, ['Photo']),
     preview,
     fileInp,
@@ -5868,6 +5908,7 @@ function attachListeners() {
   if (unsubBuildings) unsubBuildings();
   if (unsubRooms) unsubRooms();
   if (unsubUsers) unsubUsers();
+  if (unsubStatusOptions) unsubStatusOptions();
   unsubBuildings = db.collection('buildings').onSnapshot(snap => {
     const map = {};
     snap.forEach(doc => map[doc.id] = { id: doc.id, ...doc.data() });
@@ -5885,6 +5926,9 @@ function attachListeners() {
     snap.forEach(doc => map[doc.id] = { id: doc.id, ...doc.data() });
     state.users = map;
     render();
+  });
+  unsubStatusOptions = db.collection('settings').doc('statusOptions').onSnapshot(snap => {
+    state.statusOptions = (snap.exists && Array.isArray(snap.data().options) && snap.data().options.length) ? snap.data().options : ['On Vacation'];
   });
 }
 
@@ -5912,11 +5956,31 @@ async function initialSeedIfNeeded() {
     batch.set(db.collection('users').doc(), { name: 'Viewer', code: '9999', role: 'viewer', permissions: {} });
     await batch.commit();
   }
+
+  // Status-note dropdown options — seed once if missing (works for both a
+  // fresh install and an existing one that predates this feature).
+  try {
+    const statusSnap = await db.collection('settings').doc('statusOptions').get();
+    if (!statusSnap.exists) await db.collection('settings').doc('statusOptions').set({ options: ['On Vacation'] });
+  } catch (e) { console.error(e); }
 }
 
+async function ensureSuperAdminMigration() {
+  // Exactly one Super Admin should exist — the account that hides every other
+  // admin from view. If none exists yet and the current session is a regular
+  // Admin, promote this account (first admin to load the new version wins).
+  if (getRole() !== 'admin') return;
+  try {
+    const superSnap = await db.collection('users').where('role', '==', 'superadmin').limit(1).get();
+    if (!superSnap.empty) return;
+    await db.collection('users').doc(getUid()).set({ role: 'superadmin' }, { merge: true });
+    sessionStorage.setItem('oza_role', 'superadmin');
+  } catch (e) { console.error(e); }
+}
 async function boot() {
   await ensureAnonAuth();
   attachListeners();
+  await ensureSuperAdminMigration();
   render();
 }
 
