@@ -1164,10 +1164,21 @@ function clampAdj(){const{w,h}=imgDims();adj.x=w>=adj.fw?Math.min(0,Math.max(adj
 function renderAdj(){const{w,h}=imgDims();const el=$("#adjImg");el.style.width=w+"px";el.style.height=h+"px";el.style.left=adj.x+"px";el.style.top=adj.y+"px";}
 function centerAdj(){const{w,h}=imgDims();adj.x=(adj.fw-w)/2;adj.y=(adj.fh-h)/2;clampAdj();renderAdj();}
 function openAdjust(id,src){
-  adj.id=id;const im=new Image();
-  im.onload=()=>{adj.imgEl=im;adj.natW=im.naturalWidth;adj.natH=im.naturalHeight;$("#adjImg").src=src;$("#adjOverlay").classList.add("show");
-    requestAnimationFrame(()=>{const fr=$("#adjFrame");adj.fw=fr.clientWidth;adj.fh=fr.clientHeight;adj.fit=Math.min(adj.fw/adj.natW,adj.fh/adj.natH);const cover=Math.max(adj.fw/adj.natW,adj.fh/adj.natH);adj.zmin=0.5;adj.zmax=4;adj.zoom=Math.min(adj.zmax,Math.max(adj.zmin,cover/adj.fit));const sl=$("#adjZoom");sl.min=adj.zmin;sl.max=adj.zmax;sl.value=adj.zoom;centerAdj();});};
-  im.onerror=()=>toast("Could not read image");im.src=src;
+  adj.id=id;const raw=new Image();
+  raw.onload=()=>{
+    const maxSide=1600;let dw=raw.naturalWidth,dh=raw.naturalHeight;
+    if(Math.max(dw,dh)>maxSide){const sc=maxSide/Math.max(dw,dh);dw=Math.round(dw*sc);dh=Math.round(dh*sc);}
+    const dc=document.createElement("canvas");dc.width=dw;dc.height=dh;
+    dc.getContext("2d").drawImage(raw,0,0,dw,dh);
+    const small=new Image();
+    small.onload=()=>{
+      adj.imgEl=small;adj.natW=small.naturalWidth;adj.natH=small.naturalHeight;$("#adjImg").src=small.src;$("#adjOverlay").classList.add("show");
+      requestAnimationFrame(()=>{const fr=$("#adjFrame");adj.fw=fr.clientWidth||300;adj.fh=fr.clientHeight||300;adj.fit=Math.min(adj.fw/adj.natW,adj.fh/adj.natH);const cover=Math.max(adj.fw/adj.natW,adj.fh/adj.natH);adj.zmin=0.5;adj.zmax=4;adj.zoom=Math.min(adj.zmax,Math.max(adj.zmin,cover/adj.fit));const sl=$("#adjZoom");sl.min=adj.zmin;sl.max=adj.zmax;sl.value=adj.zoom;centerAdj();});
+    };
+    small.onerror=()=>toast("Could not read image");
+    small.src=dc.toDataURL("image/jpeg",0.92);
+  };
+  raw.onerror=()=>toast("Could not read image");raw.src=src;
 }
 $("#adjZoom").addEventListener("input",e=>{const o=imgDims();const cx=adj.fw/2,cy=adj.fh/2;const fx=(cx-adj.x)/o.w,fy=(cy-adj.y)/o.h;adj.zoom=parseFloat(e.target.value);const n=imgDims();adj.x=cx-fx*n.w;adj.y=cy-fy*n.h;clampAdj();renderAdj();});
 (function(){const fr=$("#adjFrame");
@@ -1176,6 +1187,7 @@ $("#adjZoom").addEventListener("input",e=>{const o=imgDims();const cx=adj.fw/2,c
   fr.addEventListener("pointerup",()=>adj.drag=false);fr.addEventListener("pointercancel",()=>adj.drag=false);
 })();
 $("#adjSave").addEventListener("click",()=>{
+  if(!adj.imgEl||!adj.fw||!adj.fh){toast("Image still loading — try again in a second");return;}
   const outW=480,outH=320,factor=outW/adj.fw;const{w,h}=imgDims();
   const c=document.createElement("canvas");c.width=outW;c.height=outH;const ctx=c.getContext("2d");
   ctx.fillStyle="#fff";ctx.fillRect(0,0,outW,outH);ctx.drawImage(adj.imgEl,adj.x*factor,adj.y*factor,w*factor,h*factor);
