@@ -284,6 +284,10 @@
   .danger-zone{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
   .danger-zone button{padding:11px 16px;border-radius:11px;font-weight:600;font-size:13px;border:1px solid var(--line);background:var(--surface)}
   .danger-zone button.red{color:var(--danger);border-color:#E9BDB7}
+  .cloudstatus{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:4px}
+  .cloudstatus.live{color:var(--lime-dk);font-weight:700}
+  .cloudstatus.bad{color:var(--danger);font-weight:600}
+  #cloudCfg{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-size:12px;font-family:ui-monospace,Menlo,monospace;resize:vertical;background:var(--bg)}
   .storagebar{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:10px;font-size:12.5px;color:var(--muted);font-weight:600}
   .storagebar .track{height:7px;background:var(--bg);border-radius:4px;margin-top:7px;overflow:hidden}
   .storagebar .fill{height:100%;background:var(--lime-dk);border-radius:4px;transition:width .3s}
@@ -556,6 +560,16 @@
         <div class="perfseg" id="perfSeg"><button data-p="today" class="active">Today</button><button data-p="week">Week</button><button data-p="month">Month</button><button data-p="all">All</button><button data-p="custom">Custom</button></div>
         <div class="customrange" id="perfRange" style="display:none;margin:0 0 10px"><input type="date" id="perfFrom"><span>→</span><input type="date" id="perfTo"></div>
         <div class="panel" style="padding:2px 14px 8px"><table class="perftable"><thead><tr><th>Staff</th><th class="r">Orders</th><th class="r">Sales SAR</th><th class="r">kg</th><th class="r">Cancels</th></tr></thead><tbody id="perfBody"></tbody></table></div>
+        <div class="sec-title" style="margin-top:22px">Cloud sync (all devices)</div>
+        <div class="backupbox">
+          <label class="toggle-row"><input type="checkbox" id="cloudEnable">Enable cloud sync</label>
+          <div class="cloudstatus" id="cloudStatus"></div>
+          <div id="cloudCfgWrap" style="margin-top:10px">
+            <div style="font-size:12px;color:var(--muted);font-weight:600;margin-bottom:5px">Paste your Firebase config here, then tick the box above.</div>
+            <textarea id="cloudCfg" rows="6" placeholder="const firebaseConfig = { apiKey: ... }"></textarea>
+          </div>
+          <button class="obtn" id="cloudPushBtn" style="margin-top:10px;display:none">Push this device's data to cloud</button>
+        </div>
         <div class="sec-title" style="margin-top:22px">Backup &amp; Restore</div>
         <div class="storagebar" id="storageBar"></div>
         <div class="backupbox">
@@ -751,11 +765,15 @@ const SEED_STAFF=[
   {id:"st2",name:"Mansoor",password:"2222",active:true},
 ];
 const LS_PROD="alabbar_products_v4", LS_SALES="alabbar_sales_v2", LS_SESSION="alabbar_session_v1", LS_STAFF="alabbar_staff_v1", LS_ADMIN="alabbar_admin_v1", LS_CATS="alabbar_cats_v2", LS_BACKUP="alabbar_backup_cfg_v1";
+const LS_CLOUD="alabbar_cloud_cfg_v1";
+const SHOP_ID="alabbar";
+let cloud={on:false,ready:false,muted:false,db:null,cfg:null,hashes:{},unsub:[],status:"off"};
 function load(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f;}catch(e){return f;}}
-function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){
+function lsWrite(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){
   const isProd=(k===LS_PROD);
   askConfirm(isProd?"Storage is full. This image could not be saved. Remove some product images, then try again.":"⚠ STORAGE FULL — this could NOT be saved and will be lost on reload. Go to Settings and remove some product images immediately, then re-enter.",()=>{});
   return false;}}
+function save(k,v){const ok=lsWrite(k,v);if(cloud.on&&cloud.ready&&!cloud.muted)cloudPush(k,v);return ok;}
 function storageBytes(){let n=0;try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf("alabbar")===0)n+=(localStorage.getItem(k)||"").length+k.length;}}catch(e){}return n;}
 
 const SEED=[
@@ -843,7 +861,9 @@ function lowStockItems(){return products.filter(p=>p.active!==false&&p.stock<LOW
 function negativeItems(){return products.filter(p=>p.active!==false&&p.stock<0);}
 function addLedger(p,type,qty,at,ref){if(!p.ledger)p.ledger=[];p.ledger.push({type,qty:+Number(qty).toFixed(2),at,balance:p.stock,ref:ref||null});}
 function hasActions(p){return (p.ledger&&p.ledger.some(m=>m.type!=="opening"))||sales.some(s=>s.lines.some(l=>l.id===p.id));}
-function nextOrderCode(){const t=todayKey().slice(2).replace(/-/g,"");const n=todaySales().length+1;return "AB-"+t+"-"+pad(n).padStart(3,"0");}
+function nextOrderCode(){const t=todayKey().slice(2).replace(/-/g,"");let n=todaySales().length+1;let code="AB-"+t+"-"+pad(n).padStart(3,"0");
+  while(sales.some(s=>s.code===code)){n++;code="AB-"+t+"-"+pad(n).padStart(3,"0");}
+  return code;}
 
 /* range */
 function rangeBounds(){
@@ -896,15 +916,17 @@ $("#luser").addEventListener("input",updateLoginMode);
 $("#logoutBtn").addEventListener("click",logout);
 
 /* nav */
+let currentView="pos";
 function goView(v){
   if(v!=="pos"&&currentUser.role!=="admin")v="pos";
+  currentView=v;
   document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("active",x.dataset.view===v));
   document.querySelectorAll("#bottomNav button").forEach(x=>x.classList.toggle("active",x.dataset.view===v));
   document.querySelectorAll(".view").forEach(s=>s.classList.remove("active"));
   $("#view-"+v).classList.add("active");
   if(v==="sales")renderSales();
   if(v==="stock")renderStock();
-  if(v==="settings"){renderCats();renderSettings();renderStaffMgmt();renderAdmin();renderBackupStatus();}
+  if(v==="settings"){renderCats();renderSettings();renderStaffMgmt();renderAdmin();renderBackupStatus();renderCloudStatus();}
 }
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;goView(b.dataset.view);});
 $("#bottomNav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;goView(b.dataset.view);});
@@ -1360,6 +1382,133 @@ $("#cfSave").addEventListener("click",()=>{const en=$("#cfEn").value.trim(),ar=$
 $("#catClose").addEventListener("click",()=>$("#catOverlay").classList.remove("show"));
 $("#catOverlay").addEventListener("click",e=>{if(e.target.id==="catOverlay")e.currentTarget.classList.remove("show");});
 
+/* Cloud sync (Firestore) */
+const CLOUD_COLS={};
+function cloudInitMap(){CLOUD_COLS[LS_PROD]={col:"products",idf:"id"};CLOUD_COLS[LS_SALES]={col:"sales",idf:"code"};CLOUD_COLS[LS_STAFF]={col:"staff",idf:"id"};CLOUD_COLS[LS_CATS]={col:"cats",idf:"id"};}
+cloudInitMap();
+function cloudRoot(){return cloud.db.collection("shops").doc(SHOP_ID);}
+function loadFirebase(){
+  if(window.firebase&&window.firebase.firestore)return Promise.resolve();
+  const base="https://cdn.jsdelivr.net/npm/firebase@10.12.2/";
+  const files=["firebase-app-compat.js","firebase-auth-compat.js","firebase-firestore-compat.js"];
+  return files.reduce((chain,f)=>chain.then(()=>new Promise((res,rej)=>{
+    const s=document.createElement("script");s.src=base+f;s.onload=res;s.onerror=()=>rej(new Error("Could not load "+f));document.head.appendChild(s);
+  })),Promise.resolve());
+}
+async function cloudPush(k,v){
+  if(!cloud.ready)return;
+  try{
+    if(k===LS_ADMIN){await cloudRoot().collection("config").doc("admin").set(v);return;}
+    const m=CLOUD_COLS[k];if(!m)return;
+    const coll=cloudRoot().collection(m.col);
+    const prev=cloud.hashes[m.col]||{};const next={};const ops=[];
+    (v||[]).forEach(item=>{
+      const id=String(item[m.idf]);if(!id||id==="undefined")return;
+      const json=JSON.stringify(item);next[id]=json;
+      if(prev[id]!==json)ops.push(()=>coll.doc(id).set(item));
+    });
+    Object.keys(prev).forEach(id=>{if(!(id in next))ops.push(()=>coll.doc(id).delete());});
+    cloud.hashes[m.col]=next;
+    for(const op of ops){try{await op();}catch(e){}}
+  }catch(e){}
+}
+function applyCloudArray(col,arr){
+  cloud.muted=true;
+  if(col==="products"){products=arr;lsWrite(LS_PROD,products);renderGrid();if(currentView==="settings")renderSettings();if(currentView==="stock")renderStock();}
+  else if(col==="sales"){sales=arr;lsWrite(LS_SALES,sales);if(currentView==="sales")renderSales();}
+  else if(col==="staff"){staff=arr;lsWrite(LS_STAFF,staff);if(currentView==="settings")renderStaffMgmt();}
+  else if(col==="cats"){cats=arr;lsWrite(LS_CATS,cats);renderGrid();if(currentView==="settings"){renderCats();renderSettings();}}
+  refreshBadges();
+  cloud.muted=false;
+}
+function cloudListen(){
+  cloud.unsub.forEach(u=>{try{u();}catch(e){}});cloud.unsub=[];
+  Object.keys(CLOUD_COLS).forEach(k=>{
+    const m=CLOUD_COLS[k];
+    const u=cloudRoot().collection(m.col).onSnapshot(snap=>{
+      const arr=[];const hh={};
+      snap.forEach(d=>{const data=d.data();arr.push(data);hh[d.id]=JSON.stringify(data);});
+      cloud.hashes[m.col]=hh;
+      applyCloudArray(m.col,arr);
+      cloud.status="live";renderCloudStatus();
+    },err=>{cloud.status="error:"+(err&&err.code||"failed");renderCloudStatus();});
+    cloud.unsub.push(u);
+  });
+  const ua=cloudRoot().collection("config").doc("admin").onSnapshot(d=>{
+    if(d.exists){cloud.muted=true;adminAcc=d.data();lsWrite(LS_ADMIN,adminAcc);cloud.muted=false;}
+  },()=>{});
+  cloud.unsub.push(ua);
+}
+async function cloudSeedUp(){
+  cloud.hashes={};
+  await cloudPush(LS_PROD,products);
+  await cloudPush(LS_SALES,sales);
+  await cloudPush(LS_STAFF,staff);
+  await cloudPush(LS_CATS,cats);
+  await cloudPush(LS_ADMIN,adminAcc);
+  await cloudRoot().collection("config").doc("meta").set({seeded:true,at:new Date().toISOString()});
+}
+async function cloudConnect(cfg,opts){
+  opts=opts||{};
+  cloud.status="connecting";renderCloudStatus();
+  await loadFirebase();
+  if(!firebase.apps.length)firebase.initializeApp(cfg);
+  cloud.db=firebase.firestore();
+  try{await cloud.db.enablePersistence({synchronizeTabs:true});}catch(e){}
+  try{await firebase.auth().signInAnonymously();}catch(e){throw new Error("Anonymous sign-in is not enabled in Firebase Authentication.");}
+  cloud.cfg=cfg;cloud.ready=true;cloud.on=true;
+  const meta=await cloudRoot().collection("config").doc("meta").get();
+  if(!meta.exists){await cloudSeedUp();}
+  else if(opts.seedAnyway){await cloudSeedUp();}
+  cloudListen();
+  save(LS_CLOUD,{enabled:true,cfg});
+  cloud.status="live";renderCloudStatus();
+}
+function cloudDisconnect(){
+  cloud.unsub.forEach(u=>{try{u();}catch(e){}});cloud.unsub=[];
+  cloud.on=false;cloud.ready=false;cloud.status="off";cloud.hashes={};
+  lsWrite(LS_CLOUD,{enabled:false,cfg:cloud.cfg||null});
+  renderCloudStatus();
+}
+function renderCloudStatus(){
+  const el=$("#cloudStatus");if(!el)return;
+  const map={off:"Not connected — this device stores data only in its own browser.",connecting:"Connecting…",live:"● Live — changes sync across all connected devices in real time."};
+  let txt=map[cloud.status]||("Problem: "+cloud.status);
+  el.textContent=txt;
+  el.className="cloudstatus"+(cloud.status==="live"?" live":(cloud.status.indexOf("error")===0?" bad":""));
+  const en=$("#cloudEnable");if(en)en.checked=cloud.on;
+  const box=$("#cloudCfgWrap");if(box)box.style.display=cloud.on?"none":"block";
+  const push=$("#cloudPushBtn");if(push)push.style.display=cloud.on?"inline-block":"none";
+}
+function parseCloudCfg(txt){
+  txt=(txt||"").trim();
+  if(!txt)throw new Error("Paste your Firebase config first.");
+  const m=txt.match(/\{[\s\S]*\}/);
+  if(!m)throw new Error("That doesn't look like a Firebase config.");
+  let obj;
+  try{obj=JSON.parse(m[0]);}
+  catch(e){try{obj=(new Function("return ("+m[0]+")"))();}catch(e2){throw new Error("Could not read that config — copy the whole firebaseConfig object.");}}
+  if(!obj||!obj.projectId||!obj.apiKey)throw new Error("Config is missing apiKey or projectId.");
+  return obj;
+}
+$("#cloudEnable").addEventListener("change",async e=>{
+  if(e.target.checked){
+    try{
+      const cfg=parseCloudCfg($("#cloudCfg").value);
+      await cloudConnect(cfg);
+      toast("Cloud sync is live");
+    }catch(err){
+      e.target.checked=false;cloud.on=false;cloud.status="off";renderCloudStatus();
+      askConfirm("Could not connect: "+(err.message||err),()=>{});
+    }
+  }else{cloudDisconnect();toast("Cloud sync turned off");}
+});
+$("#cloudPushBtn").addEventListener("click",()=>{
+  askConfirm("Overwrite the cloud copy with THIS device's data? Other devices will then match this device.",async()=>{
+    try{await cloudSeedUp();toast("Cloud updated from this device");}catch(e){askConfirm("Push failed: "+(e.message||e),()=>{});}
+  });
+});
+
 /* Backup & Restore */
 function collectBackupData(){return{schema:1,exportedAt:new Date().toISOString(),products,sales,staff,cats,adminAcc};}
 function backupBlob(){return new Blob([JSON.stringify(collectBackupData(),null,2)],{type:"application/json"});}
@@ -1474,6 +1623,11 @@ if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.s
   else setTimeout(()=>$("#luser").focus(),60);
   checkAutoBackup();
   setInterval(checkAutoBackup,5*60*1000);
+  const cc=load(LS_CLOUD,null);
+  if(cc&&cc.enabled&&cc.cfg){
+    $("#cloudCfg").value=JSON.stringify(cc.cfg,null,2);
+    cloudConnect(cc.cfg).catch(err=>{cloud.status="error: "+(err.message||"connect failed");renderCloudStatus();});
+  }else renderCloudStatus();
 })();
 </script>
 </body>
