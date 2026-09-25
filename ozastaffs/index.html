@@ -5218,11 +5218,17 @@ function renderRoomDetail(view, docId) {
       ? (() => {
           const inp = el('input', { type: 'number', min: '1', class: 'input-inline', value: String(r.capacity || 1) });
           const saveBtn = el('button', { class: 'btn btn-primary', style: 'margin-top:8px;' }, ['Save Capacity']);
-          // A plain change/blur listener isn't reliable here — on mobile, typing
-          // a number then immediately tapping Back can navigate away before the
-          // blur ever fires, silently discarding the edit. An explicit button
-          // makes the save a deliberate tap that always fires.
-          const save = () => updateRoomCapacity(docId, parseInt(inp.value, 10) || 1);
+          // Both an explicit button (reliable even if the user navigates away
+          // before blur fires) and a change/blur listener (in case they don't
+          // tap it) call this — guarded so a value that hasn't actually changed
+          // since the last save never fires twice.
+          let lastSaved = r.capacity || 1;
+          const save = () => {
+            const val = parseInt(inp.value, 10) || 1;
+            if (val === lastSaved) return;
+            lastSaved = val;
+            updateRoomCapacity(docId, val);
+          };
           saveBtn.addEventListener('click', save);
           inp.addEventListener('change', save);
           return el('div', {}, [inp, saveBtn]);
@@ -5530,7 +5536,7 @@ function printRegister(buildingId) {
 // ---------- Settings ----------
 function renderSettings(view) {
   view.innerHTML = '';
-  view.appendChild(el('div', { class: 'section' }, [el('div', { class: 'page-title' }, ['More']), el('div', { class: 'muted' }, ['Only visible to Admin.'])]));
+  view.appendChild(el('div', { class: 'section' }, [el('div', { class: 'page-title' }, ['More'])]));
 
   // ---- Users & permissions ----
   const iAmSuper = getRole() === 'superadmin';
@@ -5540,7 +5546,6 @@ function renderSettings(view) {
     .sort((a, b) => (a.role !== 'staff' && a.role !== 'viewer' ? -1 : 1) - (b.role !== 'staff' && b.role !== 'viewer' ? -1 : 1));
   view.appendChild(el('div', { class: 'section' }, [
     el('div', { class: 'section-title' }, ['Users & Access']),
-    el('div', { class: 'muted small' }, ['Admin: full access + Settings. Staff: full access, no Settings. Viewer: read-only.']),
     el('div', { class: 'user-list' }, users.map(u => userRow(u, iAmSuper))),
   ]));
   view.appendChild(el('div', { class: 'section' }, [
@@ -5551,32 +5556,37 @@ function renderSettings(view) {
   view.appendChild(el('div', { class: 'section' }, [
     el('button', { class: 'btn btn-outline btn-block', onclick: lock }, ['Lock App']),
   ]));
-  view.appendChild(el('div', { class: 'section danger-zone' }, [
-    el('div', { class: 'section-title' }, ['Danger Zone']),
-    el('button', { class: 'btn btn-danger btn-block', onclick: confirmReimport }, ['Re-import Original Register']),
-    el('div', { class: 'muted small' }, ['Overwrites all current data. Use with care.']),
-  ]));
+  if (iAmSuper) {
+    view.appendChild(el('div', { class: 'section danger-zone' }, [
+      el('div', { class: 'section-title' }, ['Danger Zone']),
+      el('button', { class: 'btn btn-danger btn-block', onclick: confirmReimport }, ['Re-import Original Register']),
+      el('div', { class: 'muted small' }, ['Overwrites all current data. Use with care.']),
+    ]));
+  }
 
   // ---- Recent activity (fetched once, appended when ready) ----
-  const rangeSelect = el('select', { class: 'input-inline' }, [
-    el('option', { value: '7' }, ['Older than 7 days']),
-    el('option', { value: '30' }, ['Older than 30 days']),
-    el('option', { value: '90' }, ['Older than 90 days']),
-    el('option', { value: 'all' }, ['Everything']),
-  ]);
-  view.appendChild(el('div', { class: 'section' }, [
-    el('div', { class: 'section-title' }, ['Clear Activity Log']),
-    rangeSelect,
-    el('button', {
-      class: 'btn btn-outline btn-block', onclick: async () => {
-        const val = rangeSelect.value;
-        const label = val === 'all' ? 'the entire activity log' : 'entries older than ' + val + ' days';
-        if (!confirm('Delete ' + label + '? This cannot be undone.')) return;
-        await clearAudit(val === 'all' ? null : parseInt(val, 10));
-        render();
-      },
-    }, ['Clear']),
-  ]));
+  if (iAmSuper) {
+    const rangeSelect = el('select', { class: 'input-inline' }, [
+      el('option', { value: '7' }, ['Older than 7 days']),
+      el('option', { value: '30' }, ['Older than 30 days']),
+      el('option', { value: '90' }, ['Older than 90 days']),
+      el('option', { value: 'all' }, ['Everything']),
+    ]);
+    view.appendChild(el('div', { class: 'section' }, [
+      el('div', { class: 'section-title' }, ['Clear Activity Log']),
+      rangeSelect,
+      el('button', {
+        class: 'btn btn-outline btn-block', onclick: async () => {
+          const val = rangeSelect.value;
+          const label = val === 'all' ? 'the entire activity log' : 'entries older than ' + val + ' days';
+          if (!confirm('Delete ' + label + '? This cannot be undone.')) return;
+          if (!(await verifySuperAdminCode())) return;
+          await clearAudit(val === 'all' ? null : parseInt(val, 10));
+          render();
+        },
+      }, ['Clear']),
+    ]));
+  }
   const activitySection = el('div', { class: 'section' }, [
     el('div', { class: 'section-title' }, ['Recent Activity']),
   ]);
@@ -5718,8 +5728,19 @@ function addUserForm(iAmSuper) {
   ]);
 }
 
-function confirmReimport() {
+async function verifySuperAdminCode() {
+  const val = prompt('Re-enter the Super Admin code to confirm this action:');
+  if (!val) return false;
+  try {
+    const snap = await db.collection('users').where('role', '==', 'superadmin').limit(1).get();
+    if (snap.empty) { toast('No Super Admin account found', true); return false; }
+    if (val.trim() !== String(snap.docs[0].data().code || '')) { toast('Incorrect Super Admin code', true); return false; }
+    return true;
+  } catch (e) { console.error(e); toast('Could not verify — check your connection', true); return false; }
+}
+async function confirmReimport() {
   if (!confirm('This will overwrite ALL current data with the original Excel register. Are you sure?')) return;
+  if (!(await verifySuperAdminCode())) return;
   runSeed(true);
 }
 
