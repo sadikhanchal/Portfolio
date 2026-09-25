@@ -114,6 +114,8 @@ body {
 .room-chip-full { background: linear-gradient(180deg, #dbf3e6, #c9ecd9); border-color: #7fcda3; }
 .room-chip-empty { background: linear-gradient(180deg, #e7eaee, #dde1e6); border-color: #a9b1ba; }
 .room-chip-over { background: linear-gradient(180deg, #fad6d0, #f6c7c0); border-color: #e4897a; }
+.room-chip-pending { border: 2px solid var(--red) !important; }
+.room-chip-pending-label { font-size: 9px; font-weight: 800; color: var(--red); margin-top: 2px; text-transform: uppercase; letter-spacing: .02em; }
 .room-chip-no { font-size: 12px; font-weight: 700; }
 .room-chip-count { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
@@ -5190,10 +5192,12 @@ function renderBuildingDetail(view, buildingId) {
 function roomChip(r) {
   const occ = occupantCount(r), cap = r.capacity || 0;
   const status = roomStatus(r);
-  const cls = 'room-chip room-chip-' + status;
+  const pending = (r.occupants || []).some(o => o.status && o.status.startsWith('Not found'));
+  const cls = 'room-chip room-chip-' + status + (pending ? ' room-chip-pending' : '');
   return el('div', { class: cls, onclick: () => goto('/room/' + r.id) }, [
     el('div', { class: 'room-chip-no' }, [(r.floor ? r.floor + ' ' : '') + 'Room ' + r.roomNo.replace(/^(GF|FF)-?/, '')]),
     el('div', { class: 'room-chip-count' }, [occ + '/' + cap]),
+    pending ? el('div', { class: 'room-chip-pending-label' }, ['⚠ Pending']) : null,
   ]);
 }
 
