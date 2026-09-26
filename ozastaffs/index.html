@@ -4819,6 +4819,17 @@ function naturalCompare(a, b) {
   return aNum - bNum;
 }
 function occupantCount(room) { return (room.occupants || []).length; }
+function isPendingOccupant(o) {
+  // Flags anyone not confirmed present at the last physical verify, OR
+  // anyone with a missing/invalid Iqama or mobile number — both need
+  // follow-up, so both show up as "pending" on room cards and counts.
+  if (o.status && o.status.startsWith('Not found')) return true;
+  const iq = (o.iqama || '').trim();
+  const mob = (o.mobile || '').trim();
+  const iqamaOk = !!iq && (/^\d{10}$/.test(iq) || /^[A-Za-z]/.test(iq));
+  const mobileOk = /^\d{10}$/.test(mob);
+  return !iqamaOk || !mobileOk;
+}
 function vacantCount(room) { return Math.max(0, (room.capacity || 0) - occupantCount(room)); }
 function overCount(room) { return Math.max(0, occupantCount(room) - (room.capacity || 0)); }
 function roomStatus(room) {
@@ -4838,7 +4849,7 @@ function buildingStats(buildingId) {
     if (over > 0) { overRooms++; overStaff += over; }
     byStatus[roomStatus(r)]++;
     (r.occupants || []).forEach(o => {
-      if (o.status && o.status.startsWith('Not found')) pending++;
+      if (isPendingOccupant(o)) pending++;
       if (o.status === 'On Vacation') onVacation++;
     });
   });
@@ -5201,7 +5212,7 @@ function renderBuildingDetail(view, buildingId) {
 function roomChip(r) {
   const occ = occupantCount(r), cap = r.capacity || 0;
   const status = roomStatus(r);
-  const pending = (r.occupants || []).some(o => o.status && o.status.startsWith('Not found'));
+  const pending = (r.occupants || []).some(isPendingOccupant);
   const cls = 'room-chip room-chip-' + status + (pending ? ' room-chip-pending' : '');
   return el('div', { class: cls, onclick: () => goto('/room/' + r.id) }, [
     el('div', { class: 'room-chip-no' }, [(r.floor ? r.floor + ' ' : '') + 'Room ' + r.roomNo.replace(/^(GF|FF)-?/, '')]),
@@ -5774,14 +5785,19 @@ function openAddOccupantModal(buildingId, presetRoomNo) {
   const rooms = roomsForBuilding(buildingId);
   const roomSelect = el('select', { class: 'input-inline' }, rooms.map(r => el('option', { value: r.roomNo, selected: presetRoomNo === r.roomNo ? 'true' : null }, [r.roomNo + ' (' + occupantCount(r) + '/' + r.capacity + ')'])));
   const nameInp = el('input', { type: 'text', class: 'input-inline', placeholder: 'Full name' });
-  const iqamaInp = el('input', { type: 'text', inputmode: 'numeric', maxlength: '10', class: 'input-inline', placeholder: '10-digit Iqama / ID number' });
+  const iqamaInp = el('input', { type: 'text', class: 'input-inline', placeholder: '10-digit Iqama, or passport no. (e.g. P5122465)' });
   const mobileInp = el('input', { type: 'text', inputmode: 'numeric', maxlength: '10', class: 'input-inline', placeholder: '10-digit mobile number' });
   const saveBtn = el('button', { class: 'btn btn-primary btn-block' }, ['Add']);
   saveBtn.addEventListener('click', async () => {
     if (!nameInp.value.trim()) { toast('Name is required', true); return; }
     const iqamaVal = iqamaInp.value.trim();
     const mobileVal = mobileInp.value.trim();
-    if (!/^\d{10}$/.test(iqamaVal)) { toast('Please enter the correct ID number — must be exactly 10 digits', true); return; }
+    const iqamaIsPassport = /^[A-Za-z]/.test(iqamaVal);
+    if (iqamaIsPassport) {
+      if (iqamaVal.length < 5) { toast('Please enter a valid passport number', true); return; }
+    } else if (!/^\d{10}$/.test(iqamaVal)) {
+      toast('Please enter the correct Iqama number (10 digits) — or a passport number starting with a letter', true); return;
+    }
     if (!/^\d{10}$/.test(mobileVal)) { toast('Please enter the correct mobile number — must be exactly 10 digits', true); return; }
     const roomDoc = roomDocId(buildingId, roomSelect.value);
     const room = state.rooms[roomDoc];
