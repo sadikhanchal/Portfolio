@@ -5039,11 +5039,14 @@ function tabBtn(route, label, iconName) {
 }
 
 // ---------- Views ----------
+const scrollPositions = {}; // route hash -> last scrollTop, so Back restores where you were
 function render() {
   if (!isUnlocked()) { renderPinGate(); return; }
   renderShell();
   const view = $('#view');
   const { name, arg } = currentRoute();
+  const scrollKey = location.hash || '#/dashboard';
+  view.addEventListener('scroll', () => { scrollPositions[scrollKey] = view.scrollTop; }, { passive: true });
   if (name === 'settings' && getRole() !== 'admin' && getRole() !== 'superadmin') { goto('/dashboard'); return; }
   if (name === 'reconcile' && !can('verify')) { goto('/dashboard'); return; }
   if (name === 'dashboard') renderDashboard(view);
@@ -5056,6 +5059,7 @@ function render() {
   else if (name === 'export') renderExport(view);
   else if (name === 'settings') renderSettings(view);
   else renderDashboard(view);
+  requestAnimationFrame(() => { view.scrollTop = scrollPositions[scrollKey] || 0; });
 }
 
 function renderDashboard(view) {
