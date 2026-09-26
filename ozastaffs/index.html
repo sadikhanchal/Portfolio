@@ -127,9 +127,18 @@ body {
 .occupant-sub { font-size: 12px; margin-top: 2px; }
 .mobile-link { color: var(--blue); font-weight: 600; text-decoration: none; }
 .mobile-link:active { opacity: .6; }
-.occ-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-.occ-avatar-fallback { display: flex; align-items: center; justify-content: center; background: #dde6f2; color: var(--blue); font-weight: 700; font-size: 15px; }
-.photo-preview { display: block; max-width: 140px; max-height: 140px; border-radius: 10px; margin: 8px 0; object-fit: cover; }
+.occ-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex-shrink: 0; cursor: pointer; }
+.occ-avatar-fallback { display: flex; align-items: center; justify-content: center; background: #dde6f2; color: var(--blue); font-weight: 700; font-size: 15px; cursor: default; }
+.photo-preview { display: block; max-width: 140px; max-height: 140px; border-radius: 10px; margin: 8px 0; object-fit: cover; cursor: pointer; }
+
+/* Photo cropper */
+.crop-box { position: relative; width: 260px; height: 260px; max-width: 100%; margin: 10px auto; overflow: hidden; border-radius: 10px; background: #111; touch-action: none; }
+.crop-img { position: absolute; top: 0; left: 0; transform-origin: top left; user-select: none; -webkit-user-drag: none; }
+.crop-zoom { width: 100%; margin: 6px 0 12px; }
+
+/* Fullscreen photo lightbox */
+.lightbox-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.92); display: flex; align-items: center; justify-content: center; z-index: 300; padding: 20px; }
+.lightbox-img { max-width: 92vw; max-height: 92vh; border-radius: 10px; object-fit: contain; }
 .occupant-actions { display: flex; gap: 4px; }
 .occupant-main { flex: 1; min-width: 0; }
 .search-result { cursor: pointer; margin-bottom: 8px; }
@@ -5765,14 +5774,18 @@ function openAddOccupantModal(buildingId, presetRoomNo) {
   const rooms = roomsForBuilding(buildingId);
   const roomSelect = el('select', { class: 'input-inline' }, rooms.map(r => el('option', { value: r.roomNo, selected: presetRoomNo === r.roomNo ? 'true' : null }, [r.roomNo + ' (' + occupantCount(r) + '/' + r.capacity + ')'])));
   const nameInp = el('input', { type: 'text', class: 'input-inline', placeholder: 'Full name' });
-  const iqamaInp = el('input', { type: 'text', class: 'input-inline', placeholder: 'Iqama / ID number' });
-  const mobileInp = el('input', { type: 'text', class: 'input-inline', placeholder: 'Mobile number' });
+  const iqamaInp = el('input', { type: 'text', inputmode: 'numeric', maxlength: '10', class: 'input-inline', placeholder: '10-digit Iqama / ID number' });
+  const mobileInp = el('input', { type: 'text', inputmode: 'numeric', maxlength: '10', class: 'input-inline', placeholder: '10-digit mobile number' });
   const saveBtn = el('button', { class: 'btn btn-primary btn-block' }, ['Add']);
   saveBtn.addEventListener('click', async () => {
     if (!nameInp.value.trim()) { toast('Name is required', true); return; }
+    const iqamaVal = iqamaInp.value.trim();
+    const mobileVal = mobileInp.value.trim();
+    if (!/^\d{10}$/.test(iqamaVal)) { toast('Please enter the correct ID number — must be exactly 10 digits', true); return; }
+    if (!/^\d{10}$/.test(mobileVal)) { toast('Please enter the correct mobile number — must be exactly 10 digits', true); return; }
     const roomDoc = roomDocId(buildingId, roomSelect.value);
     const room = state.rooms[roomDoc];
-    const occ = [...(room.occupants || []), { id: uid(), name: nameInp.value.trim(), iqama: iqamaInp.value.trim(), mobile: mobileInp.value.trim(), status: null }];
+    const occ = [...(room.occupants || []), { id: uid(), name: nameInp.value.trim(), iqama: iqamaVal, mobile: mobileVal, status: null }];
     await db.collection('rooms').doc(roomDoc).set({ occupants: occ }, { merge: true });
     logAudit('Added staff', nameInp.value.trim() + ' → ' + (state.buildings[buildingId] ? state.buildings[buildingId].name : buildingId) + ' Room ' + roomSelect.value);
     toast('Added ' + nameInp.value.trim());
@@ -5787,29 +5800,75 @@ function openAddOccupantModal(buildingId, presetRoomNo) {
   ]));
 }
 
-function resizeImageToDataUri(file, maxDim, quality) {
-  return new Promise((resolve, reject) => {
+function buildCropperUI(file, onConfirm, onCancel) {
+  const wrap = el('div', {});
+  const status = el('div', { class: 'muted small' }, ['Loading…']);
+  wrap.appendChild(status);
+  const reader = new FileReader();
+  reader.onload = () => {
     const img = new Image();
-    const reader = new FileReader();
-    reader.onload = () => {
-      img.onload = () => {
-        let w = img.width, h = img.height;
-        if (w > h && w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; }
-        else if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; }
+    img.onload = () => {
+      wrap.innerHTML = '';
+      const boxSize = 260;
+      let zoom = 1;
+      const baseScale = Math.max(boxSize / img.width, boxSize / img.height);
+      let tx = 0, ty = 0;
+      function dims() { const scale = baseScale * zoom; return { scale, dw: img.width * scale, dh: img.height * scale }; }
+      function clampPos() {
+        const { dw, dh } = dims();
+        tx = Math.min(0, Math.max(boxSize - dw, tx));
+        ty = Math.min(0, Math.max(boxSize - dh, ty));
+      }
+      const imgEl = el('img', { src: img.src, class: 'crop-img', draggable: 'false' });
+      function updateTransform() {
+        const { dw, dh } = dims();
+        imgEl.style.width = dw + 'px'; imgEl.style.height = dh + 'px';
+        imgEl.style.transform = 'translate(' + tx + 'px,' + ty + 'px)';
+      }
+      { const { dw, dh } = dims(); tx = (boxSize - dw) / 2; ty = (boxSize - dh) / 2; }
+      const box = el('div', { class: 'crop-box' }, [imgEl]);
+      updateTransform();
+      let dragging = false, startX, startY, startTX, startTY;
+      box.addEventListener('pointerdown', e => { dragging = true; startX = e.clientX; startY = e.clientY; startTX = tx; startTY = ty; box.setPointerCapture(e.pointerId); });
+      box.addEventListener('pointermove', e => { if (!dragging) return; tx = startTX + (e.clientX - startX); ty = startTY + (e.clientY - startY); clampPos(); updateTransform(); });
+      box.addEventListener('pointerup', () => { dragging = false; });
+      box.addEventListener('pointercancel', () => { dragging = false; });
+      const zoomSlider = el('input', { type: 'range', min: '100', max: '300', value: '100', class: 'crop-zoom' });
+      zoomSlider.addEventListener('input', () => { zoom = parseInt(zoomSlider.value, 10) / 100; clampPos(); updateTransform(); });
+      const useBtn = el('button', { class: 'btn btn-primary btn-block' }, ['Use Photo']);
+      useBtn.addEventListener('click', () => {
+        const { scale } = dims();
         const canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL('image/jpeg', quality));
-      };
-      img.onerror = reject;
-      img.src = reader.result;
+        const outSize = 320;
+        canvas.width = outSize; canvas.height = outSize;
+        canvas.getContext('2d').drawImage(img, -tx / scale, -ty / scale, boxSize / scale, boxSize / scale, 0, 0, outSize, outSize);
+        onConfirm(canvas.toDataURL('image/jpeg', 0.78));
+      });
+      const cancelBtn = el('button', { class: 'btn btn-outline btn-block' }, ['Cancel']);
+      cancelBtn.addEventListener('click', onCancel);
+      wrap.appendChild(el('div', { class: 'muted small' }, ['Drag to position, use the slider to zoom, then crop to just the face.']));
+      wrap.appendChild(box);
+      wrap.appendChild(el('label', { class: 'field-label' }, ['Zoom']));
+      wrap.appendChild(zoomSlider);
+      wrap.appendChild(useBtn);
+      wrap.appendChild(cancelBtn);
     };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
+    img.onerror = () => { wrap.innerHTML = ''; wrap.appendChild(el('div', { class: 'muted small' }, ['Could not read that photo.'])); };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+  return wrap;
 }
+function openPhotoLightbox(src) {
+  if (!src) return;
+  const overlay = el('div', { class: 'lightbox-overlay', id: 'lightbox-overlay', onclick: closeLightbox }, [
+    el('img', { src, class: 'lightbox-img' }),
+  ]);
+  document.body.appendChild(overlay);
+}
+function closeLightbox() { const o = $('#lightbox-overlay'); if (o) o.remove(); }
 function occupantAvatar(o) {
-  if (o.photo) return el('img', { src: o.photo, class: 'occ-avatar' });
+  if (o.photo) return el('img', { src: o.photo, class: 'occ-avatar', onclick: (e) => { e.stopPropagation(); openPhotoLightbox(o.photo); } });
   const initial = (o.name || '?').trim().charAt(0).toUpperCase() || '?';
   return el('div', { class: 'occ-avatar occ-avatar-fallback' }, [initial]);
 }
@@ -5831,19 +5890,36 @@ function openEditOccupantModal(room, o) {
   refreshStatusOptions();
   statusSelect.addEventListener('change', () => { newStatusInp.style.display = statusSelect.value === '__new__' ? '' : 'none'; });
   let photoData = o.photo || null;
-  const preview = el('img', { class: 'photo-preview', src: photoData || '' });
+  const preview = el('img', { class: 'photo-preview', src: photoData || '', onclick: () => openPhotoLightbox(photoData) });
   preview.style.display = photoData ? '' : 'none';
   const fileInp = el('input', { type: 'file', accept: 'image/*', capture: 'environment', class: 'input-inline' });
-  fileInp.addEventListener('change', async () => {
+  const formNode = el('div', {}, [
+    el('label', { class: 'field-label' }, ['Name']), nameInp,
+    el('label', { class: 'field-label' }, ['Iqama / ID No.']), iqamaInp,
+    el('label', { class: 'field-label' }, ['Mobile']), mobileInp,
+    el('label', { class: 'field-label' }, ['Status note']), statusSelect, newStatusInp,
+    el('label', { class: 'field-label' }, ['Photo']),
+    preview,
+    fileInp,
+    el('button', { class: 'btn btn-outline', onclick: () => { photoData = null; preview.style.display = 'none'; preview.src = ''; } }, ['Remove Photo']),
+    el('button', { class: 'btn btn-primary btn-block' /* filled below */ }, ['Save Changes']),
+  ]);
+  const saveBtn = formNode.children[formNode.children.length - 1];
+  fileInp.addEventListener('change', () => {
     const f = fileInp.files[0];
     if (!f) return;
-    try {
-      photoData = await resizeImageToDataUri(f, 480, 0.6);
+    const modalBody = document.querySelector('#modal-overlay .modal-body');
+    if (!modalBody) return;
+    const cropperNode = buildCropperUI(f, (dataUri) => {
+      photoData = dataUri;
       preview.src = photoData; preview.style.display = '';
-    } catch (e) { toast('Could not read that photo', true); }
+      modalBody.innerHTML = ''; modalBody.appendChild(formNode);
+    }, () => {
+      fileInp.value = '';
+      modalBody.innerHTML = ''; modalBody.appendChild(formNode);
+    });
+    modalBody.innerHTML = ''; modalBody.appendChild(cropperNode);
   });
-  const removePhotoBtn = el('button', { class: 'btn btn-outline', onclick: () => { photoData = null; preview.style.display = 'none'; preview.src = ''; } }, ['Remove Photo']);
-  const saveBtn = el('button', { class: 'btn btn-primary btn-block' }, ['Save Changes']);
   saveBtn.addEventListener('click', async () => {
     let finalStatus = statusSelect.value;
     if (finalStatus === '__new__') {
@@ -5858,29 +5934,19 @@ function openEditOccupantModal(room, o) {
     toast('Saved');
     closeModal();
   });
-  openModal('Edit Occupant', el('div', {}, [
-    el('label', { class: 'field-label' }, ['Name']), nameInp,
-    el('label', { class: 'field-label' }, ['Iqama / ID No.']), iqamaInp,
-    el('label', { class: 'field-label' }, ['Mobile']), mobileInp,
-    el('label', { class: 'field-label' }, ['Status note']), statusSelect, newStatusInp,
-    el('label', { class: 'field-label' }, ['Photo']),
-    preview,
-    fileInp,
-    removePhotoBtn,
-    saveBtn,
-  ]));
+  openModal('Edit Occupant', formNode);
 }
 
 function openTransferModal(room, o) {
   const buildingSelect = el('select', { class: 'input-inline' }, Object.values(state.buildings).sort((a, b) => naturalCompare(a.id, b.id)).map(b => el('option', { value: b.id, selected: b.id === room.buildingId ? 'true' : null }, [b.name])));
   let roomSelect = el('select', { class: 'input-inline' });
-  function refreshRooms() {
+  function refreshRooms(preselect) {
     const rooms = roomsForBuilding(buildingSelect.value);
     roomSelect.innerHTML = '';
-    rooms.forEach(r => roomSelect.appendChild(el('option', { value: r.roomNo }, [r.roomNo + ' (' + occupantCount(r) + '/' + r.capacity + ')'])));
+    rooms.forEach(r => roomSelect.appendChild(el('option', { value: r.roomNo, selected: preselect && r.roomNo === preselect ? 'true' : null }, [r.roomNo + ' (' + occupantCount(r) + '/' + r.capacity + ')'])));
   }
-  buildingSelect.addEventListener('change', refreshRooms);
-  refreshRooms();
+  buildingSelect.addEventListener('change', () => refreshRooms(null));
+  refreshRooms(room.roomNo);
   const saveBtn = el('button', { class: 'btn btn-primary btn-block' }, ['Move Occupant']);
   saveBtn.addEventListener('click', async () => {
     const newBuildingId = buildingSelect.value, newRoomNo = roomSelect.value;
