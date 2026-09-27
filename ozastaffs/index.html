@@ -134,7 +134,7 @@ body {
 .photo-preview { display: block; max-width: 140px; max-height: 140px; border-radius: 10px; margin: 8px 0; object-fit: cover; cursor: pointer; }
 
 /* Photo cropper */
-.crop-box { position: relative; width: 260px; height: 260px; max-width: 100%; margin: 10px auto; overflow: hidden; border-radius: 10px; background: #111; touch-action: none; }
+.crop-box { position: relative; max-width: 100%; margin: 10px auto; overflow: hidden; border-radius: 10px; background: #111; touch-action: none; }
 .crop-img { position: absolute; top: 0; left: 0; transform-origin: top left; user-select: none; -webkit-user-drag: none; }
 .crop-zoom { width: 100%; margin: 6px 0 12px; }
 
@@ -5831,15 +5831,22 @@ function buildCropperUI(file, onConfirm, onCancel) {
     const img = new Image();
     img.onload = () => {
       wrap.innerHTML = '';
-      const boxSize = 260;
+      // Crop frame matches a standard ID-photo ratio (6.5 x 8.1 cm portrait)
+      // instead of a square, so it fits normal ID/passport photos properly.
+      const RATIO = 6.5 / 8.1; // width / height
+      const boxH = 280, boxW = Math.round(boxH * RATIO);
       let zoom = 1;
-      const baseScale = Math.max(boxSize / img.width, boxSize / img.height);
+      const baseScale = Math.max(boxW / img.width, boxH / img.height);
       let tx = 0, ty = 0;
       function dims() { const scale = baseScale * zoom; return { scale, dw: img.width * scale, dh: img.height * scale }; }
+      function clampAxis(pos, boxSize, dSize) {
+        if (dSize <= boxSize) return (boxSize - dSize) / 2; // smaller than frame: center, no drag needed
+        return Math.min(0, Math.max(boxSize - dSize, pos));
+      }
       function clampPos() {
         const { dw, dh } = dims();
-        tx = Math.min(0, Math.max(boxSize - dw, tx));
-        ty = Math.min(0, Math.max(boxSize - dh, ty));
+        tx = clampAxis(tx, boxW, dw);
+        ty = clampAxis(ty, boxH, dh);
       }
       const imgEl = el('img', { src: img.src, class: 'crop-img', draggable: 'false' });
       function updateTransform() {
@@ -5847,28 +5854,30 @@ function buildCropperUI(file, onConfirm, onCancel) {
         imgEl.style.width = dw + 'px'; imgEl.style.height = dh + 'px';
         imgEl.style.transform = 'translate(' + tx + 'px,' + ty + 'px)';
       }
-      { const { dw, dh } = dims(); tx = (boxSize - dw) / 2; ty = (boxSize - dh) / 2; }
-      const box = el('div', { class: 'crop-box' }, [imgEl]);
+      { const { dw, dh } = dims(); tx = (boxW - dw) / 2; ty = (boxH - dh) / 2; }
+      const box = el('div', { class: 'crop-box', style: 'width:' + boxW + 'px;height:' + boxH + 'px;' }, [imgEl]);
       updateTransform();
       let dragging = false, startX, startY, startTX, startTY;
       box.addEventListener('pointerdown', e => { dragging = true; startX = e.clientX; startY = e.clientY; startTX = tx; startTY = ty; box.setPointerCapture(e.pointerId); });
-      box.addEventListener('pointermove', e => { if (!dragging) return; tx = startTX + (e.clientX - startX); ty = startTY + (e.clientY - startY); clampPos(); updateTransform(); });
+      box.addEventListener('pointermove', e => { if (!dragging) return; tx = clampAxis(startTX + (e.clientX - startX), boxW, dims().dw); ty = clampAxis(startTY + (e.clientY - startY), boxH, dims().dh); updateTransform(); });
       box.addEventListener('pointerup', () => { dragging = false; });
       box.addEventListener('pointercancel', () => { dragging = false; });
-      const zoomSlider = el('input', { type: 'range', min: '100', max: '300', value: '100', class: 'crop-zoom' });
+      // 50 = zoomed out to half the "fill the frame" size (lets more of a long
+      // photo show inside the frame); 300 = zoomed in to 3x, for a tight crop.
+      const zoomSlider = el('input', { type: 'range', min: '50', max: '300', value: '100', class: 'crop-zoom' });
       zoomSlider.addEventListener('input', () => { zoom = parseInt(zoomSlider.value, 10) / 100; clampPos(); updateTransform(); });
       const useBtn = el('button', { class: 'btn btn-primary btn-block' }, ['Use Photo']);
       useBtn.addEventListener('click', () => {
         const { scale } = dims();
         const canvas = document.createElement('canvas');
-        const outSize = 320;
-        canvas.width = outSize; canvas.height = outSize;
-        canvas.getContext('2d').drawImage(img, -tx / scale, -ty / scale, boxSize / scale, boxSize / scale, 0, 0, outSize, outSize);
-        onConfirm(canvas.toDataURL('image/jpeg', 0.78));
+        const outH = 340, outW = Math.round(outH * RATIO);
+        canvas.width = outW; canvas.height = outH;
+        canvas.getContext('2d').drawImage(img, -tx / scale, -ty / scale, boxW / scale, boxH / scale, 0, 0, outW, outH);
+        onConfirm(canvas.toDataURL('image/jpeg', 0.8));
       });
       const cancelBtn = el('button', { class: 'btn btn-outline btn-block' }, ['Cancel']);
       cancelBtn.addEventListener('click', onCancel);
-      wrap.appendChild(el('div', { class: 'muted small' }, ['Drag to position, use the slider to zoom, then crop to just the face.']));
+      wrap.appendChild(el('div', { class: 'muted small' }, ['Drag to position, use the slider to zoom in or out, then crop.']));
       wrap.appendChild(box);
       wrap.appendChild(el('label', { class: 'field-label' }, ['Zoom']));
       wrap.appendChild(zoomSlider);
