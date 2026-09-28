@@ -78,7 +78,7 @@ html[dir="rtl"] .view { direction: rtl; }
 html[dir="rtl"] input:not(.pin-input), html[dir="rtl"] textarea, html[dir="rtl"] select { direction: rtl; text-align: right; }
 html[dir="rtl"] .pin-input { direction: ltr; }
 html[dir="rtl"] .badge-stack { float: left; margin-left: 0; margin-right: 10px; align-items: flex-start; }
-html[dir="rtl"] .back-btn { transform: scaleX(-1); }
+html[dir="rtl"] .back-btn { transform: none; direction: rtl; }
 .view { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 14px 90px; }
 .view > * { max-width: 720px; margin-left: auto; margin-right: auto; }
 .section.sticky-header { position: sticky; top: -4px; padding: 8px 0 6px; background: var(--bg); z-index: 5; }
@@ -5054,7 +5054,7 @@ const AR = {
   'OZA': 'OZA', 'Staff Accommodation': 'سكن الموظفين', 'OZA Accommodation': 'سكن OZA',
   'Enter your access code to continue': 'أدخل رمز الدخول للمتابعة', 'Unlock': 'فتح',
   'Home': 'الرئيسية', 'Search': 'بحث', 'Verify': 'تحقق', 'Export': 'تصدير', 'More': 'المزيد',
-  'Rooms': 'الغرف', 'Room': 'غرفة', 'Rooms —': 'غرف —', 'Staff': 'الموظفون', 'Buildings': 'المباني',
+  'Rooms': 'الغرف', 'Room': 'غرفة', 'Rooms —': 'غرف —', 'Staff': 'الموظفون', 'Buildings': 'المباني', 'Building': 'المبنى',
   'Total Staffs': 'إجمالي الموظفين', 'Total Rooms': 'إجمالي الغرف', 'Total Staff': 'إجمالي الموظفين', 'Vacant Spaces': 'الأماكن الشاغرة', 'Full Rooms': 'الغرف الممتلئة',
   'Empty Rooms': 'الغرف الفارغة', 'Over-equipped': 'متجاوزة السعة', 'Open': 'متاحة', 'Full': 'ممتلئة',
   'Empty': 'فارغة', 'Over': 'متجاوزة', 'Over-equipped Rooms': 'الغرف المتجاوزة للسعة',
