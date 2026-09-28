@@ -131,6 +131,10 @@ body {
 .mobile-link:active { opacity: .6; }
 .occ-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex-shrink: 0; cursor: pointer; }
 .occ-avatar-fallback { display: flex; align-items: center; justify-content: center; background: #dde6f2; color: var(--blue); font-weight: 700; font-size: 15px; cursor: default; }
+.occ-avatar-lg { width: 52px; height: 65px; border-radius: 10px; }
+.occ-avatar-lg.occ-avatar-fallback { font-size: 22px; }
+.person-card { display: flex; align-items: center; gap: 12px; }
+.person-card-text { flex: 1; min-width: 0; }
 .photo-preview { display: block; max-width: 140px; max-height: 140px; border-radius: 10px; margin: 8px 0; object-fit: cover; cursor: pointer; }
 
 /* Photo cropper */
@@ -5164,13 +5168,7 @@ function renderVacationList(view) {
   if (!list.length) { view.appendChild(el('div', { class: 'section muted' }, ['Nobody is currently marked on vacation.'])); return; }
   const container = el('div', { class: 'section' });
   list.forEach(o => {
-    const b = state.buildings[o.buildingId];
-    const room = state.rooms[o.roomDocId];
-    container.appendChild(el('div', { class: 'card search-result', onclick: () => goto('/room/' + o.roomDocId) }, [
-      el('div', { class: 'occupant-name' }, [o.name]),
-      el('div', { class: 'occupant-sub muted' }, [(b ? b.name : o.buildingId) + ' · Room ' + o.roomNo]),
-      el('div', { class: 'occupant-sub muted' }, occupantSubLine(o)),
-    ]));
+    container.appendChild(personResultCard(o));
   });
   view.appendChild(container);
 }
@@ -5309,12 +5307,7 @@ function renderSearch(view) {
     if (!all.length) { results.appendChild(el('div', { class: 'muted' }, ['No matches.'])); return; }
     results.appendChild(el('div', { class: 'muted' }, [all.length + ' result(s)']));
     all.forEach(o => {
-      const b = state.buildings[o.buildingId];
-      results.appendChild(el('div', { class: 'card search-result', onclick: () => goto('/room/' + o.roomDocId) }, [
-        el('div', { class: 'occupant-name' }, [o.name]),
-        el('div', { class: 'occupant-sub muted' }, [(b ? b.name : o.buildingId) + ' · Room ' + o.roomNo]),
-        el('div', { class: 'occupant-sub muted' }, occupantSubLine(o)),
-      ]));
+      results.appendChild(personResultCard(o));
     });
   }
   input.addEventListener('input', doSearch);
@@ -5898,10 +5891,24 @@ function openPhotoLightbox(src) {
   document.body.appendChild(overlay);
 }
 function closeLightbox() { const o = $('#lightbox-overlay'); if (o) o.remove(); }
-function occupantAvatar(o) {
-  if (o.photo) return el('img', { src: o.photo, class: 'occ-avatar', onclick: (e) => { e.stopPropagation(); openPhotoLightbox(o.photo); } });
+function occupantAvatar(o, large) {
+  const sz = large ? ' occ-avatar-lg' : '';
+  if (o.photo) return el('img', { src: o.photo, class: 'occ-avatar' + sz, onclick: (e) => { e.stopPropagation(); openPhotoLightbox(o.photo); } });
   const initial = (o.name || '?').trim().charAt(0).toUpperCase() || '?';
-  return el('div', { class: 'occ-avatar occ-avatar-fallback' }, [initial]);
+  return el('div', { class: 'occ-avatar occ-avatar-fallback' + sz }, [initial]);
+}
+// Result card used by Search and the Vacation list: a larger portrait photo
+// (or initial) beside three lines of text — name, location, ID/mobile.
+function personResultCard(o) {
+  const b = state.buildings[o.buildingId];
+  return el('div', { class: 'card search-result person-card', onclick: () => goto('/room/' + o.roomDocId) }, [
+    occupantAvatar(o, true),
+    el('div', { class: 'person-card-text' }, [
+      el('div', { class: 'occupant-name' }, [o.name]),
+      el('div', { class: 'occupant-sub muted' }, [(b ? b.name : o.buildingId) + ' · Room ' + o.roomNo]),
+      el('div', { class: 'occupant-sub muted' }, occupantSubLine(o)),
+    ]),
+  ]);
 }
 function openEditOccupantModal(room, o) {
   const nameInp = el('input', { type: 'text', class: 'input-inline', value: o.name || '' });
