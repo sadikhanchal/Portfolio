@@ -222,6 +222,20 @@ html[dir="rtl"] .occupant-name-secondary { direction: ltr; text-align: right; }
   .room-grid { grid-template-columns: repeat(5, 1fr); }
 }
 
+
+/* Dashboard stat layout: primary totals first, clickable room-status cards second. */
+.stat-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.stat-row-secondary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.stat-box { position: relative; min-width: 0; }
+.stat-box-click { cursor: pointer; border-inline-start: 4px solid var(--stat-accent, var(--blue)); transition: transform .12s ease, box-shadow .12s ease, filter .12s ease; }
+.stat-box-click::after { content: '\2197'; position: absolute; inset-inline-end: 9px; top: 6px; color: var(--stat-accent, var(--blue)); font-size: 13px; font-weight: 800; opacity: .72; }
+.stat-box-click:hover { filter: brightness(.98); box-shadow: 0 4px 10px rgba(20,50,90,.14); }
+.stat-box-click:active { transform: translateY(1px); box-shadow: 0 1px 3px rgba(20,50,90,.12); }
+.stat-box-vacant { --stat-accent: #b5650c; background: linear-gradient(180deg, #fffaf0, #fdf0d8); border-color: #e8c27d; }
+.stat-box-full { --stat-accent: #1e8e5a; background: linear-gradient(180deg, #f4fcf7, #e1f4e9); border-color: #9ed5b6; }
+.stat-box-empty { --stat-accent: #55606c; background: linear-gradient(180deg, #fafbfc, #edf0f3); border-color: #c4cbd2; }
+.stat-box-over { --stat-accent: #c0392b; background: linear-gradient(180deg, #fff7f6, #fbe2df); border-color: #e5aaa2; }
+@media (min-width: 720px) { .stat-row-secondary { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 </style>
 </head>
 <body>
@@ -5041,7 +5055,7 @@ const AR = {
   'Enter your access code to continue': 'أدخل رمز الدخول للمتابعة', 'Unlock': 'فتح',
   'Home': 'الرئيسية', 'Search': 'بحث', 'Verify': 'تحقق', 'Export': 'تصدير', 'More': 'المزيد',
   'Rooms': 'الغرف', 'Room': 'غرفة', 'Rooms —': 'غرف —', 'Staff': 'الموظفون', 'Buildings': 'المباني',
-  'Total Staff': 'إجمالي الموظفين', 'Vacant Spaces': 'الأماكن الشاغرة', 'Full Rooms': 'الغرف الممتلئة',
+  'Total Staffs': 'إجمالي الموظفين', 'Total Rooms': 'إجمالي الغرف', 'Total Staff': 'إجمالي الموظفين', 'Vacant Spaces': 'الأماكن الشاغرة', 'Full Rooms': 'الغرف الممتلئة',
   'Empty Rooms': 'الغرف الفارغة', 'Over-equipped': 'متجاوزة السعة', 'Open': 'متاحة', 'Full': 'ممتلئة',
   'Empty': 'فارغة', 'Over': 'متجاوزة', 'Over-equipped Rooms': 'الغرف المتجاوزة للسعة',
   'Rooms With Space': 'الغرف التي بها مساحة', 'Staff on Vacation': 'الموظفون في إجازة',
@@ -5238,17 +5252,17 @@ function renderDashboard(view) {
     else if (st === 'over') overRooms2++;
   });
   view.appendChild(el('div', { class: 'section' }, [
-    el('div', { class: 'stat-row' }, [
-      statBox(totalStaff, 'Total Staff'),
-      statBox(totalRooms, 'Rooms'),
-      statBox(totalVacant, 'Vacant Spaces', () => goto('/rooms/partial')),
+    el('div', { class: 'stat-row stat-row-primary' }, [
+      statBox(totalStaff, 'Total Staffs'),
+      statBox(totalRooms, 'Total Rooms'),
     ]),
   ]));
   view.appendChild(el('div', { class: 'section' }, [
-    el('div', { class: 'stat-row' }, [
-      statBox(fullRooms, 'Full Rooms', () => goto('/rooms/full')),
-      statBox(emptyRooms, 'Empty Rooms', () => goto('/rooms/empty')),
-      statBox(overRooms2, 'Over-equipped', () => goto('/rooms/over')),
+    el('div', { class: 'stat-row stat-row-secondary' }, [
+      statBox(totalVacant, 'Vacant Spaces', () => goto('/rooms/partial'), 'vacant'),
+      statBox(fullRooms, 'Full Rooms', () => goto('/rooms/full'), 'full'),
+      statBox(emptyRooms, 'Empty Rooms', () => goto('/rooms/empty'), 'empty'),
+      statBox(overRooms2, 'Over-equipped', () => goto('/rooms/over'), 'over'),
     ]),
   ]));
   if (totalVacation > 0) {
@@ -5264,8 +5278,8 @@ function renderDashboard(view) {
     el('div', { class: 'card-grid' }, cards),
   ]));
 }
-function statBox(num, label, onclick) {
-  return el('div', { class: 'stat-box' + (onclick ? ' stat-box-click' : ''), onclick: onclick || null }, [el('div', { class: 'stat-num' }, [String(num)]), el('div', { class: 'stat-label' }, [label])]);
+function statBox(num, label, onclick, accent) {
+  return el('div', { class: 'stat-box' + (onclick ? ' stat-box-click' : '') + (accent ? ' stat-box-' + accent : ''), onclick: onclick || null }, [el('div', { class: 'stat-num' }, [String(num)]), el('div', { class: 'stat-label' }, [label])]);
 }
 function renderRoomStatusList(view, status) {
   view.innerHTML = '';
