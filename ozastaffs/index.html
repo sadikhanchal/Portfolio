@@ -65,6 +65,20 @@ body {
 .topbar-user { font-size: 12px; font-weight: 600; color: var(--ink); max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
 .logout-btn { border: none; background: #f0f2f5; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--blue); flex-shrink: 0; }
 .logout-btn svg { width: 18px; height: 18px; }
+.lang-toggle { position: relative; display: inline-flex; align-items: center; gap: 2px; height: 34px; padding: 3px; border: 1px solid #d5e2f1; border-radius: 999px; background: linear-gradient(135deg, #f8fbff, #edf4fb); color: var(--blue); box-shadow: 0 2px 7px rgba(9,82,161,.12), inset 0 1px 0 rgba(255,255,255,.9); cursor: pointer; flex-shrink: 0; }
+.lang-toggle::before { content: ''; position: absolute; top: 3px; bottom: 3px; width: 31px; border-radius: 999px; background: var(--blue); box-shadow: 0 2px 6px rgba(9,82,161,.28); transition: transform .22s ease; z-index: 0; }
+.lang-toggle[data-lang="ar"]::before { transform: translateX(31px); }
+.lang-toggle .lang-option { position: relative; z-index: 1; min-width: 31px; padding: 5px 6px; border-radius: 999px; font-size: 10px; font-weight: 800; line-height: 1; text-align: center; transition: color .22s ease; }
+.lang-toggle .lang-option.active { color: #fff; }
+html[dir="rtl"] .lang-toggle[data-lang="ar"]::before { transform: translateX(31px); }
+html[dir="rtl"] .lang-toggle[data-lang="en"]::before { transform: translateX(0); }
+html[dir="rtl"] .topbar { direction: ltr; }
+html[dir="rtl"] .topbar-title, html[dir="rtl"] .topbar-user { direction: rtl; text-align: right; }
+html[dir="rtl"] .view { direction: rtl; }
+html[dir="rtl"] input:not(.pin-input), html[dir="rtl"] textarea, html[dir="rtl"] select { direction: rtl; text-align: right; }
+html[dir="rtl"] .pin-input { direction: ltr; }
+html[dir="rtl"] .badge-stack { float: left; margin-left: 0; margin-right: 10px; align-items: flex-start; }
+html[dir="rtl"] .back-btn { transform: scaleX(-1); }
 .view { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 14px 90px; }
 .view > * { max-width: 720px; margin-left: auto; margin-right: auto; }
 .section.sticky-header { position: sticky; top: -4px; padding: 8px 0 6px; background: var(--bg); z-index: 5; }
@@ -126,6 +140,9 @@ body {
 .occupant-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
 .occupant-flag { border-color: var(--red); background: #fdecea; }
 .occupant-name { font-weight: 600; font-size: 14px; }
+.bilingual-name { min-width: 0; }
+.occupant-name-secondary { color: var(--muted); font-size: 12px; line-height: 1.25; margin-top: 2px; font-weight: 500; }
+html[dir="rtl"] .occupant-name-secondary { direction: ltr; text-align: right; }
 .occupant-sub { font-size: 12px; margin-top: 2px; }
 .mobile-link { color: var(--blue); font-weight: 600; text-decoration: none; }
 .mobile-link:active { opacity: .6; }
@@ -4775,7 +4792,7 @@ const auth = firebase.auth();
 const state = {
   buildings: {},      // id -> {id,name,hasFloors,declaredRooms,toilets,lastVerified,verifiedBy}
   rooms: {},          // docId -> {id,buildingId,roomNo,floor,capacity,occupants:[],lastVerified,verifiedBy}
-  users: {},          // docId -> {id,name,code,role,permissions}
+  users: {},          // docId -> {id,name,code,role,permissions,defaultLanguage}
   statusOptions: ['On Vacation'], // grows as people add custom status notes
   ready: false,
   authReady: false,
@@ -4919,16 +4936,27 @@ function icon(name) { return el('span', { class: 'icon', html: ICONS[name] || ''
 
 // ---------- Session (named users, each with their own code + permissions) ----------
 function isUnlocked() { return sessionStorage.getItem('oza_unlocked') === '1'; }
-function setSession(uid, name, role, permissions) {
+function setSession(uid, name, role, permissions, defaultLanguage) {
   sessionStorage.setItem('oza_unlocked', '1');
   sessionStorage.setItem('oza_uid', uid);
   sessionStorage.setItem('oza_name', name);
   sessionStorage.setItem('oza_role', role);
   sessionStorage.setItem('oza_perms', JSON.stringify(permissions || {}));
+  sessionStorage.setItem('oza_lang', defaultLanguage === 'ar' ? 'ar' : 'en');
+  setLanguage(defaultLanguage === 'ar' ? 'ar' : 'en', false);
 }
 function getRole() { return sessionStorage.getItem('oza_role') || 'viewer'; }
 function getUserName() { return sessionStorage.getItem('oza_name') || 'Unknown'; }
 function getUid() { return sessionStorage.getItem('oza_uid') || ''; }
+function getLanguage() { return sessionStorage.getItem('oza_lang') === 'ar' ? 'ar' : 'en'; }
+function setLanguage(lang, rerender) {
+  const next = lang === 'ar' ? 'ar' : 'en';
+  sessionStorage.setItem('oza_lang', next);
+  document.documentElement.lang = next;
+  document.documentElement.dir = next === 'ar' ? 'rtl' : 'ltr';
+  if (rerender !== false && isUnlocked()) render();
+}
+function toggleLanguage() { setLanguage(getLanguage() === 'ar' ? 'en' : 'ar'); }
 function getPerms() { try { return JSON.parse(sessionStorage.getItem('oza_perms') || '{}'); } catch (e) { return {}; } }
 function can(action) {
   const role = getRole();
@@ -4939,6 +4967,8 @@ function can(action) {
 function lock() {
   sessionStorage.removeItem('oza_unlocked'); sessionStorage.removeItem('oza_uid');
   sessionStorage.removeItem('oza_name'); sessionStorage.removeItem('oza_role'); sessionStorage.removeItem('oza_perms');
+  sessionStorage.removeItem('oza_lang');
+  setLanguage('en', false);
   location.hash = ''; renderPinGate();
 }
 
@@ -4985,7 +5015,7 @@ function renderPinGate(errorMsg) {
           if (snap.empty) { renderPinGate('Wrong code, try again.'); return; }
           const doc = snap.docs[0];
           const u = doc.data();
-          setSession(doc.id, u.name || 'User', u.role || 'viewer', u.permissions || {});
+          setSession(doc.id, u.name || 'User', u.role || 'viewer', u.permissions || {}, u.defaultLanguage || 'en');
           location.hash = '/dashboard'; // always land on Dashboard on a fresh login
           boot();
         };
@@ -4995,6 +5025,7 @@ function renderPinGate(errorMsg) {
       })(),
     ]),
   ]));
+  applyLanguage();
 }
 
 function logAudit(action, detail) {
@@ -5002,6 +5033,100 @@ function logAudit(action, detail) {
     .catch(e => console.error(e));
 }
 
+// ---------- English / Arabic UI ----------
+// The data itself (names, IDs, building names and audit values) is never
+// translated. Only known interface text and safe UI prefixes are translated.
+const AR = {
+  'OZA': 'OZA', 'Staff Accommodation': 'سكن الموظفين', 'OZA Accommodation': 'سكن OZA',
+  'Enter your access code to continue': 'أدخل رمز الدخول للمتابعة', 'Unlock': 'فتح',
+  'Home': 'الرئيسية', 'Search': 'بحث', 'Verify': 'تحقق', 'Export': 'تصدير', 'More': 'المزيد',
+  'Rooms': 'الغرف', 'Room': 'غرفة', 'Rooms —': 'غرف —', 'Staff': 'الموظفون', 'Buildings': 'المباني',
+  'Total Staff': 'إجمالي الموظفين', 'Vacant Spaces': 'الأماكن الشاغرة', 'Full Rooms': 'الغرف الممتلئة',
+  'Empty Rooms': 'الغرف الفارغة', 'Over-equipped': 'متجاوزة السعة', 'Open': 'متاحة', 'Full': 'ممتلئة',
+  'Empty': 'فارغة', 'Over': 'متجاوزة', 'Over-equipped Rooms': 'الغرف المتجاوزة للسعة',
+  'Rooms With Space': 'الغرف التي بها مساحة', 'Staff on Vacation': 'الموظفون في إجازة',
+  'Away from the accommodation.': 'خارج السكن.', 'Nobody is currently marked on vacation.': 'لا يوجد موظفون مسجلون حالياً في إجازة.',
+  'Tap to see the list and mark anyone back': 'اضغط لعرض القائمة وتسجيل عودة أي شخص',
+  'Physical Verify': 'التحقق الميداني', 'Pick a building to verify.': 'اختر مبنى للتحقق منه.',
+  "Tick who's actually here.": 'حدد الموجودين فعلياً هنا.', 'Tick All Present': 'تحديد الجميع كموجودين',
+  'Untick All': 'إلغاء تحديد الجميع', 'Save Verification': 'حفظ التحقق', 'Verifying as ': 'التحقق بواسطة ',
+  'Export & Backup': 'التصدير والنسخ الاحتياطي', 'Download Excel (.xlsx)': 'تنزيل Excel (.xlsx)',
+  'Print / Save Full Register as PDF': 'طباعة / حفظ السجل الكامل بصيغة PDF', 'Print a single building': 'طباعة مبنى واحد',
+  'Search Staff': 'بحث عن موظف', 'Search name, ID or mobile…': 'ابحث بالاسم أو الهوية أو الجوال…',
+  'No matches.': 'لا توجد نتائج مطابقة.', 'result(s)': 'نتيجة', 'None right now.': 'لا يوجد حالياً.',
+  'Add Staff to a Room': 'إضافة موظف إلى غرفة', 'View only.': 'عرض فقط.', 'Bulk Set Room Capacity': 'تعيين سعة جميع الغرف',
+  'Applies to every room in this building.': 'يطبق على كل غرفة في هذا المبنى.', 'Apply to All Rooms in ': 'تطبيق على جميع غرف ',
+  'Room capacity': 'سعة الغرفة', 'Save Capacity': 'حفظ السعة', 'Occupants': 'الساكنون',
+  'Add Occupant to This Room': 'إضافة ساكن إلى هذه الغرفة', 'Back': 'رجوع', 'Pending': 'قيد الانتظار',
+  'Space Available': 'مساحة متاحة', 'Over Capacity': 'تجاوز السعة', 'occupied': 'مشغولة', 'ID: ': 'الهوية: ',
+  'More': 'المزيد', 'Users & Access': 'المستخدمون والوصول', 'Add a User': 'إضافة مستخدم', 'Lock App': 'قفل التطبيق',
+  'Danger Zone': 'منطقة الخطر', 'Re-import Original Register': 'إعادة استيراد السجل الأصلي',
+  'Overwrites all current data. Use with care.': 'سيستبدل جميع البيانات الحالية. استخدمه بحذر.',
+  'Clear Activity Log': 'مسح سجل النشاط', 'Older than 7 days': 'أقدم من 7 أيام', 'Older than 30 days': 'أقدم من 30 يوماً',
+  'Older than 90 days': 'أقدم من 90 يوماً', 'Everything': 'الكل', 'Clear': 'مسح', 'Recent Activity': 'النشاط الأخير',
+  'Load 30 More': 'تحميل 30 إضافية', 'Nothing logged yet.': 'لا يوجد نشاط مسجل بعد.', 'Could not load activity.': 'تعذر تحميل النشاط.',
+  'Name': 'الاسم', 'Arabic Name': 'الاسم بالعربية', 'Arabic full name': 'الاسم الكامل بالعربية', 'Code': 'الرمز', 'Role': 'الدور', 'Admin': 'مدير', 'Staff': 'موظف', 'Viewer': 'مشاهد',
+  'Save': 'حفظ', 'Add User': 'إضافة مستخدم', 'Default language on login': 'اللغة الافتراضية عند تسجيل الدخول',
+  'English': 'English', 'العربية': 'العربية', 'Show code': 'إظهار الرمز', 'Staff — full room/staff access': 'موظف — صلاحية كاملة للغرف والموظفين', 'Viewer — read only': 'مشاهد — للقراءة فقط', 'Full access + Settings.': 'صلاحية كاملة + الإعدادات.', 'Read-only.': 'للقراءة فقط.',
+  'Verify': 'تحقق', 'Edit': 'تعديل', 'Transfer': 'نقل', 'Remove': 'إزالة', 'Delete user': 'حذف المستخدم',
+  'Log out': 'تسجيل الخروج', 'Switch language': 'تبديل اللغة', 'Close': 'إغلاق', 'Cancel': 'إلغاء',
+  'Never': 'أبداً', 'On Vacation': 'في إجازة', 'Vacant': 'شاغرة', 'Status': 'الحالة', 'Mobile Number': 'رقم الجوال',
+  'Room No.': 'رقم الغرفة', 'Iqama / ID No.': 'رقم الإقامة / الهوية', 'Generated via sadikhanchal.com': 'تم الإنشاء عبر sadikhanchal.com',
+  'Wrong code, try again.': 'الرمز غير صحيح، حاول مرة أخرى.', 'Could not save — check your connection and try again': 'تعذر الحفظ — تحقق من الاتصال وحاول مرة أخرى',
+  'Enter a valid number first': 'أدخل رقماً صحيحاً أولاً', 'Could not load the Excel engine — check your connection': 'تعذر تحميل محرك Excel — تحقق من الاتصال',
+  'Loading Excel engine…': 'جارٍ تحميل محرك Excel…', 'Building Excel file…': 'جارٍ إنشاء ملف Excel…',
+  'Last verified:': 'آخر تحقق:', 'Staff pending verification': 'موظفون بانتظار التحقق', 'open': 'متاحة',
+  'staff currently on vacation (not on site)': 'موظفون في إجازة حالياً (ليسوا في الموقع)',
+};
+function translateText(text) {
+  if (getLanguage() !== 'ar' || !text || !text.trim()) return text;
+  const raw = text;
+  const trimmed = raw.trim();
+  if (AR[trimmed]) return raw.replace(trimmed, AR[trimmed]);
+  let out = raw;
+  Object.keys(AR).sort((a, b) => b.length - a.length).forEach(k => { if (k && out.includes(k)) out = out.split(k).join(AR[k]); });
+  out = out.replace(/^(\d+) Rooms — (\d+) Staff \/ (\d+)$/, '$1 غرف — $2 موظفين / $3')
+    .replace(/^(\d+) rooms · (\d+) toilets( · GF\/FF)?$/, '$1 غرف · $2 دورات مياه$3')
+    .replace(/^Last verified: /, 'آخر تحقق: ')
+    .replace(/^(\d+) Staff pending verification$/, '$1 موظفون بانتظار التحقق')
+    .replace(/^(\d+) result\(s\)$/, '$1 نتيجة')
+    .replace(/^Room (.+)$/, 'غرفة $1')
+    .replace(/^([\d]+) of ([\d]+) occupied$/, '$1 من $2 مشغولة');
+  return out;
+}
+const nativeConfirm = window.confirm.bind(window);
+const nativePrompt = window.prompt.bind(window);
+window.confirm = (message) => nativeConfirm(translateText(String(message)));
+window.prompt = (message, value) => nativePrompt(translateText(String(message)), value);
+function applyLanguage() {
+  const lang = getLanguage();
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  const root = document.querySelector('#app-root');
+  if (!root) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(n => { const next = translateText(n.nodeValue); if (next !== n.nodeValue) n.nodeValue = next; });
+  root.querySelectorAll('[placeholder],[title],[aria-label]').forEach(node => {
+    ['placeholder', 'title', 'aria-label'].forEach(attr => { if (node.hasAttribute(attr)) node.setAttribute(attr, translateText(node.getAttribute(attr))); });
+  });
+  const toggle = root.querySelector('.lang-toggle');
+  if (toggle) {
+    toggle.dataset.lang = lang;
+    toggle.querySelectorAll('.lang-option').forEach((el, i) => el.classList.toggle('active', lang === (i === 0 ? 'en' : 'ar')));
+  }
+}
+let languageObserverStarted = false;
+function startLanguageObserver() {
+  if (languageObserverStarted) return;
+  languageObserverStarted = true;
+  const observer = new MutationObserver(() => {
+    clearTimeout(observer._timer);
+    observer._timer = setTimeout(applyLanguage, 0);
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+}
 
 // ---------- Router ----------
 function currentRoute() {
@@ -5030,6 +5155,10 @@ function renderShell() {
       el('div', { class: 'topbar-title' }, [el('div', {}, ['OZA']), el('div', {}, ['Staff Accommodation'])]),
       el('div', { class: 'topbar-spacer' }),
       el('div', { class: 'topbar-user' }, [getUserName()]),
+      el('button', { class: 'lang-toggle', 'data-lang': getLanguage(), title: 'Switch language', 'aria-label': 'Switch language', onclick: toggleLanguage }, [
+        el('span', { class: 'lang-option' + (getLanguage() === 'en' ? ' active' : '') }, ['EN']),
+        el('span', { class: 'lang-option' + (getLanguage() === 'ar' ? ' active' : '') }, ['AR']),
+      ]),
       el('button', { class: 'logout-btn', title: 'Log out (' + getUserName() + ')', html: ICONS.logout, onclick: () => { if (confirm('Log out?')) lock(); } }),
     ]),
     el('main', { id: 'view', class: 'view' }),
@@ -5065,6 +5194,7 @@ function render() {
   else if (name === 'export') renderExport(view);
   else if (name === 'settings') renderSettings(view);
   else renderDashboard(view);
+  applyLanguage();
   requestAnimationFrame(() => { view.scrollTop = scrollPositions[scrollKey] || 0; });
 }
 
@@ -5279,7 +5409,7 @@ function occupantRow(room, o) {
   const row = [
     occupantAvatar(o),
     el('div', { class: 'occupant-main' }, [
-      el('div', { class: 'occupant-name' }, [o.name]),
+      bilingualStaffName(o),
       el('div', { class: 'occupant-sub muted' }, occupantSubLine(o)),
     ]),
   ];
@@ -5301,6 +5431,7 @@ function renderSearch(view) {
     if (!q) return;
     const all = allOccupantsFlat().filter(o =>
       (o.name || '').toLowerCase().includes(q) ||
+      (o.arabicName || '').toLowerCase().includes(q) ||
       (o.iqama || '').toLowerCase().includes(q) ||
       (o.mobile || '').toLowerCase().includes(q)
     );
@@ -5376,7 +5507,7 @@ function reconcileRow(room, o, checks, registry) {
   rowEl.appendChild(el('label', { class: 'reconcile-check' }, [cb]));
   rowEl.appendChild(occupantAvatar(o));
   rowEl.appendChild(el('div', { class: 'occupant-main' }, [
-    el('div', { class: 'occupant-name' }, [o.name]),
+    bilingualStaffName(o),
     el('div', { class: 'occupant-sub muted' }, occupantSubLine(o)),
   ]));
   const actions = [];
@@ -5458,7 +5589,7 @@ async function exportExcel() {
   try { logoId = wb.addImage({ base64: rawLogoB64, extension: 'jpeg' }); } catch (e) { console.error(e); }
   buildings.forEach(b => {
     const ws = wb.addWorksheet(b.id, { views: [{ state: 'frozen', ySplit: 4 }] });
-    ws.columns = [{ width: 12 }, { width: 18 }, { width: 28 }, { width: 16 }, { width: 22 }];
+    ws.columns = [{ width: 12 }, { width: 18 }, { width: 28 }, { width: 28 }, { width: 16 }, { width: 22 }];
     if (logoId) ws.addImage(logoId, { tl: { col: 0, row: 0 }, ext: { width: 54, height: 49 } });
     ws.mergeCells('B1:E1');
     ws.getCell('B1').value = 'OZA STAFF ACCOMMODATION REGISTER';
@@ -5467,7 +5598,7 @@ async function exportExcel() {
     ws.getCell('B2').value = b.name + '   ·   Generated ' + new Date().toLocaleDateString('en-GB');
     ws.getCell('B2').font = { size: 10, color: { argb: 'FF6B7684' } };
     ws.getRow(3).height = 6;
-    const header = ws.addRow(['Room No.', 'Iqama / ID No.', 'Name', 'Mobile Number', 'Status']);
+    const header = ws.addRow(['Room No.', 'Iqama / ID No.', 'English Name', 'Arabic Name', 'Mobile Number', 'Status']);
     header.eachCell(c => {
       c.font = { bold: true, color: { argb: 'FFFFFFFF' } };
       c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0952A1' } };
@@ -5479,11 +5610,11 @@ async function exportExcel() {
       const startRow = ws.rowCount + 1;
       let rowsAdded = 0;
       if (!(r.occupants || []).length) {
-        ws.addRow([r.roomNo, '', '', '', 'Vacant']);
+        ws.addRow([r.roomNo, '', '', '', '', 'Vacant']);
         rowsAdded = 1;
       } else {
         r.occupants.forEach((o, i) => {
-          ws.addRow([i === 0 ? r.roomNo : '', o.iqama || '', o.name || '', o.mobile || '', o.status || '']);
+          ws.addRow([i === 0 ? r.roomNo : '', o.iqama || '', o.name || '', o.arabicName || '', o.mobile || '', o.status || '']);
           rowsAdded++;
         });
       }
@@ -5538,13 +5669,13 @@ function printRegister(buildingId) {
     '<p>' + (buildingId ? (buildings[0] ? buildings[0].name : '') : 'Full Register — All Buildings') + ' · Printed ' + new Date().toLocaleString('en-GB') + '</p></div></div>';
   buildings.forEach(b => {
     if (!b) return;
-    html += '<h2>' + b.name + '</h2><table><tr><th>Room</th><th>ID / Iqama No.</th><th>Name</th><th>Mobile</th><th>Status</th></tr>';
+    html += '<h2>' + b.name + '</h2><table><tr><th>Room</th><th>ID / Iqama No.</th><th>English Name</th><th>Arabic Name</th><th>Mobile</th><th>Status</th></tr>';
     roomsForBuilding(b.id).forEach(r => {
-      if (!(r.occupants || []).length) { html += '<tr><td class="room-cell">' + r.roomNo + '</td><td colspan="4" class="vacant">Vacant</td></tr>'; return; }
+      if (!(r.occupants || []).length) { html += '<tr><td class="room-cell">' + r.roomNo + '</td><td colspan="5" class="vacant">Vacant</td></tr>'; return; }
       const n = r.occupants.length;
       r.occupants.forEach((o, i) => {
         html += '<tr>' + (i === 0 ? '<td class="room-cell" rowspan="' + n + '">' + r.roomNo + '</td>' : '') +
-          '<td>' + (o.iqama || '') + '</td><td>' + (o.name || '') + '</td><td>' + (o.mobile || '') + '</td><td>' + (o.status || '') + '</td></tr>';
+          '<td>' + (o.iqama || '') + '</td><td>' + (o.name || '') + '</td><td>' + (o.arabicName || '') + '</td><td>' + (o.mobile || '') + '</td><td>' + (o.status || '') + '</td></tr>';
       });
     });
     html += '</table>';
@@ -5667,6 +5798,10 @@ function userRow(u, iAmSuper) {
   const roleSelect = canEditRole
     ? el('select', { class: 'input-inline' }, roleOptions.map(r => el('option', { value: r, selected: u.role === r ? 'true' : null }, [roleLabels[r]])))
     : null;
+  const languageSelect = iAmSuper ? el('select', { class: 'input-inline' }, [
+    el('option', { value: 'en', selected: (u.defaultLanguage || 'en') === 'en' ? 'true' : null }, ['English']),
+    el('option', { value: 'ar', selected: u.defaultLanguage === 'ar' ? 'true' : null }, ['العربية']),
+  ]) : null;
   const perms = u.permissions || {};
   const permBoxes = {};
   ['verify', 'edit', 'transfer', 'delete'].forEach(p => {
@@ -5690,7 +5825,7 @@ function userRow(u, iAmSuper) {
     if (isProtected && newRole !== u.role && admins.length <= 1) { toast('Cannot change the only Admin\'s role', true); return; }
     const newPerms = {};
     ['verify', 'edit', 'transfer', 'delete'].forEach(p => { newPerms[p] = !!permBoxes[p].checked; });
-    await db.collection('users').doc(u.id).set({ name: nameInp.value.trim() || u.name, code: codeInp.value.trim() || u.code, role: newRole, permissions: newPerms }, { merge: true });
+    await db.collection('users').doc(u.id).set({ name: nameInp.value.trim() || u.name, code: codeInp.value.trim() || u.code, role: newRole, defaultLanguage: languageSelect ? languageSelect.value : (u.defaultLanguage || 'en'), permissions: newPerms }, { merge: true });
     toast((nameInp.value.trim() || u.name) + ' updated');
   } }, ['Save']);
   const delBtn = el('button', { class: 'icon-btn icon-btn-danger', title: 'Delete user', html: ICONS.trash, onclick: async () => {
@@ -5711,6 +5846,7 @@ function userRow(u, iAmSuper) {
     el('label', { class: 'field-label' }, ['Code']), codeInp,
     el('label', { class: 'field-label' }, ['Role']),
     roleSelect || el('div', { class: 'input-inline', style: 'background:#f4f6f9;' }, [roleLabels[u.role] || u.role]),
+    languageSelect ? el('div', {}, [el('label', { class: 'field-label' }, ['Default language on login']), languageSelect]) : null,
     permRowContainer,
     saveBtn,
   ]);
@@ -5725,6 +5861,10 @@ function addUserForm(iAmSuper) {
   ];
   if (iAmSuper) roleOptions.push({ v: 'admin', t: 'Admin — full access + Settings' });
   const roleSelect = el('select', { class: 'input-inline' }, roleOptions.map(o => el('option', { value: o.v }, [o.t])));
+  const languageSelect = iAmSuper ? el('select', { class: 'input-inline' }, [
+    el('option', { value: 'en' }, ['English']),
+    el('option', { value: 'ar' }, ['العربية']),
+  ]) : null;
   const permBoxes = {};
   const permRow = el('div', { class: 'perm-row' }, ['verify', 'edit', 'transfer', 'delete'].map(p => {
     permBoxes[p] = el('input', { type: 'checkbox', checked: 'true' });
@@ -5738,7 +5878,7 @@ function addUserForm(iAmSuper) {
     if (dupe) { toast('That code is already in use', true); return; }
     const permissions = {};
     ['verify', 'edit', 'transfer', 'delete'].forEach(p => { permissions[p] = !!permBoxes[p].checked; });
-    await db.collection('users').add({ name: nameInp.value.trim(), code: codeInp.value.trim(), role: roleSelect.value, permissions });
+    await db.collection('users').add({ name: nameInp.value.trim(), code: codeInp.value.trim(), role: roleSelect.value, defaultLanguage: languageSelect ? languageSelect.value : 'en', permissions });
     toast(nameInp.value.trim() + ' added');
     nameInp.value = ''; codeInp.value = '';
   });
@@ -5746,6 +5886,7 @@ function addUserForm(iAmSuper) {
     el('label', { class: 'field-label' }, ['Name']), nameInp,
     el('label', { class: 'field-label' }, ['Code']), codeInp,
     el('label', { class: 'field-label' }, ['Role']), roleSelect,
+    languageSelect ? el('div', {}, [el('label', { class: 'field-label' }, ['Default language on login']), languageSelect]) : null,
     permRow,
     addBtn,
   ]);
@@ -5784,6 +5925,7 @@ function openAddOccupantModal(buildingId, presetRoomNo) {
   const rooms = roomsForBuilding(buildingId);
   const roomSelect = el('select', { class: 'input-inline' }, rooms.map(r => el('option', { value: r.roomNo, selected: presetRoomNo === r.roomNo ? 'true' : null }, [r.roomNo + ' (' + occupantCount(r) + '/' + r.capacity + ')'])));
   const nameInp = el('input', { type: 'text', class: 'input-inline', placeholder: 'Full name' });
+  const arabicNameInp = el('input', { type: 'text', class: 'input-inline', placeholder: 'Arabic full name' });
   const iqamaInp = el('input', { type: 'text', class: 'input-inline', placeholder: '10-digit Iqama, or passport no. (e.g. P5122465)' });
   const mobileInp = el('input', { type: 'text', inputmode: 'numeric', maxlength: '10', class: 'input-inline', placeholder: '10-digit mobile number' });
   const saveBtn = el('button', { class: 'btn btn-primary btn-block' }, ['Add']);
@@ -5800,7 +5942,7 @@ function openAddOccupantModal(buildingId, presetRoomNo) {
     if (!/^\d{10}$/.test(mobileVal)) { toast('Please enter the correct mobile number — must be exactly 10 digits', true); return; }
     const roomDoc = roomDocId(buildingId, roomSelect.value);
     const room = state.rooms[roomDoc];
-    const occ = [...(room.occupants || []), { id: uid(), name: nameInp.value.trim(), iqama: iqamaVal, mobile: mobileVal, status: null }];
+    const occ = [...(room.occupants || []), { id: uid(), name: nameInp.value.trim(), arabicName: arabicNameInp.value.trim(), iqama: iqamaVal, mobile: mobileVal, status: null }];
     await db.collection('rooms').doc(roomDoc).set({ occupants: occ }, { merge: true });
     logAudit('Added staff', nameInp.value.trim() + ' → ' + (state.buildings[buildingId] ? state.buildings[buildingId].name : buildingId) + ' Room ' + roomSelect.value);
     toast('Added ' + nameInp.value.trim());
@@ -5809,6 +5951,7 @@ function openAddOccupantModal(buildingId, presetRoomNo) {
   openModal('Add Occupant', el('div', {}, [
     el('label', { class: 'field-label' }, ['Room']), roomSelect,
     el('label', { class: 'field-label' }, ['Name']), nameInp,
+    el('label', { class: 'field-label' }, ['Arabic Name']), arabicNameInp,
     el('label', { class: 'field-label' }, ['Iqama / ID No.']), iqamaInp,
     el('label', { class: 'field-label' }, ['Mobile']), mobileInp,
     saveBtn,
@@ -5891,10 +6034,24 @@ function openPhotoLightbox(src) {
   document.body.appendChild(overlay);
 }
 function closeLightbox() { const o = $('#lightbox-overlay'); if (o) o.remove(); }
+function primaryStaffName(o) {
+  const english = (o.name || '').trim();
+  const arabic = (o.arabicName || '').trim();
+  return getLanguage() === 'ar' ? (arabic || english || '—') : (english || arabic || '—');
+}
+function bilingualStaffName(o) {
+  const english = (o.name || '').trim();
+  const arabic = (o.arabicName || '').trim();
+  const primary = getLanguage() === 'ar' ? (arabic || english || '—') : (english || arabic || '—');
+  const secondary = getLanguage() === 'ar' ? english : arabic;
+  const children = [el('div', { class: 'occupant-name' }, [primary])];
+  if (secondary && secondary !== primary) children.push(el('div', { class: 'occupant-name-secondary' }, [secondary]));
+  return el('div', { class: 'bilingual-name' }, children);
+}
 function occupantAvatar(o, large) {
   const sz = large ? ' occ-avatar-lg' : '';
   if (o.photo) return el('img', { src: o.photo, class: 'occ-avatar' + sz, onclick: (e) => { e.stopPropagation(); openPhotoLightbox(o.photo); } });
-  const initial = (o.name || '?').trim().charAt(0).toUpperCase() || '?';
+  const initial = (primaryStaffName(o) || '?').trim().charAt(0).toUpperCase() || '?';
   return el('div', { class: 'occ-avatar occ-avatar-fallback' + sz }, [initial]);
 }
 // Result card used by Search and the Vacation list: a larger portrait photo
@@ -5904,7 +6061,7 @@ function personResultCard(o) {
   return el('div', { class: 'card search-result person-card', onclick: () => goto('/room/' + o.roomDocId) }, [
     occupantAvatar(o, true),
     el('div', { class: 'person-card-text' }, [
-      el('div', { class: 'occupant-name' }, [o.name]),
+      bilingualStaffName(o),
       el('div', { class: 'occupant-sub muted' }, [(b ? b.name : o.buildingId) + ' · Room ' + o.roomNo]),
       el('div', { class: 'occupant-sub muted' }, occupantSubLine(o)),
     ]),
@@ -5912,6 +6069,7 @@ function personResultCard(o) {
 }
 function openEditOccupantModal(room, o) {
   const nameInp = el('input', { type: 'text', class: 'input-inline', value: o.name || '' });
+  const arabicNameInp = el('input', { type: 'text', class: 'input-inline', value: o.arabicName || '', placeholder: 'Arabic full name' });
   const iqamaInp = el('input', { type: 'text', class: 'input-inline', value: o.iqama || '' });
   const mobileInp = el('input', { type: 'text', class: 'input-inline', value: o.mobile || '' });
   const statusSelect = el('select', { class: 'input-inline' });
@@ -5933,6 +6091,7 @@ function openEditOccupantModal(room, o) {
   const fileInp = el('input', { type: 'file', accept: 'image/*', capture: 'environment', class: 'input-inline' });
   const formNode = el('div', {}, [
     el('label', { class: 'field-label' }, ['Name']), nameInp,
+    el('label', { class: 'field-label' }, ['Arabic Name']), arabicNameInp,
     el('label', { class: 'field-label' }, ['Iqama / ID No.']), iqamaInp,
     el('label', { class: 'field-label' }, ['Mobile']), mobileInp,
     el('label', { class: 'field-label' }, ['Status note']), statusSelect, newStatusInp,
@@ -5966,7 +6125,7 @@ function openEditOccupantModal(room, o) {
         db.collection('settings').doc('statusOptions').set({ options: firebase.firestore.FieldValue.arrayUnion(finalStatus) }, { merge: true }).catch(e => console.error(e));
       }
     }
-    const occ = (room.occupants || []).map(x => x.id === o.id ? { ...x, name: nameInp.value.trim(), iqama: iqamaInp.value.trim(), mobile: mobileInp.value.trim(), status: finalStatus || null, photo: photoData } : x);
+    const occ = (room.occupants || []).map(x => x.id === o.id ? { ...x, name: nameInp.value.trim(), arabicName: arabicNameInp.value.trim(), iqama: iqamaInp.value.trim(), mobile: mobileInp.value.trim(), status: finalStatus || null, photo: photoData } : x);
     await db.collection('rooms').doc(room.id).set({ occupants: occ }, { merge: true });
     logAudit('Edited staff', nameInp.value.trim() + ' — ' + (state.buildings[room.buildingId] ? state.buildings[room.buildingId].name : room.buildingId) + ' Room ' + room.roomNo);
     toast('Saved');
@@ -6094,9 +6253,9 @@ async function initialSeedIfNeeded() {
       }
     } catch (e) { console.error(e); }
     const batch = db.batch();
-    batch.set(db.collection('users').doc(), { name: 'Admin', code: adminCode, role: 'admin', permissions: { verify: true, edit: true, transfer: true, delete: true } });
-    batch.set(db.collection('users').doc(), { name: 'Fazl', code: staffCode, role: 'staff', permissions: { verify: true, edit: true, transfer: true, delete: true } });
-    batch.set(db.collection('users').doc(), { name: 'Viewer', code: '9999', role: 'viewer', permissions: {} });
+    batch.set(db.collection('users').doc(), { name: 'Admin', code: adminCode, role: 'admin', defaultLanguage: 'en', permissions: { verify: true, edit: true, transfer: true, delete: true } });
+    batch.set(db.collection('users').doc(), { name: 'Fazl', code: staffCode, role: 'staff', defaultLanguage: 'en', permissions: { verify: true, edit: true, transfer: true, delete: true } });
+    batch.set(db.collection('users').doc(), { name: 'Viewer', code: '9999', role: 'viewer', defaultLanguage: 'en', permissions: {} });
     await batch.commit();
   }
 
@@ -6129,6 +6288,8 @@ async function boot() {
 
 // ---------- Entry ----------
 document.addEventListener('DOMContentLoaded', () => {
+  startLanguageObserver();
+  setLanguage(getLanguage(), false);
   if (isUnlocked()) {
     // returning user this session: auth + seed-check, then straight in
     ensureAnonAuth().then(initialSeedIfNeeded).then(boot).catch(e => console.error(e));
