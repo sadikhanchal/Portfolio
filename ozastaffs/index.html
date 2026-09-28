@@ -72,7 +72,7 @@ body {
 .lang-toggle .lang-option.active { color: #fff; }
 html[dir="rtl"] .lang-toggle[data-lang="ar"]::before { transform: translateX(31px); }
 html[dir="rtl"] .lang-toggle[data-lang="en"]::before { transform: translateX(0); }
-html[dir="rtl"] .topbar { direction: ltr; }
+html[dir="rtl"] .topbar { direction: rtl; }
 html[dir="rtl"] .topbar-title, html[dir="rtl"] .topbar-user { direction: rtl; text-align: right; }
 html[dir="rtl"] .view { direction: rtl; }
 html[dir="rtl"] input:not(.pin-input), html[dir="rtl"] textarea, html[dir="rtl"] select { direction: rtl; text-align: right; }
@@ -5416,7 +5416,7 @@ function occupantRow(room, o) {
   if (actions.length) row.push(el('div', { class: 'occupant-actions' }, actions));
   return el('div', { class: 'occupant-row' + (o.status ? ' occupant-flag' : '') }, row);
 }
-function backBtn(route) { return el('button', { class: 'back-btn', onclick: () => goto(route) }, ['← Back']); }
+function backBtn(route) { const isArabic = getLanguage() === 'ar'; return el('button', { class: 'back-btn', onclick: () => goto(route) }, [isArabic ? 'رجوع →' : '← Back']); }
 
 // ---------- Search ----------
 function renderSearch(view) {
