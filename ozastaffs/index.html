@@ -5713,12 +5713,25 @@ function renderSettings(view) {
   // ---- Users & permissions ----
   const iAmSuper = getRole() === 'superadmin';
   const myUid = getUid();
+  // Ordinary Admins can see themselves and non-admin users only. In
+  // particular, the Super Admin is never exposed in their selector/list.
   const users = Object.values(state.users)
-    .filter(u => iAmSuper || !(u.role === 'admin' || u.role === 'superadmin') || u.id === myUid)
+    .filter(u => iAmSuper || (u.id === myUid) || (u.role !== 'admin' && u.role !== 'superadmin'))
     .sort((a, b) => (a.role !== 'staff' && a.role !== 'viewer' ? -1 : 1) - (b.role !== 'staff' && b.role !== 'viewer' ? -1 : 1));
+  const userSelect = el('select', { class: 'input-inline' }, users.map(u =>
+    el('option', { value: u.id }, [u.name + (u.id === myUid ? ' (you)' : '')])));
+  const selectedUserPanel = el('div', {});
+  function showSelectedUser(id) {
+    selectedUserPanel.innerHTML = '';
+    const selected = users.find(u => u.id === id);
+    if (selected) selectedUserPanel.appendChild(userRow(selected, iAmSuper));
+  }
+  userSelect.addEventListener('change', () => showSelectedUser(userSelect.value));
+  showSelectedUser(users[0] ? users[0].id : '');
   view.appendChild(el('div', { class: 'section' }, [
     el('div', { class: 'section-title' }, ['Users & Access']),
-    el('div', { class: 'user-list' }, users.map(u => userRow(u, iAmSuper))),
+    users.length ? userSelect : el('div', { class: 'muted small' }, ['No users available.']),
+    selectedUserPanel,
   ]));
   view.appendChild(el('div', { class: 'section' }, [
     el('div', { class: 'section-title' }, ['Add a User']),
@@ -5809,10 +5822,12 @@ function userRow(u, iAmSuper) {
   const isProtected = u.role === 'admin' || u.role === 'superadmin';
   const isSelf = u.id === getUid();
   const nameInp = el('input', { type: 'text', class: 'input-inline', value: u.name || '' });
-  const codeInp = el('input', { type: 'text', class: 'input-inline', value: u.code || '' });
+  // Never render the actual code into a visible text field. Password changes
+  // happen only through the two-entry confirmation modal below.
+  const codeInp = el('input', { type: 'password', class: 'input-inline', value: '••••••', readonly: 'true', autocomplete: 'new-password' });
   const roleOptions = iAmSuper ? ['admin', 'staff', 'viewer'] : ['staff', 'viewer'];
-  const roleLabels = { admin: 'Admin', staff: 'Staff', viewer: 'Viewer' };
-  const canEditRole = iAmSuper || !isProtected;
+  const roleLabels = { admin: 'Admin', superadmin: 'Super Admin', staff: 'Staff', viewer: 'Viewer' };
+  const canEditRole = (iAmSuper && u.role !== 'superadmin') || !isProtected;
   const roleSelect = canEditRole
     ? el('select', { class: 'input-inline' }, roleOptions.map(r => el('option', { value: r, selected: u.role === r ? 'true' : null }, [roleLabels[r]])))
     : null;
@@ -5843,7 +5858,7 @@ function userRow(u, iAmSuper) {
     if (isProtected && newRole !== u.role && admins.length <= 1) { toast('Cannot change the only Admin\'s role', true); return; }
     const newPerms = {};
     ['verify', 'edit', 'transfer', 'delete'].forEach(p => { newPerms[p] = !!permBoxes[p].checked; });
-    await db.collection('users').doc(u.id).set({ name: nameInp.value.trim() || u.name, code: codeInp.value.trim() || u.code, role: newRole, defaultLanguage: languageSelect ? languageSelect.value : (u.defaultLanguage || 'en'), permissions: newPerms }, { merge: true });
+    await db.collection('users').doc(u.id).set({ name: nameInp.value.trim() || u.name, role: newRole, defaultLanguage: languageSelect ? languageSelect.value : (u.defaultLanguage || 'en'), permissions: newPerms }, { merge: true });
     toast((nameInp.value.trim() || u.name) + ' updated');
   } }, ['Save']);
   const delBtn = el('button', { class: 'icon-btn icon-btn-danger', title: 'Delete user', html: ICONS.trash, onclick: async () => {
@@ -5861,7 +5876,8 @@ function userRow(u, iAmSuper) {
       delBtn,
     ]),
     el('label', { class: 'field-label' }, ['Name']), nameInp,
-    el('label', { class: 'field-label' }, ['Code']), codeInp,
+    el('label', { class: 'field-label' }, ['Password']), codeInp,
+    el('button', { class: 'btn btn-outline btn-block', onclick: () => openPasswordResetModal(u) }, ['Reset Password']),
     el('label', { class: 'field-label' }, ['Role']),
     roleSelect || el('div', { class: 'input-inline', style: 'background:#f4f6f9;' }, [roleLabels[u.role] || u.role]),
     languageSelect ? el('div', {}, [el('label', { class: 'field-label' }, ['Default language on login']), languageSelect]) : null,
@@ -5870,9 +5886,34 @@ function userRow(u, iAmSuper) {
   ]);
 }
 
+function openPasswordResetModal(u) {
+  const first = el('input', { type: 'password', class: 'input-inline', placeholder: 'New password', autocomplete: 'new-password' });
+  const second = el('input', { type: 'password', class: 'input-inline', placeholder: 'Confirm new password', autocomplete: 'new-password' });
+  const saveBtn = el('button', { class: 'btn btn-primary btn-block' }, ['Confirm Password Reset']);
+  saveBtn.addEventListener('click', async () => {
+    const next = first.value.trim();
+    const confirmNext = second.value.trim();
+    if (!next || !confirmNext) { toast('Enter the new password twice', true); return; }
+    if (next !== confirmNext) { toast('Passwords do not match', true); return; }
+    if (next === u.code) { toast('Choose a different password', true); return; }
+    try {
+      await db.collection('users').doc(u.id).set({ code: next }, { merge: true });
+      logAudit('Reset user password', u.name);
+      toast('Password reset for ' + u.name);
+      closeModal();
+    } catch (e) { console.error(e); toast('Could not reset password — check your connection', true); }
+  });
+  openModal('Reset Password — ' + u.name, el('div', {}, [
+    el('div', { class: 'muted small' }, ['Enter the new password twice to confirm the reset.']),
+    el('label', { class: 'field-label' }, ['New password']), first,
+    el('label', { class: 'field-label' }, ['Confirm new password']), second,
+    saveBtn,
+  ]));
+}
+
 function addUserForm(iAmSuper) {
   const nameInp = el('input', { type: 'text', class: 'input-inline', placeholder: 'Name' });
-  const codeInp = el('input', { type: 'text', class: 'input-inline', placeholder: 'Code (PIN)' });
+  const codeInp = el('input', { type: 'password', class: 'input-inline', placeholder: 'Password (PIN)', autocomplete: 'new-password' });
   const roleOptions = [
     { v: 'staff', t: 'Staff — full room/staff access' },
     { v: 'viewer', t: 'Viewer — read only' },
