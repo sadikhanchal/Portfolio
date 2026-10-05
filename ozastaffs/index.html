@@ -6265,7 +6265,29 @@ async function runSeed(force) {
 }
 
 // ---------- Boot ----------
+// Credential-free device snapshot for instant repeat startup.
+let cacheDbPromise;
+function startupDb() {
+  return cacheDbPromise || (cacheDbPromise = new Promise((resolve,reject) => {
+    const r=indexedDB.open('oza-staffs-startup-v1',1);
+    r.onupgradeneeded=()=>r.result.createObjectStore('snapshots');
+    r.onsuccess=()=>resolve(r.result); r.onerror=()=>reject(r.error);
+  }));
+}
+const warmStartupCache=(async()=>{
+  try { const d=await startupDb(); await new Promise(resolve=>{
+    const r=d.transaction('snapshots').objectStore('snapshots').get('register');
+    r.onsuccess=()=>{if(r.result){if(!unsubBuildings)state.buildings=r.result.buildings||{};if(!unsubRooms)state.rooms=r.result.rooms||{};}resolve();};
+    r.onerror=()=>resolve();
+  }); } catch(e){console.warn('Startup cache unavailable',e);}
+})();
+let cacheSaveTimer, startupRenderFrame;
+function saveStartupCache(){clearTimeout(cacheSaveTimer);cacheSaveTimer=setTimeout(async()=>{
+  try {const d=await startupDb();const tx=d.transaction('snapshots','readwrite');tx.objectStore('snapshots').put({buildings:state.buildings,rooms:state.rooms,savedAt:Date.now()},'register');tx.onerror=()=>console.warn('Cache write unavailable');}catch(e){console.warn('Cache unavailable',e);}
+},300);}
+function renderLoadedData(){if(!isUnlocked())return;cancelAnimationFrame(startupRenderFrame);startupRenderFrame=requestAnimationFrame(render);}
 function attachListeners() {
+  if (unsubBuildings && unsubRooms && unsubUsers && unsubStatusOptions) return;
   if (unsubBuildings) unsubBuildings();
   if (unsubRooms) unsubRooms();
   if (unsubUsers) unsubUsers();
@@ -6274,19 +6296,21 @@ function attachListeners() {
     const map = {};
     snap.forEach(doc => map[doc.id] = { id: doc.id, ...doc.data() });
     state.buildings = map;
-    render();
+    saveStartupCache();
+    renderLoadedData();
   });
   unsubRooms = db.collection('rooms').onSnapshot(snap => {
     const map = {};
     snap.forEach(doc => map[doc.id] = { id: doc.id, ...doc.data() });
     state.rooms = map;
-    render();
+    saveStartupCache();
+    renderLoadedData();
   });
   unsubUsers = db.collection('users').onSnapshot(snap => {
     const map = {};
     snap.forEach(doc => map[doc.id] = { id: doc.id, ...doc.data() });
     state.users = map;
-    render();
+    renderLoadedData();
   });
   unsubStatusOptions = db.collection('settings').doc('statusOptions').onSnapshot(snap => {
     state.statusOptions = (snap.exists && Array.isArray(snap.data().options) && snap.data().options.length) ? snap.data().options : ['On Vacation'];
@@ -6339,10 +6363,11 @@ async function ensureSuperAdminMigration() {
   } catch (e) { console.error(e); }
 }
 async function boot() {
+  await warmStartupCache;
+  render();
   await ensureAnonAuth();
   attachListeners();
-  await ensureSuperAdminMigration();
-  render();
+  ensureSuperAdminMigration().then(()=>{if(isUnlocked())render();}).catch(console.error);
 }
 
 // ---------- Entry ----------
@@ -6351,13 +6376,20 @@ document.addEventListener('DOMContentLoaded', () => {
   setLanguage(getLanguage(), false);
   if (isUnlocked()) {
     // returning user this session: auth + seed-check, then straight in
-    ensureAnonAuth().then(initialSeedIfNeeded).then(boot).catch(e => console.error(e));
+    boot().catch(e => console.error(e));
   } else {
     // show the code screen immediately — don't make people stare at a blank
     // page while Firestore is checked; auth/seeding happens quietly behind
     // it, and the submit handler itself awaits auth before checking a code.
     renderPinGate();
-    ensureAnonAuth().then(initialSeedIfNeeded).catch(e => console.error(e));
+    ensureAnonAuth().then(async()=>{
+      await warmStartupCache;
+      attachListeners();
+      if(!localStorage.getItem('oza-staffs-seed-checked-v1')){
+        await initialSeedIfNeeded();
+        localStorage.setItem('oza-staffs-seed-checked-v1','1');
+      }
+    }).catch(e=>console.error(e));
   }
 });
 
