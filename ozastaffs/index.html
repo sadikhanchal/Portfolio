@@ -146,7 +146,7 @@ html[dir="rtl"] .occupant-name-secondary { direction: ltr; text-align: right; }
 .occupant-sub { font-size: 12px; margin-top: 2px; }
 .mobile-link { color: var(--blue); font-weight: 600; text-decoration: none; }
 .mobile-link:active { opacity: .6; }
-.occ-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex-shrink: 0; cursor: pointer; }
+.occ-avatar { width: 38px; height: 38px; border-radius: 8px; object-fit: cover; flex-shrink: 0; cursor: pointer; }
 .occ-avatar-fallback { display: flex; align-items: center; justify-content: center; background: #dde6f2; color: var(--blue); font-weight: 700; font-size: 15px; cursor: default; }
 .occ-avatar-lg { width: 52px; height: 65px; border-radius: 10px; }
 .occ-avatar-lg.occ-avatar-fallback { font-size: 22px; }
@@ -4813,6 +4813,9 @@ const state = {
   users: {},          // docId -> {id,name,code,role,permissions,defaultLanguage}
   statusOptions: ['On Vacation'], // grows as people add custom status notes
   ready: false,
+  buildingsLoaded: false,
+  roomsLoaded: false,
+  cachedRegister: false,
   authReady: false,
 };
 
@@ -5195,6 +5198,15 @@ function tabBtn(route, label, iconName) {
 const scrollPositions = {}; // route hash -> last scrollTop, so Back restores where you were
 function render() {
   if (!isUnlocked()) { renderPinGate(); return; }
+  if (!state.buildingsLoaded || !state.roomsLoaded) {
+    renderShell();
+    const loadingView = $('#view');
+    loadingView.appendChild(el('div', {class:'section card', style:'text-align:center;padding:32px;'}, [
+      el('div', {class:'page-title'}, [getLanguage() === 'ar' ? 'جاري تحميل السجل…' : 'Loading accommodation register…']),
+      el('div', {class:'muted small'}, [getLanguage() === 'ar' ? 'سيظهر السجل المحفوظ فور توفره.' : 'Preparing room and building data.']),
+    ]));
+    return;
+  }
   renderShell();
   const view = $('#view');
   const { name, arg } = currentRoute();
@@ -6277,13 +6289,21 @@ function startupDb() {
 const warmStartupCache=(async()=>{
   try { const d=await startupDb(); await new Promise(resolve=>{
     const r=d.transaction('snapshots').objectStore('snapshots').get('register');
-    r.onsuccess=()=>{if(r.result){if(!unsubBuildings)state.buildings=r.result.buildings||{};if(!unsubRooms)state.rooms=r.result.rooms||{};}resolve();};
+    r.onsuccess=()=>{
+      const saved=r.result;
+      if(saved && saved.complete && saved.buildings && saved.rooms){
+        if(!state.buildingsLoaded){state.buildings=saved.buildings;state.buildingsLoaded=true;}
+        if(!state.roomsLoaded){state.rooms=saved.rooms;state.roomsLoaded=true;}
+        state.cachedRegister=true;
+      }
+      resolve();
+    };
     r.onerror=()=>resolve();
   }); } catch(e){console.warn('Startup cache unavailable',e);}
 })();
 let cacheSaveTimer, startupRenderFrame;
-function saveStartupCache(){clearTimeout(cacheSaveTimer);cacheSaveTimer=setTimeout(async()=>{
-  try {const d=await startupDb();const tx=d.transaction('snapshots','readwrite');tx.objectStore('snapshots').put({buildings:state.buildings,rooms:state.rooms,savedAt:Date.now()},'register');tx.onerror=()=>console.warn('Cache write unavailable');}catch(e){console.warn('Cache unavailable',e);}
+function saveStartupCache(){if(!state.buildingsLoaded || !state.roomsLoaded)return;clearTimeout(cacheSaveTimer);cacheSaveTimer=setTimeout(async()=>{
+  try {const d=await startupDb();const tx=d.transaction('snapshots','readwrite');tx.objectStore('snapshots').put({buildings:state.buildings,rooms:state.rooms,complete:true,savedAt:Date.now()},'register');tx.onerror=()=>console.warn('Cache write unavailable');}catch(e){console.warn('Cache unavailable',e);}
 },300);}
 function renderLoadedData(){if(!isUnlocked())return;cancelAnimationFrame(startupRenderFrame);startupRenderFrame=requestAnimationFrame(render);}
 function attachListeners() {
@@ -6293,16 +6313,20 @@ function attachListeners() {
   if (unsubUsers) unsubUsers();
   if (unsubStatusOptions) unsubStatusOptions();
   unsubBuildings = db.collection('buildings').onSnapshot(snap => {
+    if(snap.empty && snap.metadata.fromCache)return;
     const map = {};
     snap.forEach(doc => map[doc.id] = { id: doc.id, ...doc.data() });
     state.buildings = map;
+    state.buildingsLoaded = true;
     saveStartupCache();
     renderLoadedData();
   });
   unsubRooms = db.collection('rooms').onSnapshot(snap => {
+    if(snap.empty && snap.metadata.fromCache)return;
     const map = {};
     snap.forEach(doc => map[doc.id] = { id: doc.id, ...doc.data() });
     state.rooms = map;
+    state.roomsLoaded = true;
     saveStartupCache();
     renderLoadedData();
   });
@@ -6398,7 +6422,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // the server; if they're missing this just quietly does nothing.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.register('sw.js', {updateViaCache:'none'}).then(reg => reg.update()).catch(() => {});
   });
 }
 
