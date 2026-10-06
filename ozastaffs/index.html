@@ -5157,7 +5157,29 @@ function currentRoute() {
 }
 window.addEventListener('hashchange', render);
 
-function goto(hash) { location.hash = hash; }
+// Remember the actual source list whenever a room is opened.
+const roomReturnRoutes = {};
+function goto(hash) {
+  if (hash.startsWith('/room/')) {
+    const source = location.hash.replace(/^#/, '');
+    const id = hash.slice('/room/'.length);
+    const allowed = /^\/rooms\/(partial|full|empty|over)$/.test(source) || /^\/building\/[^/]+$/.test(source) || /^\/reconcile(?:\/[^/]+)?$/.test(source) || source === '/search' || source === '/vacation';
+    if (allowed) {
+      roomReturnRoutes[id] = source;
+      try { sessionStorage.setItem('oza-room-return-' + id, source); } catch (e) {}
+    } else if (!source.startsWith('/room/')) {
+      delete roomReturnRoutes[id];
+      try { sessionStorage.removeItem('oza-room-return-' + id); } catch (e) {}
+    }
+  }
+  location.hash = hash;
+}
+function roomReturnRoute(room) {
+  let route = roomReturnRoutes[room.id];
+  try { route = route || sessionStorage.getItem('oza-room-return-' + room.id); } catch (e) {}
+  const allowed = /^\/rooms\/(partial|full|empty|over)$/.test(route || '') || /^\/building\/[^/]+$/.test(route || '') || /^\/reconcile(?:\/[^/]+)?$/.test(route || '') || route === '/search' || route === '/vacation';
+  return allowed ? route : '/building/' + room.buildingId;
+}
 
 // ---------- Shell ----------
 function renderShell() {
@@ -5393,7 +5415,7 @@ function renderRoomDetail(view, docId) {
   const status = roomStatus(r);
   const statusLabel = { empty: 'Empty', partial: 'Space Available', full: 'Full', over: 'Over Capacity' }[status];
   view.appendChild(el('div', { class: 'section' }, [
-    backBtn('/building/' + r.buildingId),
+    backBtn(roomReturnRoute(r)),
     el('div', { class: 'page-title' }, [(b ? b.name : r.buildingId) + ' — Room ' + r.roomNo]),
     el('div', { class: 'room-status-row' }, [
       el('span', { class: 'badge badge-' + (status === 'partial' ? 'vacant' : status === 'empty' ? 'empty' : status === 'over' ? 'over' : 'full') }, [statusLabel]),
