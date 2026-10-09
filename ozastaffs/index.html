@@ -6014,6 +6014,40 @@ function openModal(title, bodyNode) {
 }
 function closeModal() { const m = $('#modal-overlay'); if (m) m.remove(); }
 
+function occupantIdError(value) {
+  const id = String(value || '').trim();
+  if (!id) return '';
+  if (/^[A-Za-z]/.test(id)) return id.length >= 5 ? '' : 'Please check the passport number';
+  return /^[12]\d{9}$/.test(id) ? '' : 'Please check the Iqama number';
+}
+function hasDuplicateOccupantId(rooms, value, excludeRoomId, excludeOccupantId) {
+  const key = String(value || '').trim().toUpperCase();
+  if (!key) return false;
+  return rooms.some(room => (room.occupants || []).some(person =>
+    !(room.id === excludeRoomId && person.id === excludeOccupantId) &&
+    String(person.iqama || '').trim().toUpperCase() === key));
+}
+async function validateOccupantId(value, excludeRoomId, excludeOccupantId) {
+  const error = occupantIdError(value);
+  const ar = getLanguage() === 'ar';
+  if (error) { toast(ar ? (/^[A-Za-z]/.test(String(value).trim()) ? 'يرجى التحقق من رقم جواز السفر' : 'يرجى التحقق من رقم الإقامة') : error, true); return false; }
+  if (!String(value || '').trim()) return true;
+  try {
+    // Check current server records rather than a potentially stale startup cache.
+    const snap = await db.collection('rooms').get({ source: 'server' });
+    const rooms = snap.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    if (hasDuplicateOccupantId(rooms, value, excludeRoomId, excludeOccupantId)) {
+      toast(ar ? 'رقم الإقامة / جواز السفر مستخدم بالفعل' : 'Iqama / passport number is already in use', true);
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.error(e);
+    toast(ar ? 'تعذر التحقق من الرقم. تحقق من الاتصال وحاول مرة أخرى.' : 'Could not check ID. Check your connection and try again.', true);
+    return false;
+  }
+}
+
 function openAddOccupantModal(buildingId, presetRoomNo) {
   const rooms = roomsForBuilding(buildingId);
   const roomSelect = el('select', { class: 'input-inline' }, rooms.map(r => el('option', { value: r.roomNo, selected: presetRoomNo === r.roomNo ? 'true' : null }, [r.roomNo + ' (' + occupantCount(r) + '/' + r.capacity + ')'])));
@@ -6026,12 +6060,7 @@ function openAddOccupantModal(buildingId, presetRoomNo) {
     if (!nameInp.value.trim()) { toast('Name is required', true); return; }
     const iqamaVal = iqamaInp.value.trim();
     const mobileVal = mobileInp.value.trim();
-    const iqamaIsPassport = /^[A-Za-z]/.test(iqamaVal);
-    if (iqamaIsPassport) {
-      if (iqamaVal.length < 5) { toast('Please enter a valid passport number', true); return; }
-    } else if (!/^\d{10}$/.test(iqamaVal)) {
-      toast('Please enter the correct Iqama number (10 digits) — or a passport number starting with a letter', true); return;
-    }
+    if (!(await validateOccupantId(iqamaVal))) return;
     if (!/^\d{10}$/.test(mobileVal)) { toast('Please enter the correct mobile number — must be exactly 10 digits', true); return; }
     const roomDoc = roomDocId(buildingId, roomSelect.value);
     const room = state.rooms[roomDoc];
@@ -6211,6 +6240,7 @@ function openEditOccupantModal(room, o) {
     modalBody.innerHTML = ''; modalBody.appendChild(cropperNode);
   });
   saveBtn.addEventListener('click', async () => {
+    if (!(await validateOccupantId(iqamaInp.value.trim(), room.id, o.id))) return;
     let finalStatus = statusSelect.value;
     if (finalStatus === '__new__') {
       finalStatus = newStatusInp.value.trim();
