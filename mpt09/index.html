@@ -1,1 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Document Control · RSGT-OZA-MPT09</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a1224;--bg2:#101b35;--panel:#121f3b;--line:#ffffff1c;--tx:#e9eefb;--mu:#8e9bb8;--ac:#fca311;--ac2:#ffd27a;--sea:#2dd4bf;--glow:#fca31133;color-scheme:dark}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#eef2f8;--bg2:#e3e9f3;--panel:#ffffff;--line:#14213d1a;--tx:#14213d;--mu:#5d6b88;--glow:#fca3111f;color-scheme:light}}
+:root[data-theme="light"]{--bg:#eef2f8;--bg2:#e3e9f3;--panel:#ffffff;--line:#14213d1a;--tx:#14213d;--mu:#5d6b88;--glow:#fca3111f;color-scheme:light}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:20px}
+body{font:15px/1.5 "Instrument Sans",system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);overflow-x:hidden}
+h1,h2,.num{font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;letter-spacing:-.02em}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.bg i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;animation:drift 22s ease-in-out infinite alternate}
+.bg i:nth-child(1){width:46vw;height:46vw;background:#fca31144;top:-12vw;right:-8vw}
+.bg i:nth-child(2){width:40vw;height:40vw;background:#2dd4bf2e;bottom:-14vw;left:12vw;animation-delay:-8s}
+@keyframes drift{to{transform:translate(-6vw,5vw) scale(1.15)}}
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100dvh}
+.rail{position:sticky;top:0;height:100dvh;padding:22px 18px;display:flex;flex-direction:column;gap:22px;background:linear-gradient(180deg,#0f1a33,#0a1224);color:#e9eefb;border-right:1px solid #ffffff14}
+.brand{display:flex;gap:11px;align-items:center}
+.logo{width:40px;height:40px;border-radius:12px;background:var(--ac);color:#14213d;display:grid;place-items:center;font:800 17px "Bricolage Grotesque";box-shadow:0 0 0 0 var(--glow);animation:ping 3s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 14px #fca31100}}
+.brand b{font:700 17px "Bricolage Grotesque";display:block;line-height:1.1}.brand small{color:#8e9bb8;font-size:12px}
+nav{display:flex;flex-direction:column;gap:4px}
+nav a{display:flex;gap:11px;align-items:center;padding:10px 12px;border-radius:11px;color:#b8c3dc;text-decoration:none;font-weight:500;transition:.25s;position:relative}
+nav a:hover{background:#ffffff0f;color:#fff;transform:translateX(3px)}
+nav a.on{background:var(--ac);color:#14213d;font-weight:600}
+nav a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.facts{margin-top:auto;display:grid;gap:14px}
+.facts div{border-left:2px solid #fca31166;padding-left:12px}
+.facts small{color:#8e9bb8;font-size:12px;display:block}.facts b{font:700 20px "Bricolage Grotesque";color:var(--ac2)}
+.theme{background:#ffffff12;color:#e9eefb;border:0;border-radius:10px;padding:9px;cursor:pointer;font:inherit;transition:.2s}.theme:hover{background:#ffffff22}
+main{padding:32px clamp(16px,3.4vw,48px) 60px;min-width:0;max-width:1320px}
+header h1{font-size:clamp(28px,4.6vw,52px);font-weight:800;line-height:1.02}
+header p{color:var(--mu);margin-top:10px;max-width:60ch}
+.live{display:inline-flex;gap:8px;align-items:center;color:var(--sea);font-weight:600;font-size:13px;margin-bottom:12px}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--sea);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.25;transform:scale(1.6)}}
+.pipe{margin:30px 0 8px;padding:22px;border-radius:24px;background:linear-gradient(135deg,var(--panel),var(--bg2));border:1px solid var(--line);position:relative;overflow:hidden}
+.pipe::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 35%,#fca31114 50%,transparent 65%);transform:translateX(-100%);animation:sweep 6s 1.6s infinite}
+@keyframes sweep{to{transform:translateX(100%)}}
+.pipe h2{font-size:20px}.pipe>p{color:var(--mu);font-size:14px;margin:2px 0 18px}
+.stages{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.stage{padding:12px;border-radius:16px;background:#ffffff08;border:1px solid var(--line);cursor:pointer;transition:.3s;text-align:left;color:inherit;font:inherit;position:relative}
+.stage:hover,.stage.on{transform:translateY(-4px);border-color:var(--c);box-shadow:0 12px 30px -12px var(--c)}
+.stage .num{font-size:34px;font-weight:800;line-height:1;color:var(--c)}
+.stage span{display:block;font-size:13px;color:var(--mu);margin:3px 0 12px;min-height:2.6em}
+.dots{display:flex;flex-wrap:wrap;gap:5px;min-height:20px}
+.dot{width:18px;height:18px;border-radius:6px;background:var(--c);opacity:0;transform:scale(0) rotate(-40deg);animation:pop .55s cubic-bezier(.3,1.6,.5,1) forwards;animation-delay:calc(var(--i)*70ms + 300ms)}
+@keyframes pop{to{opacity:1;transform:none}}
+.dot:hover{transform:scale(1.35);transition:.15s}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0}
+.kpi{padding:16px 18px;border-radius:18px;background:var(--panel);border:1px solid var(--line);transition:.3s;position:relative;overflow:hidden}
+.kpi:hover{transform:translateY(-3px);border-color:var(--c)}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c)}
+.kpi .num{font-size:36px;font-weight:800;line-height:1.1}.kpi small{color:var(--mu);display:block;font-size:13px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:26px 0 14px;position:sticky;top:0;z-index:5;padding:10px 0;background:linear-gradient(var(--bg) 70%,transparent)}
+.bar label{display:flex;gap:8px;align-items:center;color:var(--mu);font-size:13px}
+select,input[type=search]{background:var(--panel);color:var(--tx);border:1px solid var(--line);border-radius:12px;padding:9px 12px;font:inherit;transition:.2s}
+select:hover,input:hover{border-color:var(--ac)}input[type=search]{flex:1;min-width:180px}
+.chip{border:0;background:var(--ac);color:#14213d;border-radius:999px;padding:7px 14px;font:600 13px "Instrument Sans",sans-serif;cursor:pointer;display:none;transition:.2s}.chip.show{display:inline-block}.chip:hover{transform:scale(1.05)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.card{padding:20px;border-radius:22px;background:var(--panel);border:1px solid var(--line);position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;width:260px;height:260px;left:calc(var(--mx,-999px) - 130px);top:calc(var(--my,-999px) - 130px);background:radial-gradient(var(--glow),transparent 65%);pointer-events:none;transition:opacity .3s}
+.card h2{font-size:18px;margin-bottom:14px;position:relative}
+.donut{display:flex;gap:20px;align-items:center;flex-wrap:wrap;position:relative}
+.donut svg{width:170px;height:170px;transform:rotate(-90deg);flex:none}
+.donut circle{fill:none;stroke-width:22;transition:stroke-dasharray 1.1s cubic-bezier(.2,.8,.2,1),stroke-dashoffset 1.1s;cursor:pointer}
+.donut circle:hover{stroke-width:27}
+.ctr{position:absolute;left:0;width:170px;text-align:center;top:58px;pointer-events:none}.ctr b{font:800 34px "Bricolage Grotesque";display:block;line-height:1}.ctr small{color:var(--mu)}
+.leg{list-style:none;padding:0;display:grid;gap:6px;font-size:13px;flex:1;min-width:150px}
+.leg li{display:flex;gap:8px;align-items:center;cursor:pointer;padding:3px 6px;border-radius:8px;transition:.2s}.leg li:hover{background:#ffffff10}.leg li.z{opacity:.35}
+.leg i{width:10px;height:10px;border-radius:3px;flex:none}.leg b{margin-left:auto}
+.row{display:grid;grid-template-columns:minmax(90px,38%) 1fr 26px;gap:10px;align-items:center;margin:9px 0;font-size:13.5px;position:relative}
+.row div{height:11px;border-radius:9px;background:#ffffff10;overflow:hidden}
+.row i{display:block;height:100%;width:0;border-radius:9px;background:var(--c);transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.row b{text-align:right}
+.tbl{margin-top:14px;border-radius:22px;border:1px solid var(--line);background:var(--panel);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;color:var(--mu);font-weight:500;padding:13px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel)}
+td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr{transition:background .2s,transform .2s;animation:rowin .5s both;animation-delay:calc(var(--i)*35ms)}
+@keyframes rowin{from{opacity:0;transform:translateX(-14px)}}
+tbody tr:hover{background:#fca3110f}
+.mono{font:500 12.5px ui-monospace,Menlo,Consolas,monospace;color:var(--ac2);white-space:nowrap}
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:color-mix(in srgb,var(--c) 22%,transparent);color:var(--c);border:1px solid color-mix(in srgb,var(--c) 45%,transparent);white-space:nowrap}
+.empty{padding:40px;text-align:center;color:var(--mu)}
+footer{color:var(--mu);font-size:13px;margin-top:22px;max-width:70ch}
+@media(max-width:1100px){.stages{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:860px){
+ .app{grid-template-columns:1fr}
+ .rail{position:sticky;top:0;z-index:20;height:auto;flex-direction:row;align-items:center;padding:10px 14px;gap:12px;border-right:0;border-bottom:1px solid #ffffff14}
+ .brand small,.facts,nav a span{display:none}.brand b{font-size:15px}
+ nav{flex-direction:row;margin-left:auto}nav a{padding:10px 12px}.theme{padding:9px 11px}
+ .bar{top:62px}
+}
+@media(max-width:640px){
+ .stages{grid-template-columns:1fr 1fr}
+ thead{display:none}table,tbody,tr,td{display:block}
+ tr{padding:12px 14px;border-bottom:1px solid var(--line)}td{border:0;padding:3px 0}
+ td[data-l]::before{content:attr(data-l) ": ";color:var(--mu)}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.dot{opacity:1;transform:none}}
+.btn{border:0;background:var(--ac);color:#14213d;border-radius:12px;padding:9px 16px;font:600 14px "Instrument Sans",sans-serif;cursor:pointer;transition:.2s}.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px -8px var(--ac)}.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--line)}.btn:disabled{opacity:.5;cursor:wait}
+.note{padding:12px 16px;border-radius:14px;background:#fca3111f;border:1px solid #fca31155;margin:6px 0 14px}
+dialog{border:1px solid var(--line);border-radius:24px;background:var(--panel);color:var(--tx);padding:26px;width:min(520px,92vw);margin:auto}dialog::backdrop{background:#050a16b3;backdrop-filter:blur(6px)}
+dialog[open]{animation:dlg .35s cubic-bezier(.2,1.2,.4,1)}@keyframes dlg{from{opacity:0;transform:translateY(20px) scale(.96)}}
+dialog h2{font-size:22px;margin-bottom:4px}dialog p{color:var(--mu);font-size:14px;margin-bottom:16px}
+.fld{display:grid;gap:6px;margin-bottom:12px;font-size:13px;color:var(--mu)}.fld select,.fld input{width:100%;font-size:15px;color:var(--tx)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.acts{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+.res{margin:14px 0;padding:16px;border-radius:16px;background:#22c55e1f;border:1px solid #22c55e66;animation:dlg .4s}.res .mono{display:block;font-size:14px;margin:6px 0 12px;white-space:normal;word-break:break-all;color:var(--tx)}
+td select{padding:5px 8px;font-size:13px;border-radius:9px;max-width:190px}.cp{border:0;background:#ffffff12;color:inherit;border-radius:8px;cursor:pointer;padding:3px 7px;margin-left:6px;transition:.2s}.cp:hover{background:var(--ac);color:#14213d}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,30px);background:var(--ac);color:#14213d;padding:10px 18px;border-radius:999px;font-weight:600;opacity:0;transition:.3s;z-index:99;pointer-events:none}.toast.on{opacity:1;transform:translate(-50%,0)}
+[hidden]{display:none!important}
+@media print{@page{size:landscape;margin:10mm}*{animation:none!important;transition:none!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{background:#fff!important;color:#14213d!important}.bg,.rail,.bar,.note,.toast,.theme,.cp,.act,th:last-child,footer{display:none!important}.app{display:block}main{padding:0;max-width:none}
+.card,.pipe,.kpi,.tbl{background:#fff!important;border-color:#cbd5e1!important;break-inside:avoid}.dot,tbody tr{opacity:1!important;transform:none!important}.pipe::after,.card::before{display:none}
+:root{--tx:#14213d;--mu:#475569;--line:#cbd5e1;--panel:#fff;--bg2:#fff;--ac2:#b45309}td select{border:0;appearance:none;background:none;color:inherit;padding:0}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><i></i><i></i></div>
+<div class="app">
+<aside class="rail">
+  <div class="brand"><div class="logo">DC</div><div><b>DC Hub</b><small>Document Control</small></div></div>
+  <nav aria-label="Sections">
+    <a href="#/" class="on">📊 <span>Dashboard</span></a>
+    <a href="#analysis">📈 <span>Insights</span></a>
+    <a href="#/register">📋 <span>Register</span></a>
+  </nav>
+  <div class="facts">
+    <div><small>Project</small><b>RSGT-OZA-MPT09</b></div>
+    <div><small>Next number</small><b id="fSerial">0016</b></div>
+    <div><small>Documents in register</small><b id="fDocs">15</b></div>
+    <div><small>Today</small><b id="fDate"></b></div>
+  </div>
+  <button class="theme" id="theme" aria-label="Toggle light or dark theme">🌗</button>
+</aside>
+<main id="top">
+  <div class="bar">
+    <label>Discipline <select id="fd"></select></label>
+    <label>Owner <select id="fo"></select></label>
+    <input type="search" id="q" placeholder="Search number, title or owner" aria-label="Search documents">
+    <button class="chip" id="clr">Clear stage filter ✕</button>
+    <button class="btn" id="nw">＋ New document</button>
+    <button class="btn ghost" id="pr">🖨 Print</button>
+    <button class="btn ghost" id="dt">Data ⋯</button>
+  </div>
+  <div class="note" id="note" hidden></div>
+  <div id="v-dash">
+  <header>
+    <div class="live">Live from the numbering log</div>
+    <h1>Red Sea Gateway Terminal<br>document control</h1>
+    <p>Workshop &amp; fuel station project. See where every document sits, who has to act next, and what is still waiting on the consultant.</p>
+  </header>
+  <section class="pipe" aria-labelledby="ph">
+    <h2 id="ph">Who has the ball?</h2>
+    <p>Each square is one document. Tap a stage to filter the register.</p>
+    <div class="stages" id="stages"></div>
+  </section>
 
+  
+  <section class="kpis" id="kpis"></section>
+  <section class="grid" id="analysis">
+    <div class="card"><h2>Status mix</h2><div class="donut"><div style="position:relative"><svg viewBox="0 0 200 200" id="dn"></svg><div class="ctr"><b id="dnT">0</b><small>documents</small></div></div><ul class="leg" id="leg"></ul></div></div>
+    <div class="card"><h2>Disciplines</h2><div id="bDisc"></div></div>
+    <div class="card"><h2>Document types</h2><div id="bType"></div></div>
+    <div class="card"><h2>Workload by owner</h2><div id="bOwn"></div></div>
+  </section>
+
+  
+  </div>
+  <div id="v-reg" hidden>
+    <header><h1>Document register</h1><p>Create a number, copy it, then prepare the document. Editors move each document through its stages here.</p></header>
+    <div class="bar" style="position:static;padding:0;margin:22px 0 14px"><label>Status <select id="fs"></select></label></div>
+    <section class="tbl" aria-label="Document register">
+      <table><thead><tr><th>No.</th><th>Document number</th><th>Description</th><th>Owner</th><th>Rev</th><th>Status</th><th>With</th><th></th></tr></thead><tbody id="tb"></tbody></table>
+      <div class="empty" id="em" hidden>No documents match. Clear a filter, or create the next document number.</div>
+    </section>
+  </div>
+  <footer>Your register lives in this browser. Import the Excel log to refresh it, and download data.json if you want other devices to match.</footer>
+</main>
+</div>
+<dialog id="dlg"><div id="dbody"></div></dialog><div class="toast" id="toast" role="status"></div>
+<script>
+const P="RSGT-OZA-MPT09",pad=n=>String(n).padStart(4,"0");
+const ST={"PREPARING":["#f59e0b","Authors","Preparing"],"UNDER REVIEW (INTERNAL)":["#3b82f6","PM","Under review"],"REQUESTED TO REVISE (INTERNAL)":["#ea580c","Authors","Revise (internal)"],"APPROVED FOR SUBMISSION":["#14b8a6","DC","Ready to submit"],"SUBMITTED - WAITING RESPONSE":["#818cf8","Consultant","Waiting response"],"CODE B - APPROVED WITH COMMENTS":["#84cc16","Authors","Code B - Approved with comments"],"CODE C - REVISE & RESUBMIT":["#ef4444","Authors","Code C - Revise & resubmit"],"CODE D - NO REVIEW REQUIRED":["#94a3b8","Closed","Code D - No review required"],"COMPLETED":["#22c55e","Closed","Code A - Approved"]};
+const STAGES=[["Authors","Authors preparing or revising","#f59e0b"],["PM","PM internal review","#3b82f6"],["DC","Ready for Document Control","#14b8a6"],["Consultant","Waiting on Haskoning","#818cf8"],["Closed","Approved or closed","#22c55e"]];
+const DISC={ARC:"Architectural",CIV:"Civil",STR:"Structural",GEO:"Geotechnical",SUR:"Surveying/Mapping",ELE:"Electrical",FPR:"Fire Protection",GEN:"General",HSE:"Health and Safety",QTY:"Quality",HVC:"HVAC",MEC:"Mechanical",PLB:"Plumbing",SGN:"Signage / wayfinding",ADM:"Administrative",FIN:"Finance"};
+const TYPE={CAL:"Calculations",CER:"Certificates",SPC:"Specifications",PPG:"Policies / Procedures",PRP:"Proposal",RPT:"Report",PLC:"Policy",PLN:"Plan",SCH:"Schedule",MTX:"Matrix",TWG:"Tender Drawings",DWG:"Design Drawings",SWG:"Shop Drawing",IFC:"Issued for Construction",AWG:"As-Built Drawings",ITP:"Inspection Test Plan",MAT:"Material Submittal",MIR:"Material Inspection Request",WIR:"Work Inspection Request",MST:"Method Statement",NCR:"Non-Conformance Report",PQD:"Pre-qualification",RFI:"Request for information",MNL:"Manual / O&M",PAP:"Payment Application"};
+const OWN=["Eng. Muhammad Saud","Eng. Kaleemullah","Al Badeel Design Consultant","Technical Office","Eng. Muhammad Adil","DC","Consultant"];
+const REV=["A","B","C","D","0","0A","0B","0C","0D","1","1A","1B","1C","1D","2"];
+let D=[];const canEd=true,KEY="mpt09_docs_v1";
+const numOf=r=>`${P}-${r.d}-${r.t}-${pad(r.n)}-Rev ${r.r||"A"}`;
+const $=id=>document.getElementById(id),st={d:"ALL",o:"ALL",q:"",g:null,s:"ALL"};
+const stage=r=>ST[r.s][1];
+const ownList=()=>[...new Set([...OWN,...D.map(r=>r.o).filter(Boolean)])];
+function fillOwners(){const v=$("fo").value||"ALL";$("fo").innerHTML='<option value="ALL">All owners</option>'+ownList().map(o=>`<option>${o}</option>`).join("");$("fo").value=ownList().includes(v)?v:"ALL";st.o=$("fo").value}
+$("fs").innerHTML='<option value="ALL">All statuses</option>'+Object.keys(ST).map(k=>`<option value="${k}">${ST[k][2]}</option>`).join("");
+$("fDate").textContent=new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+function count(el,to,pct){const t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/900),v=to*(1-Math.pow(1-k,3));el.textContent=pct?Math.round(v)+"%":Math.round(v);if(k<1)requestAnimationFrame(f)})(t0)}
+const base=r=>(st.d=="ALL"||r.d==st.d)&&(st.o=="ALL"||r.o==st.o);
+function bars(el,map,color){const e=Object.entries(map).sort((a,b)=>b[1]-a[1]||0),m=Math.max(1,...e.map(x=>x[1]));
+ el.innerHTML=e.map(([k,v])=>`<div class="row" style="--c:${color}"><span>${k}</span><div><i data-w="${v/m*100}"></i></div><b>${v}</b></div>`).join("")||'<p class="empty">No data</p>';
+ requestAnimationFrame(()=>requestAnimationFrame(()=>el.querySelectorAll("i").forEach(i=>i.style.width=i.dataset.w+"%")))}
+const FLOW={"PREPARING":["UNDER REVIEW (INTERNAL)","Send to review"],"REQUESTED TO REVISE (INTERNAL)":["UNDER REVIEW (INTERNAL)","Send to review"],"UNDER REVIEW (INTERNAL)":["APPROVED FOR SUBMISSION","Approve"],"APPROVED FOR SUBMISSION":["SUBMITTED - WAITING RESPONSE","Mark submitted"]};
+const GRP=[["Internal",["PREPARING","UNDER REVIEW (INTERNAL)","REQUESTED TO REVISE (INTERNAL)","APPROVED FOR SUBMISSION","SUBMITTED - WAITING RESPONSE"]],["Consultant response",["COMPLETED","CODE B - APPROVED WITH COMMENTS","CODE C - REVISE & RESUBMIT","CODE D - NO REVIEW REQUIRED"]]];
+const statusSel=r=>`<select data-n="${r.n}" data-f="s" style="color:${ST[r.s][0]}">${GRP.map(([g,ks])=>`<optgroup label="${g}">${ks.map(k=>`<option value="${k}" ${k==r.s?"selected":""}>${ST[k][2]}</option>`).join("")}</optgroup>`).join("")}</select>`;
+const nextBtn=r=>FLOW[r.s]?`<button class="cp nx" data-n="${r.n}">${FLOW[r.s][1]} ▸</button>`:/CODE [BC]/.test(r.s)?`<button class="cp nx" data-n="${r.n}">Start revision ▸</button>`:"";
+async function advance(n){const r=D.find(x=>x.n==n);if(!r)return;if(FLOW[r.s])return setField(n,"s",FLOW[r.s][0]);setField(n,"r",REV[REV.indexOf(r.r||"A")+1]||r.r,{s:"REQUESTED TO REVISE (INTERNAL)"});toast("Revision started")}
+const nextNo=()=>{const u=new Set(D.map(r=>r.n));let n=1;while(u.has(n))n++;return n};
+let first=true;
+function render(){
+ $("fSerial").textContent=pad(nextNo());$("fDocs").textContent=D.length;
+ const f=D.filter(base),by={};f.forEach(r=>by[r.s]=(by[r.s]||0)+1);
+ const sg={};f.forEach(r=>sg[stage(r)]=(sg[stage(r)]||0)+1);
+ // stages with one square per document
+ let i=0;$("stages").innerHTML=STAGES.map(([k,l,c])=>{const rs=f.filter(r=>stage(r)==k);
+  return `<button class="stage ${st.g==k?"on":""}" style="--c:${c}" data-g="${k}" aria-pressed="${st.g==k}"><div class="num">${rs.length}</div><span>${l}</span><div class="dots">${rs.map(r=>`<i class="dot" style="--i:${first?i++:0}" title="${r.num} — ${r.x}"></i>`).join("")}</div></button>`}).join("");
+ $("stages").querySelectorAll(".stage").forEach(b=>b.onclick=()=>{st.g=st.g==b.dataset.g?null:b.dataset.g;render()});
+ const n=f.length,sent=f.filter(r=>["Consultant","Closed"].includes(stage(r))||/CODE/.test(r.s)).length;
+ const K=[["Total documents",n,"#fca311"],["With consultant",sg.Consultant||0,"#818cf8"],["In-house progress",(sg.PM||0)+(sg.DC||0)+f.filter(r=>r.s=="PREPARING").length,"#3b82f6"],["Needs revision",f.filter(r=>/REVISE|CODE B|CODE C/.test(r.s)).length,"#ef4444"],["Approved or closed",sg.Closed||0,"#22c55e"],["Submission rate",n?sent/n*100:0,"#2dd4bf",1]];
+ $("kpis").innerHTML=K.map(([l,v,c,p])=>`<div class="kpi" style="--c:${c}"><div class="num" data-v="${v}" data-p="${p||""}">0</div><small>${l}</small></div>`).join("");
+ $("kpis").querySelectorAll(".num").forEach(e=>count(e,+e.dataset.v,e.dataset.p));
+ // donut
+ const C=2*Math.PI*78;let off=0,seg="";const ents=Object.keys(ST);
+ ents.forEach(k=>{const v=by[k]||0,len=n?v/n*C:0;seg+=`<circle data-s="${k}" cx="100" cy="100" r="78" stroke="${ST[k][0]}" stroke-dasharray="0 ${C}" data-len="${Math.max(0,len-2)}" data-C="${C}" stroke-dashoffset="${-off}"><title>${ST[k][2]}: ${v}</title></circle>`;off+=len});
+ $("dn").innerHTML=seg;requestAnimationFrame(()=>requestAnimationFrame(()=>$("dn").querySelectorAll("circle").forEach(c=>c.setAttribute("stroke-dasharray",`${c.dataset.len} ${C}`))));
+ $("dn").querySelectorAll("circle").forEach(c=>c.onclick=()=>{st.g=ST[c.dataset.s][1];render()});
+ $("dnT").textContent=n;
+ $("leg").innerHTML=ents.map(k=>`<li class="${by[k]?"":"z"}" data-k="${k}"><i style="background:${ST[k][0]}"></i>${ST[k][2]}<b>${by[k]||0}</b></li>`).join("");
+ $("leg").querySelectorAll("li").forEach(l=>l.onclick=()=>{st.g=ST[l.dataset.k][1];render()});
+ // bars: each chart ignores its own filter
+ const m=(rs,key)=>{const o={};rs.forEach(r=>o[r[key]]=(o[r[key]]||0)+1);return o};
+ bars($("bDisc"),m(D.filter(r=>st.o=="ALL"||r.o==st.o),"d"),"#fca311");
+ const tm=m(f,"t");bars($("bType"),Object.fromEntries(Object.entries(tm).map(([k,v])=>[k+" · "+TYPE[k],v])),"#3b82f6");
+ bars($("bOwn"),m(D.filter(r=>st.d=="ALL"||r.d==st.d),"o"),"#2dd4bf");
+ // table
+ const q=st.q.toLowerCase(),rows=f.filter(r=>(!st.g||stage(r)==st.g)&&(st.s=="ALL"||r.s==st.s)&&(!q||(r.num+r.x+r.o).toLowerCase().includes(q)));
+ const wth=r=>stage(r)=="Authors"?r.o:{PM:"Eng. Muhammad Adil (PM)",DC:"Sadikh (DC)",Consultant:"Haskoning",Closed:"—"}[stage(r)];
+ $("tb").innerHTML=rows.map((r,i)=>`<tr style="--i:${Math.min(i,20)}"><td data-l="No.">${pad(r.n)}</td><td class="mono">${r.num}<button class="cp" data-c="${r.num}" title="Copy number" aria-label="Copy number">⧉</button></td><td>${r.x}</td><td data-l="Owner">${r.o}</td><td data-l="Rev">${canEd?`<select data-n="${r.n}" data-f="r">${REV.map(v=>`<option ${v==(r.r||"A")?"selected":""}>${v}</option>`).join("")}</select>`:(r.r||"A")}</td><td>${canEd?statusSel(r)+nextBtn(r):`<span class="badge" style="--c:${ST[r.s][0]}">${ST[r.s][2]}</span>`}</td><td data-l="With">${wth(r)}</td><td class="act"><button class="cp" data-e="${r.n}" title="Edit" aria-label="Edit">✎</button><button class="cp" data-x="${r.n}" title="Delete" aria-label="Delete">🗑</button></td></tr>`).join("");
+ $("tb").querySelectorAll(".cp").forEach(b=>b.onclick=()=>copy(b.dataset.c));
+ $("tb").querySelectorAll("select").forEach(x=>x.onchange=()=>setField(+x.dataset.n,x.dataset.f,x.value));
+ $("tb").querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>openForm(D.find(x=>x.n==+b.dataset.e)));$("tb").querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>del(+b.dataset.x));
+ $("tb").querySelectorAll(".nx").forEach(b=>b.onclick=()=>advance(+b.dataset.n));
+ $("em").hidden=rows.length>0;$("clr").classList.toggle("show",!!st.g);first=false;
+}
+$("fd").onchange=e=>{st.d=e.target.value;first=true;render()};$("fo").onchange=e=>{st.o=e.target.value;first=true;render()};
+$("fs").onchange=e=>{st.s=e.target.value;render()};$("q").oninput=e=>{st.q=e.target.value;render()};$("clr").onclick=()=>{st.g=null;render()};
+document.querySelectorAll(".card").forEach(c=>c.addEventListener("pointermove",e=>{const b=c.getBoundingClientRect();c.style.setProperty("--mx",e.clientX-b.left+"px");c.style.setProperty("--my",e.clientY-b.top+"px")}));
+const links=[...document.querySelectorAll("nav a")];
+function route(){const reg=location.hash=="#/register";$("v-reg").hidden=!reg;$("v-dash").hidden=reg;
+ links.forEach(a=>a.classList.toggle("on",reg?a.hash=="#/register":a.hash==(location.hash=="#analysis"?"#analysis":"#/")));
+ if(reg)scrollTo(0,0);else if(location.hash=="#analysis")$("analysis").scrollIntoView();else scrollTo(0,0)}
+addEventListener("hashchange",route);
+$("theme").onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme=="dark":!matchMedia("(prefers-color-scheme:light)").matches;r.dataset.theme=dark?"light":"dark"};
+const toast=m=>{const t=$("toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1800)};
+const note=m=>{$("note").textContent=m||"";$("note").hidden=!m};
+async function copy(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch(_){}a.remove()}toast("Copied "+t)}
+const SEED=[[1, "GEO", "PQD", "Prequalification for Al Mumayaz Laboratory", "Eng. Muhammad Saud", "COMPLETED"], [2, "ADM", "PQD", "Prequalification for Albadeel Engineering Consultancy", "Eng. Muhammad Saud", "SUB"], [3, "ADM", "MTX", "Communication Matrix", "Technical Office", "SUB"], [4, "HSE", "PLN", "Health Safety and Environmental Plan", "Eng. Kaleemullah", "SUB"], [5, "MEC", "RFI", "Clarification for fuel tank wall construction", "Eng. Muhammad Adil", "PREPARING"], [6, "ADM", "MTX", "Organization Chart", "Technical Office", "SUB"], [7, "QTY", "PLN", "Quality Management Plan", "Eng. Muhammad Saud", "SUB"], [8, "QTY", "PLC", "Quality ISO Policy", "Eng. Muhammad Saud", "SUB"], [9, "HSE", "PLN", "Generic Project Risk Assessment Plan", "Eng. Kaleemullah", "SUB"], [10, "HSE", "PLN", "Training Management Plan", "Eng. Kaleemullah", "SUB"], [11, "HSE", "PLN", "Construction Waste Management Plan", "Eng. Kaleemullah", "SUB"], [13, "GEN", "PRP", "Proposed project sign board", "Technical Office", "SUB"], [14, "ARC", "PRP", "Architectural Proposals", "Al Badeel Design Consultant", "SUB"], [15, "GEN", "PRP", "Project Layout Proposals", "Al Badeel Design Consultant", "SUB"], [16, "SUR", "PLN", "Existing ground survey levels", "Al Badeel Design Consultant", "SUB"]],SUB="SUBMITTED - WAITING RESPONSE";
+const hydrate=a=>a.map(v=>({...v,num:numOf(v)})).sort((x,y)=>x.n-y.n);
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(D.map(({num,...v})=>v)))}catch(e){note("This browser blocked saving. Changes will be lost on reload.")}};
+const commit=()=>{D=hydrate(D);save();fillOwners();render()};
+async function boot(reset){let a=null;if(!reset){try{a=JSON.parse(localStorage.getItem(KEY))}catch(e){}}
+ if(!a){try{const r=await fetch("data.json",{cache:"no-store"});if(r.ok)a=await r.json()}catch(e){}}
+ D=hydrate(a||SEED.map(([n,d,t,x,o,s])=>({n,d,t,x,o,r:"A",s:s=="SUB"?SUB:s})));if(reset)save();fillOwners();render();first=false}
+function setField(n,f,v,extra){const r=D.find(x=>x.n==n);if(!r)return;r[f]=v;Object.assign(r,extra||{});commit();toast("Updated "+pad(n))}
+function del(n){const r=D.find(x=>x.n==n);if(r&&confirm("Delete "+r.num+"?\n"+r.x+"\n\nThe number "+pad(n)+" becomes free and will be used for the next new document."))
+ {D=D.filter(x=>x.n!=n);commit();toast("Deleted "+pad(n))}}
+const sel=(id,o,fn,v)=>`<select id="${id}">${o.map(k=>fn(k).replace("<option",`<option ${k==v?"selected":""}`)).join("")}</select>`;
+function openForm(r){const d=$("dlg"),b=$("dbody"),ed=!!r;
+ b.innerHTML=`<h2>${ed?"Edit "+pad(r.n):"New document number"}</h2><p>${ed?"Changing discipline, type or Rev changes the document number.":"Fill these in and the next free number is generated. Copy it, then prepare the document."}</p>
+ <div class="two"><label class="fld">Discipline${sel("nd",Object.keys(DISC),k=>`<option value="${k}">${k} · ${DISC[k]}</option>`,r&&r.d)}</label><label class="fld">Document type${sel("nt",Object.keys(TYPE),k=>`<option value="${k}">${k} · ${TYPE[k]}</option>`,r&&r.t)}</label></div>
+ <label class="fld">Description<input id="nx" maxlength="160" placeholder="e.g. Method statement for tank foundation"></label>
+ <div class="two"><label class="fld">Owner / prepared by${sel("no",ownList(),o=>`<option>${o}</option>`,r&&r.o)}</label><label class="fld">Rev${sel("nr",REV,v=>`<option>${v}</option>`,r&&(r.r||"A"))}</label></div>
+ <div id="nres"></div><div class="acts"><button class="btn ghost" id="nc">Close</button><button class="btn" id="ng">${ed?"Save changes":"Generate number"}</button></div>`;
+ if(ed)$("nx").value=r.x;d.showModal();$("nc").onclick=()=>d.close();
+ $("ng").onclick=()=>{const x=$("nx").value.trim();if(!x){$("nx").focus();$("nres").innerHTML='<p style="color:#ef4444">Add a description first.</p>';return}
+  const f={d:$("nd").value,t:$("nt").value,x,o:$("no").value,r:$("nr").value};
+  if(ed){Object.assign(r,f);commit();d.close();toast("Saved "+pad(r.n));return}
+  const n=nextNo();D.push({n,...f,s:"PREPARING"});commit();const num=numOf({...f,n});
+  $("nres").innerHTML=`<div class="res"><b>Your document number</b><span class="mono">${num}</span><button class="btn" id="cn">Copy number</button></div>`;
+  $("cn").onclick=()=>copy(num);$("ng").textContent="Create another";$("ng").onclick=()=>openForm()}}
+const loadX=()=>window.XLSX?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+const fin=r=>({"COMPLETED":"Code A - Approved","CODE D - NO REVIEW REQUIRED":"Code D - No review required"}[r.s]||(/CODE [BC]/.test(r.s)?ST[r.s][2]:""));
+const aoa=()=>[["Serial No.","Disci","Doc Type","Document Number","Document Description","Rev","Document Owner / Prepared By","Current Status","Responsible Person","Final Status"],...D.map(r=>[pad(r.n),r.d,r.t,r.num,r.x,r.r||"A",r.o,r.s,wth(r),fin(r)])];
+const wth=r=>stage(r)=="Authors"?r.o:{PM:"Eng. Muhammad Adil (PM)",DC:"Sadikh (DC)",Consultant:"Haskoning",Closed:""}[stage(r)];
+const dl=(name,blob)=>{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)};
+async function readXlsx(file){await loadX();const wb=XLSX.read(await file.arrayBuffer(),{type:"array"}),ws=wb.Sheets["Doc Numbering Log"]||wb.Sheets[wb.SheetNames[0]];
+ const A=XLSX.utils.sheet_to_json(ws,{header:1,defval:""}),hi=A.findIndex(r=>r.includes("Serial No.")&&r.includes("Doc Type"));if(hi<0)throw 0;
+ const H=A[hi].map(h=>String(h).trim()),ix=k=>H.indexOf(k),c={n:ix("Serial No."),d:ix("Disci"),t:ix("Doc Type"),x:ix("Document Description"),r:ix("Rev"),o:ix("Document Owner / Prepared By"),s:ix("Current Status")},S=v=>String(v).trim();
+ return A.slice(hi+1).map(r=>({n:parseInt(r[c.n]),d:S(r[c.d]),t:S(r[c.t]),x:S(r[c.x]),r:S(r[c.r])===""?"A":S(r[c.r]),o:S(r[c.o]),s:ST[S(r[c.s])]?S(r[c.s]):"PREPARING"})).filter(v=>v.n&&v.d&&v.t&&v.x)}
+function openData(){const d=$("dlg"),b=$("dbody");
+ b.innerHTML=`<h2>Data</h2><p>The Excel log stays your master. Import it here whenever you add rows.</p>
+ <label class="fld">Import Excel log (.xlsx)<input type="file" id="fi" accept=".xlsx,.xls"></label><div id="nres"></div>
+ <div class="acts" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn ghost" id="x1">Export Excel</button><button class="btn ghost" id="x2">Export CSV</button><button class="btn ghost" id="x3">Download data.json</button><button class="btn ghost" id="x4">Reset to published</button><button class="btn" id="nc">Close</button></div>`;
+ d.showModal();$("nc").onclick=()=>d.close();
+ $("x1").onclick=async()=>{try{await loadX();const w=XLSX.utils.book_new();XLSX.utils.book_append_sheet(w,XLSX.utils.aoa_to_sheet(aoa()),"Doc Numbering Log");XLSX.writeFile(w,"Document_Numbering_Log.xlsx")}catch(e){toast("Excel library couldn’t load. Try CSV.")}};
+ $("x2").onclick=()=>dl("Document_Numbering_Log.csv",new Blob(["\ufeff"+aoa().map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\r\n")],{type:"text/csv"}));
+ $("x3").onclick=()=>dl("data.json",new Blob([JSON.stringify(D.map(({num,...v})=>v),null,1)],{type:"application/json"}));
+ $("x4").onclick=()=>{if(confirm("Discard changes made in this browser and go back to the published data.json?")){localStorage.removeItem(KEY);boot(true);d.close()}};
+ $("fi").onchange=async e=>{const f=e.target.files[0];if(!f)return;let rows;try{rows=await readXlsx(f)}catch(x){$("nres").innerHTML='<p style="color:#ef4444">Couldn’t find the log table. Pick the Document Numbering Log workbook.</p>';return}
+  const have=new Map(D.map(r=>[r.n,r])),nw=rows.filter(r=>!have.has(r.n)).length;
+  $("nres").innerHTML=`<div class="res"><b>${rows.length} documents found</b><p style="margin:6px 0 10px">${nw} new. Merge updates matching serials and keeps documents created here. Replace makes this page match the Excel exactly.</p><div class="acts" style="justify-content:flex-start"><button class="btn" id="im">Merge</button><button class="btn ghost" id="ir">Replace all</button></div></div>`;
+  $("im").onclick=()=>{rows.forEach(r=>{const o=have.get(r.n);o?Object.assign(o,r):D.push(r)});commit();d.close();toast("Merged "+rows.length+" documents")};
+  $("ir").onclick=()=>{D=rows;commit();d.close();toast("Replaced with "+rows.length+" documents")}}}
+$("nw").onclick=()=>openForm();$("dt").onclick=openData;$("pr").onclick=()=>print();
+route();boot();
+</script>
+</body>
+</html>
