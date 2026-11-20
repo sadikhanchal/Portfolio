@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-app-version="2026.11.21.6">
+<html lang="en" data-app-version="2026.11.21.7">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -178,8 +178,7 @@ body:has(#v-reg:not([hidden])) main#top{padding-left:clamp(8px,1vw,16px);padding
     <a href="#/register"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg> <span>Register</span></a>
   </nav>
   <div class="facts">
-    <div><small>Project</small><b>RSGT-OZA-MPT09</b></div><div id="sidebar-project" hidden><small>Project name</small><b class="sidebar-project-name">Construction of Workshop &amp; Fuel Station</b></div>
-    <div><small>Next number</small><b id="fSerial">0016</b></div>
+    <div><small>Project</small><b>RSGT-OZA-MPT09</b></div><div><small>Next number</small><b id="fSerial">0016</b></div>
     <div><small>Documents in register</small><b id="fDocs">15</b></div><div id="sidebar-status"></div>
 
   </div>
@@ -698,7 +697,7 @@ $("fd").onchange=e=>{st.d=e.target.value;first=true;render()};$("fo").onchange=e
 $("fs").onchange=e=>{st.s=e.target.value;st.j=null;st.g=null;render()};$("q").oninput=e=>{st.q=e.target.value;render()};$("clr").onclick=()=>{st.g=null;st.j=null;render()};
 document.querySelectorAll(".card").forEach(c=>c.addEventListener("pointermove",e=>{const b=c.getBoundingClientRect();c.style.setProperty("--mx",e.clientX-b.left+"px");c.style.setProperty("--my",e.clientY-b.top+"px")}));
 const links=[...document.querySelectorAll("nav a")];
-function route(){const reg=location.hash=="#/register";$("register-header").hidden=!reg;$("register-tools").hidden=!reg;$("v-reg").hidden=!reg;$("v-dash").hidden=reg;$("sidebar-project").hidden=!reg;$("dashboard-print-tools").hidden=reg;
+function route(){const reg=location.hash=="#/register";$("register-header").hidden=!reg;$("register-tools").hidden=!reg;$("v-reg").hidden=!reg;$("v-dash").hidden=reg;$("dashboard-print-tools").hidden=reg;
  links.forEach(a=>a.classList.toggle("on",reg?a.hash=="#/register":a.hash==(location.hash=="#analysis"?"#analysis":"#/")));
  render();if(reg)scrollTo(0,0);else if(location.hash=="#analysis")$("analysis").scrollIntoView();else scrollTo(0,0)}
 addEventListener("hashchange",route);
