@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "project": "MPT09",
-  "version": "8cbda34d-7441-4e07-a7e0-5ae783f0a007",
-  "publishedAt": "2026-11-21T14:12:07.068Z",
+  "version": "cdc46179-fe05-4db9-a165-ae7dc1ce2320",
+  "publishedAt": "2026-11-21T19:34:45.622Z",
   "calendar": {
     "excludedWeekdays": [
       5
@@ -901,7 +901,7 @@
       "n": 17,
       "d": "GEN",
       "t": "DWG",
-      "x": "Layout Drawing CAD file",
+      "x": "Site Layout Drawing CAD file",
       "o": "Al Badeel Design Consultant",
       "r": "A",
       "s": "SUBMITTED - WAITING RESPONSE",
@@ -936,6 +936,32 @@
           "status": "SUBMITTED - WAITING RESPONSE",
           "who": "Haskoning",
           "previousStatus": "APPROVED FOR SUBMISSION"
+        },
+        {
+          "id": "e8a6b524-7954-4494-accf-be024ecc702e",
+          "kind": "edit",
+          "at": "2026-11-21",
+          "recordedAt": "2026-11-21T19:33:42.146Z",
+          "rev": "A",
+          "status": "SUBMITTED - WAITING RESPONSE",
+          "who": "Haskoning",
+          "reason": "Change the description from \"Layout Drawing CAD file\" to \"Site Layout Drawing CAD file\"",
+          "before": {
+            "x": "Layout Drawing CAD file",
+            "o": "Al Badeel Design Consultant",
+            "d": "GEN",
+            "t": "DWG",
+            "submittedDate": "2026-11-21",
+            "responseDate": ""
+          },
+          "after": {
+            "x": "Site Layout Drawing CAD file",
+            "o": "Al Badeel Design Consultant",
+            "d": "GEN",
+            "t": "DWG",
+            "submittedDate": "2026-11-21",
+            "responseDate": ""
+          }
         }
       ],
       "submittedDate": "2026-11-21",
