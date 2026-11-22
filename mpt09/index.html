@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-app-version="2026.11.21.19">
+<html lang="en" data-app-version="2026.11.22.20">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -750,7 +750,7 @@ function catalogEntries(kind){const map=kind==='discipline'?DISC:TYPE,field=kind
 function wireCatalogEditors(){for(const [kind,id] of [['discipline','nd'],['type','nt']]){const add=$('add-'+id);if(!add)continue;add.onclick=()=>{const box=$('new-'+id);box.hidden=!box.hidden;if(!box.hidden)$(id+'-code').focus()};$('cancel-'+id).onclick=()=>{$('new-'+id).hidden=true};$('save-'+id).onclick=()=>{if(!requireEditing())return;try{const code=$(id+'-code').value.trim().toUpperCase(),label=$(id+'-name').value.trim();validCatalogEntry(code,label);const map=kind==='discipline'?DISC:TYPE;if(catalogEntries(kind).some(([k])=>k===code))throw Error('Code '+code+' already exists. Select it from the list.');const clean=catalogSnapshot();clean[kind==='discipline'?'disciplines':'documentTypes'][code]=label;applyCatalogs(clean);const opt=document.createElement('option');opt.value=code;opt.textContent=code+' · '+label;$(id).appendChild(opt);$(id).value=code;$('new-'+id).hidden=true;save();fillDisc();$('form-error').textContent=''}catch(e){$('form-error').textContent=e.message}}}}
 function catalogEditor(id,title){return `<div class="catalog-editor" id="new-${id}" hidden><p>New ${esc(title)} · code becomes part of document numbers.</p><div class="two"><label class="fld">Code<input type="text" id="${id}-code" maxlength="8" placeholder="e.g. ELV"></label><label class="fld">Name<input type="text" id="${id}-name" maxlength="100"></label></div><div class="acts"><button type="button" class="btn ghost" id="cancel-${id}">Cancel</button><button type="button" class="btn" id="save-${id}">Add ${esc(title)}</button></div></div>`}
 
-const EDIT_PIN_HASH='4299d02186fc8c305429e9c21f92319798bf2d3c1d1f56a8f275870a7c7132cf';
+const EDIT_PIN_HASH='609e64c69f6ecd42f6820a05e3e259799a2015ad7b83cd62268f54e1233a95e9';
 function requireEditing(){if(canEd)return true;toast('View-only mode. Unlock editing to make changes.');return false}
 function syncAccess(){const b=$('edit-mode');b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/>'+(canEd?'<path d="M8 10V6a4 4 0 0 1 8 0"/>':'<path d="M8 10V6a4 4 0 0 1 8 0v4"/>')+'</svg><span>'+(canEd?'Editing enabled · Lock':'View only · Unlock')+'</span>';b.setAttribute('aria-label',canEd?'Lock editing':'Unlock editing');b.dataset.editing=String(canEd);$('nw').hidden=!canEd}
 let unlockFailures=0,unlockAfter=0;
