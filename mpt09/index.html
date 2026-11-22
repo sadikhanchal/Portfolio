@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-app-version="2026.11.22.20">
+<html lang="en" data-app-version="2026.11.22.21">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -761,8 +761,9 @@ function syncThemeIcon(){const r=document.documentElement,dark=r.dataset.theme?r
 
 function seedDates(r){if(r.n!==5){r.submittedDate='2026-11-19';r.everSubmitted=true;r.history.push(event({...r,s:SUB},'status','2026-11-19',{source:'Published original log'}))}if(r.n===1){r.responseDate='2026-11-19';r.history.push(event(r,'status',r.responseDate,{source:'Response date confirmed by Sadikh'}))}return r}
 async function fetchPublished(){const res=await fetch('data.json?t='+Date.now(),{cache:'no-store'});if(!res.ok)throw Error('No published data.json found');const p=await res.json();return {docs:validateRecords(Array.isArray(p)?p:p.documents),version:Array.isArray(p)?'legacy':p.version||p.publishedAt||'',catalogs:validateCatalogs(p.catalogs)}}
-async function boot(){let a=null,m={};try{a=JSON.parse(localStorage.getItem(KEY));m=JSON.parse(localStorage.getItem(metaKey)||'{}')}catch(e){}dirty=!!m.dirty;localVersion=m.localVersion||'';if(!a){try{const p=await fetchPublished();a=p.docs;applyCatalogs(p.catalogs);localVersion=p.version}catch(e){a=SEED.map(([n,d,t,x,o,s])=>seedDates(normalize({n,d,t,x,o,r:'A',s:s==='SUB'?SUB:s})))}}try{D=hydrate(validateRecords(a))}catch(e){D=[];note('Saved data could not be loaded: '+e.message+'. Use Data to restore a valid backup.')}cleanupDemoOnce();fillOwners();fillDisc();render();first=false;}
+async function boot(){let a=null,m={};try{a=JSON.parse(localStorage.getItem(KEY));m=JSON.parse(localStorage.getItem(metaKey)||'{}')}catch(e){}dirty=!!m.dirty;localVersion=m.localVersion||'';if(!a){try{const p=await fetchPublished();a=p.docs;applyCatalogs(p.catalogs);localVersion=p.version}catch(e){a=SEED.map(([n,d,t,x,o,s])=>seedDates(normalize({n,d,t,x,o,r:'A',s:s==='SUB'?SUB:s})))}}try{D=hydrate(validateRecords(a))}catch(e){D=[];note('Saved data could not be loaded: '+e.message+'. Use Data to restore a valid backup.')}cleanupDemoOnce();cleanupWithdrawnAppendix();fillOwners();fillDisc();render();first=false;}
 function cleanupDemoOnce(){const key='mpt09_demo_0012_cleanup_20261121';if(localStorage.getItem(key))return;const matches=D.filter(r=>r.n===12&&r.d==='CIV'&&r.t==='DWG'&&r.r==='B');if(matches.length){D=D.filter(r=>!matches.includes(r));localStorage.setItem(KEY,JSON.stringify(D));dirty=true;localStorage.setItem(metaKey,JSON.stringify({dirty:true,localVersion}));}localStorage.setItem(key,'done');}
+function cleanupWithdrawnAppendix(){const matches=D.filter(r=>r.id==='45a74764-1d92-4842-9890-961a51a698c0'&&r.n===12&&r.d==='HSE'&&r.t==='PLN');if(!matches.length)return;D=D.filter(r=>!matches.includes(r));save();}
 function revisionParts(v){const m=String(v||'A').match(/^(\d*)([A-Z]+)$/);return m?{cycle:m[1],letter:m[2]}:{cycle:String(v||''),letter:'A'}}
 function nextRevision(r){const p=revisionParts(r.r);if(isClosed(r.s))return (p.cycle===''?0:Number(p.cycle)+1)+'A';let a=p.letter.split(''),i=a.length-1;while(i>=0&&a[i]==='Z'){a[i]='A';i--}if(i<0)a.unshift('A');else a[i]=String.fromCharCode(a[i].charCodeAt(0)+1);return p.cycle+a.join('')}
 function revOptions(r){return [...new Set([r.r||'A',...REV.map(l=>revisionParts(r.r).cycle+l)])]}
