@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "project": "MPT09",
-  "version": "cdc46179-fe05-4db9-a165-ae7dc1ce2320",
-  "publishedAt": "2026-11-21T19:34:45.622Z",
+  "version": "486992e2-6af0-4700-9cad-3d5f17f12abd",
+  "publishedAt": "2026-11-22T07:23:04.287Z",
   "calendar": {
     "excludedWeekdays": [
       5
@@ -664,38 +664,6 @@
       "submittedDate": "2026-11-19",
       "responseDate": "",
       "everSubmitted": true
-    },
-    {
-      "n": 12,
-      "d": "HSE",
-      "t": "PLN",
-      "x": "Task Specific Risk Assessment Plan for Demolition of Warehouse",
-      "o": "Eng. Kaleemullah",
-      "r": "A",
-      "s": "UNDER REVIEW (INTERNAL)",
-      "id": "45a74764-1d92-4842-9890-961a51a698c0",
-      "history": [
-        {
-          "id": "5f52a50c-0c10-444d-98ef-6c71e5fa0bd8",
-          "kind": "status",
-          "at": "2026-11-21",
-          "recordedAt": "2026-11-21T12:15:23.459Z",
-          "rev": "A",
-          "status": "PREPARING",
-          "who": "Eng. Kaleemullah",
-          "action": "Created"
-        },
-        {
-          "id": "e275b3c9-aca9-43d3-8c2f-ee5b93bd7ac4",
-          "kind": "status",
-          "at": "2026-11-21",
-          "recordedAt": "2026-11-21T12:15:36.091Z",
-          "rev": "A",
-          "status": "UNDER REVIEW (INTERNAL)",
-          "who": "Eng. Muhammad Adil (PM)",
-          "previousStatus": "PREPARING"
-        }
-      ]
     },
     {
       "n": 13,
