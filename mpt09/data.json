@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "project": "MPT09",
-  "version": "486992e2-6af0-4700-9cad-3d5f17f12abd",
-  "publishedAt": "2026-11-22T07:23:04.287Z",
+  "version": "eae55e05-b0ae-4621-8989-6ccf6129fe99",
+  "publishedAt": "2026-11-22T08:05:02.273Z",
   "calendar": {
     "excludedWeekdays": [
       5
@@ -289,76 +289,6 @@
             "submittedDate": "2026-11-19",
             "responseDate": ""
           }
-        }
-      ],
-      "submittedDate": "2026-11-19",
-      "responseDate": "",
-      "everSubmitted": true
-    },
-    {
-      "n": 5,
-      "d": "MEC",
-      "t": "RFI",
-      "x": "Clarification for fuel tank wall construction",
-      "o": "Eng. Muhammad Adil",
-      "r": "A",
-      "s": "PREPARING",
-      "id": "41a7e6c8-64ee-4a54-b1fe-8b87f03ad4b1",
-      "history": [
-        {
-          "id": "8944bb90-7942-4713-a21a-744bbe16673c",
-          "kind": "status",
-          "at": "2026-11-19",
-          "recordedAt": "2026-11-20T18:15:41.922Z",
-          "rev": "A",
-          "status": "SUBMITTED - WAITING RESPONSE",
-          "who": "Haskoning",
-          "source": "Date correction",
-          "reason": "Date Entry"
-        },
-        {
-          "id": "ce9cef0c-644e-4f27-b714-b82ee43566ea",
-          "kind": "edit",
-          "at": "2026-11-20",
-          "recordedAt": "2026-11-20T18:15:41.922Z",
-          "rev": "A",
-          "status": "PREPARING",
-          "who": "Eng. Muhammad Adil",
-          "reason": "Date Entry",
-          "before": {
-            "x": "Clarification for fuel tank wall construction",
-            "o": "Eng. Muhammad Adil",
-            "d": "MEC",
-            "t": "RFI"
-          },
-          "after": {
-            "x": "Clarification for fuel tank wall construction",
-            "o": "Eng. Muhammad Adil",
-            "d": "MEC",
-            "t": "RFI",
-            "submittedDate": "2026-11-19",
-            "responseDate": ""
-          }
-        },
-        {
-          "id": "b43bc854-cb45-4483-a6cc-a7420c6e3623",
-          "kind": "status",
-          "at": "2026-11-21",
-          "recordedAt": "2026-11-21T11:09:04.474Z",
-          "rev": "A",
-          "status": "UNDER REVIEW (INTERNAL)",
-          "who": "Eng. Muhammad Adil (PM)",
-          "previousStatus": "PREPARING"
-        },
-        {
-          "id": "b71f3c5e-7acc-4296-89bb-aa6f5dbfac8e",
-          "kind": "status",
-          "at": "2026-11-21",
-          "recordedAt": "2026-11-21T11:25:24.133Z",
-          "rev": "A",
-          "status": "PREPARING",
-          "who": "Eng. Muhammad Adil",
-          "previousStatus": "UNDER REVIEW (INTERNAL)"
         }
       ],
       "submittedDate": "2026-11-19",
@@ -666,6 +596,41 @@
       "everSubmitted": true
     },
     {
+      "n": 12,
+      "d": "MEC",
+      "t": "RFI",
+      "x": "RFI for fuel tank wall construction",
+      "o": "Eng. Muhammad Adil",
+      "r": "A",
+      "s": "SUBMITTED - WAITING RESPONSE",
+      "id": "3bbe95f0-47db-47e5-9a3e-f7fa78daa458",
+      "history": [
+        {
+          "id": "7dfe2995-ba06-4e72-b808-d6d5acfbd867",
+          "kind": "status",
+          "at": "2026-11-22",
+          "recordedAt": "2026-11-22T07:58:02.257Z",
+          "rev": "A",
+          "status": "PREPARING",
+          "who": "Eng. Muhammad Adil",
+          "action": "Created"
+        },
+        {
+          "id": "d232577c-ef76-4bc8-86f1-a891627d1c05",
+          "kind": "status",
+          "at": "2026-11-22",
+          "recordedAt": "2026-11-22T07:58:15.529Z",
+          "rev": "A",
+          "status": "SUBMITTED - WAITING RESPONSE",
+          "who": "Haskoning",
+          "previousStatus": "PREPARING"
+        }
+      ],
+      "submittedDate": "2026-11-22",
+      "responseDate": "",
+      "everSubmitted": true
+    },
+    {
       "n": 13,
       "d": "GEN",
       "t": "PRP",
@@ -869,7 +834,7 @@
       "n": 17,
       "d": "GEN",
       "t": "DWG",
-      "x": "Site Layout Drawing CAD file",
+      "x": "Layout Drawing CAD file",
       "o": "Al Badeel Design Consultant",
       "r": "A",
       "s": "SUBMITTED - WAITING RESPONSE",
@@ -904,32 +869,6 @@
           "status": "SUBMITTED - WAITING RESPONSE",
           "who": "Haskoning",
           "previousStatus": "APPROVED FOR SUBMISSION"
-        },
-        {
-          "id": "e8a6b524-7954-4494-accf-be024ecc702e",
-          "kind": "edit",
-          "at": "2026-11-21",
-          "recordedAt": "2026-11-21T19:33:42.146Z",
-          "rev": "A",
-          "status": "SUBMITTED - WAITING RESPONSE",
-          "who": "Haskoning",
-          "reason": "Change the description from \"Layout Drawing CAD file\" to \"Site Layout Drawing CAD file\"",
-          "before": {
-            "x": "Layout Drawing CAD file",
-            "o": "Al Badeel Design Consultant",
-            "d": "GEN",
-            "t": "DWG",
-            "submittedDate": "2026-11-21",
-            "responseDate": ""
-          },
-          "after": {
-            "x": "Site Layout Drawing CAD file",
-            "o": "Al Badeel Design Consultant",
-            "d": "GEN",
-            "t": "DWG",
-            "submittedDate": "2026-11-21",
-            "responseDate": ""
-          }
         }
       ],
       "submittedDate": "2026-11-21",
