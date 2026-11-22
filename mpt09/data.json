@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "project": "MPT09",
-  "version": "da64b53d-6c28-4dcf-b280-c2e80ebf5c58",
-  "publishedAt": "2026-11-22T10:14:05.085Z",
+  "version": "35297418-0457-4fa4-bce7-18853039e700",
+  "publishedAt": "2026-11-22T11:06:52.349Z",
   "calendar": {
     "excludedWeekdays": [
       5
@@ -848,96 +848,6 @@
       ],
       "submittedDate": "2026-11-19",
       "responseDate": "2026-11-22",
-      "everSubmitted": true
-    },
-    {
-      "n": 17,
-      "d": "GEN",
-      "t": "DWG",
-      "x": "Layout Drawing CAD file",
-      "o": "Al Badeel Design Consultant",
-      "r": "A",
-      "s": "SUBMITTED - WAITING RESPONSE",
-      "id": "02938395-8f5a-404e-a2ef-7385a238759d",
-      "history": [
-        {
-          "id": "869d8811-0448-40f1-848f-8ebf1cabce4b",
-          "kind": "status",
-          "at": "2026-11-21",
-          "recordedAt": "2026-11-21T12:16:23.101Z",
-          "rev": "A",
-          "status": "PREPARING",
-          "who": "Al Badeel Design Consultant",
-          "action": "Created"
-        },
-        {
-          "id": "01c07968-6113-447e-893c-b2cb17005201",
-          "kind": "status",
-          "at": "2026-11-21",
-          "recordedAt": "2026-11-21T13:45:13.371Z",
-          "rev": "A",
-          "status": "APPROVED FOR SUBMISSION",
-          "who": "DC",
-          "previousStatus": "PREPARING"
-        },
-        {
-          "id": "6142c7e7-a26b-478a-a20f-2333995c448e",
-          "kind": "status",
-          "at": "2026-11-21",
-          "recordedAt": "2026-11-21T14:11:51.404Z",
-          "rev": "A",
-          "status": "SUBMITTED - WAITING RESPONSE",
-          "who": "Haskoning",
-          "previousStatus": "APPROVED FOR SUBMISSION"
-        }
-      ],
-      "submittedDate": "2026-11-21",
-      "responseDate": "",
-      "everSubmitted": true
-    },
-    {
-      "n": 18,
-      "d": "ARC",
-      "t": "DWG",
-      "x": "Architecture drawing CAD file",
-      "o": "Al Badeel Design Consultant",
-      "r": "A",
-      "s": "SUBMITTED - WAITING RESPONSE",
-      "id": "980e99a4-cf70-49f6-9d7f-923a73ced64d",
-      "history": [
-        {
-          "id": "c81a5b4b-17b9-4187-9b4f-5f497e2567c7",
-          "kind": "status",
-          "at": "2026-11-21",
-          "recordedAt": "2026-11-21T12:16:48.291Z",
-          "rev": "A",
-          "status": "PREPARING",
-          "who": "Al Badeel Design Consultant",
-          "action": "Created"
-        },
-        {
-          "id": "8a1988c3-3750-414c-84c8-d8889c5cce7e",
-          "kind": "status",
-          "at": "2026-11-21",
-          "recordedAt": "2026-11-21T13:45:16.949Z",
-          "rev": "A",
-          "status": "APPROVED FOR SUBMISSION",
-          "who": "DC",
-          "previousStatus": "PREPARING"
-        },
-        {
-          "id": "56c9737a-11d3-4a6e-a201-c88d39107c76",
-          "kind": "status",
-          "at": "2026-11-21",
-          "recordedAt": "2026-11-21T14:11:55.323Z",
-          "rev": "A",
-          "status": "SUBMITTED - WAITING RESPONSE",
-          "who": "Haskoning",
-          "previousStatus": "APPROVED FOR SUBMISSION"
-        }
-      ],
-      "submittedDate": "2026-11-21",
-      "responseDate": "",
       "everSubmitted": true
     }
   ]
