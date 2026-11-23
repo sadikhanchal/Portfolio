@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "project": "MPT09",
-  "version": "35297418-0457-4fa4-bce7-18853039e700",
-  "publishedAt": "2026-11-22T11:06:52.349Z",
+  "version": "3d336a83-72e7-45fc-9ee9-886a4f03b97b",
+  "publishedAt": "2026-11-23T09:11:21.155Z",
   "calendar": {
     "excludedWeekdays": [
       5
@@ -696,7 +696,7 @@
       "t": "PRP",
       "x": "Architectural Proposals",
       "o": "Al Badeel Design Consultant",
-      "r": "A",
+      "r": "B",
       "s": "SUBMITTED - WAITING RESPONSE",
       "id": "0a2dd8cf-1cf0-4111-8c64-6773ca3b811a",
       "history": [
@@ -734,9 +734,49 @@
             "submittedDate": "2026-11-19",
             "responseDate": ""
           }
+        },
+        {
+          "id": "902478c8-c967-4006-bd97-c380c307f9fb",
+          "kind": "status",
+          "at": "2026-11-22",
+          "recordedAt": "2026-11-23T07:33:23.570Z",
+          "rev": "A",
+          "status": "CODE C - REVISE & RESUBMIT",
+          "who": "DC",
+          "previousStatus": "SUBMITTED - WAITING RESPONSE"
+        },
+        {
+          "id": "c24795a4-c36f-4419-8c4a-912a9bbc55e9",
+          "kind": "status",
+          "at": "2026-11-23",
+          "recordedAt": "2026-11-23T07:33:26.219Z",
+          "rev": "B",
+          "status": "REQUESTED TO REVISE (INTERNAL)",
+          "who": "Al Badeel Design Consultant",
+          "action": "Start revision"
+        },
+        {
+          "id": "42e210df-ac03-4eb2-907d-ab98f399ee25",
+          "kind": "status",
+          "at": "2026-11-23",
+          "recordedAt": "2026-11-23T07:33:33.443Z",
+          "rev": "B",
+          "status": "APPROVED FOR SUBMISSION",
+          "who": "DC",
+          "previousStatus": "REQUESTED TO REVISE (INTERNAL)"
+        },
+        {
+          "id": "413d8e2d-4695-464b-a124-6edb750e1fb7",
+          "kind": "status",
+          "at": "2026-11-23",
+          "recordedAt": "2026-11-23T09:06:52.660Z",
+          "rev": "B",
+          "status": "SUBMITTED - WAITING RESPONSE",
+          "who": "Haskoning",
+          "previousStatus": "APPROVED FOR SUBMISSION"
         }
       ],
-      "submittedDate": "2026-11-19",
+      "submittedDate": "2026-11-23",
       "responseDate": "",
       "everSubmitted": true
     },
@@ -746,7 +786,7 @@
       "t": "PRP",
       "x": "Project Layout Proposals",
       "o": "Al Badeel Design Consultant",
-      "r": "A",
+      "r": "B",
       "s": "SUBMITTED - WAITING RESPONSE",
       "id": "d8a3d137-5256-431f-bba4-d4610a5001a4",
       "history": [
@@ -784,9 +824,49 @@
             "submittedDate": "2026-11-19",
             "responseDate": ""
           }
+        },
+        {
+          "id": "928dc4ba-2572-4735-ad05-ba8279495c84",
+          "kind": "status",
+          "at": "2026-11-22",
+          "recordedAt": "2026-11-23T07:32:14.908Z",
+          "rev": "A",
+          "status": "CODE C - REVISE & RESUBMIT",
+          "who": "DC",
+          "previousStatus": "SUBMITTED - WAITING RESPONSE"
+        },
+        {
+          "id": "f7458c63-be91-4951-aef5-384d65f7f82a",
+          "kind": "status",
+          "at": "2026-11-22",
+          "recordedAt": "2026-11-23T07:32:40.339Z",
+          "rev": "B",
+          "status": "REQUESTED TO REVISE (INTERNAL)",
+          "who": "Al Badeel Design Consultant",
+          "action": "Start revision"
+        },
+        {
+          "id": "75626142-b3b0-4b1a-afe3-31a9725a312a",
+          "kind": "status",
+          "at": "2026-11-23",
+          "recordedAt": "2026-11-23T07:32:54.371Z",
+          "rev": "B",
+          "status": "APPROVED FOR SUBMISSION",
+          "who": "DC",
+          "previousStatus": "REQUESTED TO REVISE (INTERNAL)"
+        },
+        {
+          "id": "4d494489-2d6b-486e-9467-b336ea8e9e6e",
+          "kind": "status",
+          "at": "2026-11-23",
+          "recordedAt": "2026-11-23T09:06:58.826Z",
+          "rev": "B",
+          "status": "SUBMITTED - WAITING RESPONSE",
+          "who": "Haskoning",
+          "previousStatus": "APPROVED FOR SUBMISSION"
         }
       ],
-      "submittedDate": "2026-11-19",
+      "submittedDate": "2026-11-23",
       "responseDate": "",
       "everSubmitted": true
     },
@@ -796,8 +876,8 @@
       "t": "PLN",
       "x": "Existing ground survey levels",
       "o": "Al Badeel Design Consultant",
-      "r": "A",
-      "s": "CODE B - APPROVED WITH COMMENTS",
+      "r": "B",
+      "s": "SUBMITTED - WAITING RESPONSE",
       "id": "232153f7-9c19-4404-9c20-90402d8ae822",
       "history": [
         {
@@ -844,10 +924,40 @@
           "status": "CODE B - APPROVED WITH COMMENTS",
           "who": "DC",
           "previousStatus": "SUBMITTED - WAITING RESPONSE"
+        },
+        {
+          "id": "a936dfb4-0ad2-4a5f-9d8b-210bf66b91fd",
+          "kind": "status",
+          "at": "2026-11-22",
+          "recordedAt": "2026-11-23T07:32:47.533Z",
+          "rev": "B",
+          "status": "REQUESTED TO REVISE (INTERNAL)",
+          "who": "Al Badeel Design Consultant",
+          "action": "Start revision"
+        },
+        {
+          "id": "a00e9f92-6597-4fd7-892a-040369560522",
+          "kind": "status",
+          "at": "2026-11-23",
+          "recordedAt": "2026-11-23T07:32:58.920Z",
+          "rev": "B",
+          "status": "APPROVED FOR SUBMISSION",
+          "who": "DC",
+          "previousStatus": "REQUESTED TO REVISE (INTERNAL)"
+        },
+        {
+          "id": "531f927e-bce0-4d1d-bd67-644ad0ddff2c",
+          "kind": "status",
+          "at": "2026-11-23",
+          "recordedAt": "2026-11-23T09:07:01.318Z",
+          "rev": "B",
+          "status": "SUBMITTED - WAITING RESPONSE",
+          "who": "Haskoning",
+          "previousStatus": "APPROVED FOR SUBMISSION"
         }
       ],
-      "submittedDate": "2026-11-19",
-      "responseDate": "2026-11-22",
+      "submittedDate": "2026-11-23",
+      "responseDate": "",
       "everSubmitted": true
     }
   ]
