@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "project": "MPT09",
-  "version": "13e3d899-3a0c-439a-ad2e-e604b35f9c77",
-  "publishedAt": "2026-11-23T11:27:41.086Z",
+  "version": "f59ffc20-458f-40db-aa21-2a2373875ec1",
+  "publishedAt": "2026-11-23T13:58:47.004Z",
   "calendar": {
     "excludedWeekdays": [
       5
@@ -302,7 +302,7 @@
       "x": "Prequalification for High Towns Co. as PEB manufacturer",
       "o": "Eng. Muhammad Saud",
       "r": "A",
-      "s": "SUBMITTED - WAITING RESPONSE",
+      "s": "COMPLETED",
       "id": "a5244889-97d1-4d60-bd7c-6ace6c2d1931",
       "history": [
         {
@@ -324,10 +324,20 @@
           "status": "SUBMITTED - WAITING RESPONSE",
           "who": "Haskoning",
           "previousStatus": "PREPARING"
+        },
+        {
+          "id": "e8568cb6-1447-456e-b642-95675a9bebef",
+          "kind": "status",
+          "at": "2026-11-23",
+          "recordedAt": "2026-11-23T13:45:50.693Z",
+          "rev": "A",
+          "status": "COMPLETED",
+          "who": "DC",
+          "previousStatus": "SUBMITTED - WAITING RESPONSE"
         }
       ],
       "submittedDate": "2026-11-23",
-      "responseDate": "",
+      "responseDate": "2026-11-23",
       "everSubmitted": true
     },
     {
@@ -1002,7 +1012,7 @@
       "x": "Prequalification for Tiger Profiles and Insulations LLC",
       "o": "Eng. Muhammad Saud",
       "r": "A",
-      "s": "SUBMITTED - WAITING RESPONSE",
+      "s": "COMPLETED",
       "id": "312fdc8b-a0a2-4d82-b87b-285a3022d694",
       "history": [
         {
@@ -1024,10 +1034,20 @@
           "status": "SUBMITTED - WAITING RESPONSE",
           "who": "Haskoning",
           "previousStatus": "PREPARING"
+        },
+        {
+          "id": "841f47ce-bf0a-4063-b9d8-ea1de6fe2ee7",
+          "kind": "status",
+          "at": "2026-11-23",
+          "recordedAt": "2026-11-23T13:58:29.342Z",
+          "rev": "A",
+          "status": "COMPLETED",
+          "who": "DC",
+          "previousStatus": "SUBMITTED - WAITING RESPONSE"
         }
       ],
       "submittedDate": "2026-11-23",
-      "responseDate": "",
+      "responseDate": "2026-11-23",
       "everSubmitted": true
     },
     {
@@ -1037,7 +1057,7 @@
       "x": "Prequalification for KMIX Group",
       "o": "Eng. Muhammad Saud",
       "r": "A",
-      "s": "SUBMITTED - WAITING RESPONSE",
+      "s": "COMPLETED",
       "id": "d76c238a-a6a5-4e04-99a4-a0ef1b3a0b0e",
       "history": [
         {
@@ -1059,10 +1079,20 @@
           "status": "SUBMITTED - WAITING RESPONSE",
           "who": "Haskoning",
           "previousStatus": "PREPARING"
+        },
+        {
+          "id": "a9769a23-55c5-4cbf-a731-47dfe8ff4c77",
+          "kind": "status",
+          "at": "2026-11-23",
+          "recordedAt": "2026-11-23T13:58:36.341Z",
+          "rev": "A",
+          "status": "COMPLETED",
+          "who": "DC",
+          "previousStatus": "SUBMITTED - WAITING RESPONSE"
         }
       ],
       "submittedDate": "2026-11-23",
-      "responseDate": "",
+      "responseDate": "2026-11-23",
       "everSubmitted": true
     },
     {
