@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "project": "DHC1295",
-  "version": "initial-cma-2026-11-24-status-corrected",
-  "publishedAt": "2026-11-24T09:54:29.357Z",
+  "version": "cma-2026-11-24-owner-rollout-v1",
+  "publishedAt": "2026-11-24T11:48:07.227Z",
   "catalogs": {
     "disciplines": {
       "ARC": "Architectural",
@@ -62,6 +62,17 @@
       "title": "TLS Security System Stage 3",
       "sourceRows": [
         3
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-1",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -73,6 +84,17 @@
       "title": "",
       "sourceRows": [
         6
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-2",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -84,6 +106,17 @@
       "title": "GATE HOUSE (GH.NO.1)- FOUNDATION PLAN & RFT-01",
       "sourceRows": [
         7
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-3",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -95,6 +128,17 @@
       "title": "GATE HOUSE (GH.NO.1)- FOUNDATION PLAN & RFT-02",
       "sourceRows": [
         8
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-4",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -106,6 +150,17 @@
       "title": "GATE HOUSE (GH.NO.1)- COLUMN &AXES",
       "sourceRows": [
         9
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-5",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -117,6 +172,17 @@
       "title": "GATE HOUSE (GH.NO.1)- SLAB ON GRADE",
       "sourceRows": [
         10
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-6",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -128,6 +194,17 @@
       "title": "GATE HOUSE (GH.NO.1)- ROOF SLAB RFT",
       "sourceRows": [
         11
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-7",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -139,6 +216,17 @@
       "title": "GATE HOUSE (GH.NO.1)- ROOF BEAM RFT",
       "sourceRows": [
         12
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-8",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -150,6 +238,17 @@
       "title": "",
       "sourceRows": [
         13
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-9",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -161,6 +260,17 @@
       "title": "GATE HOUSE (GH.NO.2)- FOUNDATION PLAN & RFT-01",
       "sourceRows": [
         14
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-10",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -172,6 +282,17 @@
       "title": "GATE HOUSE (GH.NO.2)- FOUNDATION PLAN & RFT-02",
       "sourceRows": [
         15
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-11",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -183,6 +304,17 @@
       "title": "GATE HOUSE (GH.NO.2)- COLUMN &AXES",
       "sourceRows": [
         16
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-12",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -194,6 +326,17 @@
       "title": "GATE HOUSE (GH.NO.2)- SLAB ON GRADE",
       "sourceRows": [
         17
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-13",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -205,6 +348,17 @@
       "title": "GATE HOUSE (GH.NO.2)- ROOF SLAB CONC. DIM.& RFT",
       "sourceRows": [
         18
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-14",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -216,6 +370,17 @@
       "title": "GATE HOUSE (GH.NO.2)- ROOF BEAM RFT",
       "sourceRows": [
         19
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-15",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -227,6 +392,17 @@
       "title": "",
       "sourceRows": [
         20
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-16",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -238,6 +414,17 @@
       "title": "GATE HOUSE (GH. NO.3)- FOUNDATION PLAN & RFT-01-Sheet 01 of 02",
       "sourceRows": [
         21
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-17",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -249,6 +436,17 @@
       "title": "GATE HOUSE (GH. NO.3)- FOUNDATION PLAN & RFT-01-Sheet 02 of 02",
       "sourceRows": [
         22
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-18",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -260,6 +458,17 @@
       "title": "GATE HOUSE (GH. NO.3)- COLUMN &AXES",
       "sourceRows": [
         23
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-19",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -271,6 +480,17 @@
       "title": "GATE HOUSE (GH. NO.3)- SLAB ON GRADE",
       "sourceRows": [
         24
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-20",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -282,6 +502,17 @@
       "title": "GATE HOUSE (GH. NO.3)- ROOF SLAB RFT",
       "sourceRows": [
         25
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-21",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -293,6 +524,17 @@
       "title": "GATE HOUSE (GH. NO.3)- ROOF BEAM RFT",
       "sourceRows": [
         26
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-22",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -304,6 +546,17 @@
       "title": "",
       "sourceRows": [
         27
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-23",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -315,6 +568,17 @@
       "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- FOUNDATION 1-2",
       "sourceRows": [
         28
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-24",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -326,6 +590,17 @@
       "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- FOUNDATION -2-2",
       "sourceRows": [
         29
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-25",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -337,6 +612,17 @@
       "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- COLUMN & AXES PLAN & RFT",
       "sourceRows": [
         30
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-26",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -348,6 +634,17 @@
       "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- SLAB ON GRADE",
       "sourceRows": [
         31
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-27",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -359,6 +656,17 @@
       "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- ROOF SLAB ALYOUT & DETAILS",
       "sourceRows": [
         32
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-28",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -370,6 +678,17 @@
       "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- ROOF SLAB RFT",
       "sourceRows": [
         33
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-29",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -381,6 +700,17 @@
       "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- ROOF BEAM RFT",
       "sourceRows": [
         34
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-30",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -392,6 +722,17 @@
       "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  SITE DEVELOPMENT PLAN",
       "sourceRows": [
         37
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-31",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -403,6 +744,17 @@
       "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  GROUND FLOOR PLAN",
       "sourceRows": [
         38
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-32",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -414,6 +766,17 @@
       "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  GROUND FLOOR TILING PLAN",
       "sourceRows": [
         39
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-33",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -425,6 +788,17 @@
       "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  ROOF PLAN &DETAILS",
       "sourceRows": [
         40
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-34",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -436,6 +810,17 @@
       "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  CEILING PLAN",
       "sourceRows": [
         41
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-35",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -447,6 +832,17 @@
       "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  ELEVATIONS 01&02",
       "sourceRows": [
         42
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-36",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -458,6 +854,17 @@
       "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  ELEVATIONS 03&04",
       "sourceRows": [
         43
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-37",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -469,6 +876,17 @@
       "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  SECTION A",
       "sourceRows": [
         44
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-38",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -480,6 +898,17 @@
       "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  SECTION B",
       "sourceRows": [
         45
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-39",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -491,6 +920,17 @@
       "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  WALL SECTION DETAIL",
       "sourceRows": [
         46
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-40",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -502,6 +942,17 @@
       "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  DOORS DETAILS",
       "sourceRows": [
         47
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-41",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -513,6 +964,17 @@
       "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  WINDOWS DETAILS & FINISHES SCHEDULE",
       "sourceRows": [
         48
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-42",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -524,6 +986,17 @@
       "title": "",
       "sourceRows": [
         49
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-43",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -535,6 +1008,17 @@
       "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  GROUND FLOOR PLAN",
       "sourceRows": [
         50
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-44",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -546,6 +1030,17 @@
       "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  GROUND FLOOR TILING PLAN",
       "sourceRows": [
         51
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-45",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -557,6 +1052,17 @@
       "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  ROOF PLAN &DETAILS",
       "sourceRows": [
         52
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-46",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -568,6 +1074,17 @@
       "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  CEILING PLAN",
       "sourceRows": [
         53
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-47",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -579,6 +1096,17 @@
       "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  ELEVATIONS 01&02",
       "sourceRows": [
         54
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-48",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -590,6 +1118,17 @@
       "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  ELEVATIONS 03&04",
       "sourceRows": [
         55
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-49",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -601,6 +1140,17 @@
       "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  SECTION A",
       "sourceRows": [
         56
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-50",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -612,6 +1162,17 @@
       "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  SECTION B",
       "sourceRows": [
         57
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-51",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -623,6 +1184,17 @@
       "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  WALL SECTION DETAIL",
       "sourceRows": [
         58
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-52",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -634,6 +1206,17 @@
       "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  DOORS DETAILS",
       "sourceRows": [
         59
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-53",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -645,6 +1228,17 @@
       "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  WINDOWS DETAILS & FINISHES SCHEDULE",
       "sourceRows": [
         60
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-54",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -657,6 +1251,17 @@
       "sourceRows": [
         61,
         62
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-55",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -668,6 +1273,17 @@
       "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - GROUND FLOOR PLAN",
       "sourceRows": [
         63
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-56",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -679,6 +1295,17 @@
       "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - GROUND FLOOR TILING PLAN",
       "sourceRows": [
         64
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-57",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -690,6 +1317,17 @@
       "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - ROOF PLAN &DETAILS",
       "sourceRows": [
         65
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-58",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -701,6 +1339,17 @@
       "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - CEILING PLAN",
       "sourceRows": [
         66
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-59",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -712,6 +1361,17 @@
       "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - ELEVATIONS 01&02",
       "sourceRows": [
         67
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-60",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -723,6 +1383,17 @@
       "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - ELEVATIONS 03&04",
       "sourceRows": [
         68
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-61",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -734,6 +1405,17 @@
       "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - SECTION A",
       "sourceRows": [
         69
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-62",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -745,6 +1427,17 @@
       "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - SECTION B",
       "sourceRows": [
         70
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-63",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -756,6 +1449,17 @@
       "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - WALL SECTION DETAIL",
       "sourceRows": [
         71
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-64",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -767,6 +1471,17 @@
       "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - DOORS DETAILS",
       "sourceRows": [
         72
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-65",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -778,6 +1493,17 @@
       "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - WINDOWS DETAILS & FINISHES SCHEDULE",
       "sourceRows": [
         73
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-66",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -789,6 +1515,17 @@
       "title": "SECURITY SUPPORT BUILDING 1  - GROUND FLOOR PLAN",
       "sourceRows": [
         74
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-67",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -800,6 +1537,17 @@
       "title": "SECURITY SUPPORT BUILDING 1  - GROUND TILING PLAN",
       "sourceRows": [
         75
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-68",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -811,6 +1559,17 @@
       "title": "SECURITY SUPPORT BUILDING 1  - CEILING PLAN",
       "sourceRows": [
         76
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-69",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -822,6 +1581,17 @@
       "title": "SECURITY SUPPORT BUILDING 1  - ROOF FLOOR PLAN",
       "sourceRows": [
         77
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-70",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -833,6 +1603,17 @@
       "title": "SECURITY SUPPORT BUILDING 1  - ELEVATION 1&2",
       "sourceRows": [
         78
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-71",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -844,6 +1625,17 @@
       "title": "SECURITY SUPPORT BUILDING 1  - ELEVATION 3&4",
       "sourceRows": [
         79
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-72",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -855,6 +1647,17 @@
       "title": "SECURITY SUPPORT BUILDING 1  - SECTION A&B",
       "sourceRows": [
         80
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-73",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -866,6 +1669,17 @@
       "title": "SECURITY SUPPORT BUILDING 1  - DOOR & FINISHING SCHEDULES",
       "sourceRows": [
         81
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-74",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -877,6 +1691,17 @@
       "title": "Calculation note-GATE NO.1 MEG",
       "sourceRows": [
         83
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-75",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -888,6 +1713,17 @@
       "title": "Calculation note-GATE NO.2 MEG..",
       "sourceRows": [
         84
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-76",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -899,6 +1735,17 @@
       "title": "Calculation note-GATE NO.3 MEG..",
       "sourceRows": [
         85
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-77",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -910,6 +1757,17 @@
       "title": "Calculation note-SSB AT GATE NO.1 MEG.",
       "sourceRows": [
         86
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-78",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -921,6 +1779,17 @@
       "title": "Technical Specifications for Bollards Force B12-250-F",
       "sourceRows": [
         88
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-79",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -932,6 +1801,17 @@
       "title": "Company Profile for Brosis",
       "sourceRows": [
         89
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-80",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -943,6 +1823,17 @@
       "title": "Crash Test Certification",
       "sourceRows": [
         90
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-81",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -954,6 +1845,17 @@
       "title": "Certificate of passed Barrier Testing Programme",
       "sourceRows": [
         91
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-82",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -965,6 +1867,17 @@
       "title": "HCIS compliance for Fixed Bollards",
       "sourceRows": [
         92
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-83",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -976,6 +1889,17 @@
       "title": "Technical Specification for Anit-Ram Road Blockers SHEILD B12",
       "sourceRows": [
         93
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-84",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -987,6 +1911,17 @@
       "title": "Company Profile for Brosis",
       "sourceRows": [
         94
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-85",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -998,6 +1933,17 @@
       "title": "Certificate of passed Barrier Testing Programme",
       "sourceRows": [
         95
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-86",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     },
     {
@@ -1009,6 +1955,17 @@
       "title": "HCIS compliance for Road Blockers",
       "sourceRows": [
         96
+      ],
+      "owner": "Eng. Muhammad Sheta",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-doc-87",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
       ]
     }
   ],
@@ -1021,7 +1978,7 @@
       "title": "Timeline Schedule for CMA Security System Stage 3",
       "rev": "0",
       "status": "CODE_C",
-      "owner": "",
+      "owner": "Eng. Muhammad Sheta",
       "submittedDate": "2026-11-15",
       "responseDate": "2026-11-23",
       "documentIds": [
@@ -1048,7 +2005,17 @@
         }
       ],
       "sourceIndex": 1,
-      "discipline": "OTH"
+      "discipline": "OTH",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-tn-1",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
+      ]
     },
     {
       "id": "tn-2",
@@ -1058,7 +2025,7 @@
       "title": "Structural Drawings Gate House No.1",
       "rev": "0",
       "status": "CODE_B",
-      "owner": "",
+      "owner": "Eng. Muhammad Sheta",
       "submittedDate": "2026-11-15",
       "responseDate": "2026-11-23",
       "documentIds": [
@@ -1091,7 +2058,17 @@
         }
       ],
       "sourceIndex": 2,
-      "discipline": "STR"
+      "discipline": "STR",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-tn-2",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
+      ]
     },
     {
       "id": "tn-3",
@@ -1101,7 +2078,7 @@
       "title": "Structural Drawings Gate House No.2",
       "rev": "0",
       "status": "CODE_B",
-      "owner": "",
+      "owner": "Eng. Muhammad Sheta",
       "submittedDate": "2026-11-15",
       "responseDate": "2026-11-23",
       "documentIds": [
@@ -1134,7 +2111,17 @@
         }
       ],
       "sourceIndex": 3,
-      "discipline": "STR"
+      "discipline": "STR",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-tn-3",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
+      ]
     },
     {
       "id": "tn-4",
@@ -1144,7 +2131,7 @@
       "title": "Structural Drawings Gate House No.3",
       "rev": "0",
       "status": "CODE_B",
-      "owner": "",
+      "owner": "Eng. Muhammad Sheta",
       "submittedDate": "2026-11-15",
       "responseDate": "2026-11-23",
       "documentIds": [
@@ -1177,7 +2164,17 @@
         }
       ],
       "sourceIndex": 4,
-      "discipline": "STR"
+      "discipline": "STR",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-tn-4",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
+      ]
     },
     {
       "id": "tn-5",
@@ -1187,7 +2184,7 @@
       "title": "Structural Drawings Security Support Building",
       "rev": "0",
       "status": "CODE_B",
-      "owner": "",
+      "owner": "Eng. Muhammad Sheta",
       "submittedDate": "2026-11-15",
       "responseDate": "2026-11-23",
       "documentIds": [
@@ -1221,7 +2218,17 @@
         }
       ],
       "sourceIndex": 5,
-      "discipline": "STR"
+      "discipline": "STR",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-tn-5",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
+      ]
     },
     {
       "id": "tn-6",
@@ -1231,7 +2238,7 @@
       "title": "Architectural Drawings Main Entrance Gate No.1",
       "rev": "0",
       "status": "CODE_B",
-      "owner": "",
+      "owner": "Eng. Muhammad Sheta",
       "submittedDate": "2026-11-15",
       "responseDate": "2026-11-23",
       "documentIds": [
@@ -1269,7 +2276,17 @@
         }
       ],
       "sourceIndex": 6,
-      "discipline": "ARC"
+      "discipline": "ARC",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-tn-6",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
+      ]
     },
     {
       "id": "tn-7",
@@ -1279,7 +2296,7 @@
       "title": "Architectural Drawings Main Entrance Gate No.2",
       "rev": "0",
       "status": "CODE_B",
-      "owner": "",
+      "owner": "Eng. Muhammad Sheta",
       "submittedDate": "2026-11-15",
       "responseDate": "2026-11-23",
       "documentIds": [
@@ -1317,7 +2334,17 @@
         }
       ],
       "sourceIndex": 7,
-      "discipline": "ARC"
+      "discipline": "ARC",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-tn-7",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
+      ]
     },
     {
       "id": "tn-8",
@@ -1327,7 +2354,7 @@
       "title": "Architectural Drawings Main Entrance Gate No.3",
       "rev": "0",
       "status": "CODE_B",
-      "owner": "",
+      "owner": "Eng. Muhammad Sheta",
       "submittedDate": "2026-11-15",
       "responseDate": "2026-11-23",
       "documentIds": [
@@ -1365,7 +2392,17 @@
         }
       ],
       "sourceIndex": 8,
-      "discipline": "ARC"
+      "discipline": "ARC",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-tn-8",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
+      ]
     },
     {
       "id": "tn-9",
@@ -1375,7 +2412,7 @@
       "title": "Architectural Drawings Security Support Building",
       "rev": "0",
       "status": "CODE_B",
-      "owner": "",
+      "owner": "Eng. Muhammad Sheta",
       "submittedDate": "2026-11-15",
       "responseDate": "2026-11-23",
       "documentIds": [
@@ -1409,7 +2446,17 @@
         }
       ],
       "sourceIndex": 9,
-      "discipline": "ARC"
+      "discipline": "ARC",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-tn-9",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
+      ]
     },
     {
       "id": "tn-10",
@@ -1419,7 +2466,7 @@
       "title": "Material Submittal for Bollards",
       "rev": "0",
       "status": "CODE_B",
-      "owner": "",
+      "owner": "Eng. Muhammad Sheta",
       "submittedDate": "2026-11-15",
       "responseDate": "2026-11-23",
       "documentIds": [
@@ -1450,7 +2497,17 @@
         }
       ],
       "sourceIndex": 10,
-      "discipline": "CIV"
+      "discipline": "CIV",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-tn-10",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
+      ]
     },
     {
       "id": "tn-11",
@@ -1460,7 +2517,7 @@
       "title": "Material Submittal for Road Blockers",
       "rev": "0",
       "status": "CODE_B",
-      "owner": "",
+      "owner": "Eng. Muhammad Sheta",
       "submittedDate": "2026-11-15",
       "responseDate": "2026-11-23",
       "documentIds": [
@@ -1490,7 +2547,17 @@
         }
       ],
       "sourceIndex": 11,
-      "discipline": "CIV"
+      "discipline": "CIV",
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-tn-11",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
+        }
+      ]
     },
     {
       "id": "tn-12",
@@ -1501,7 +2568,7 @@
       "rev": "0",
       "discipline": "CIV",
       "status": "SUBMITTED",
-      "owner": "",
+      "owner": "Eng. Muhammad Sheta",
       "submittedDate": "2026-11-16",
       "responseDate": "",
       "documentIds": [],
@@ -1514,6 +2581,16 @@
           "rev": "0",
           "owner": "",
           "source": "User-provided status screenshot"
+        }
+      ],
+      "ownerCorrections": [
+        {
+          "id": "owner-rollout-20261124-tn-12",
+          "at": "2026-11-24",
+          "kind": "owner_correction",
+          "previousOwner": "",
+          "owner": "Eng. Muhammad Sheta",
+          "reason": "Current owner confirmed by user"
         }
       ]
     }
