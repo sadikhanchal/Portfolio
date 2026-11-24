@@ -8,3 +8,5 @@
 
 /* release35: client scale and contextual sidebar parties. */
 .parties .party:nth-child(2) img{transform:scale(.85);transform-origin:center}.sidebar-parties{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:12px;padding:12px 10px;background:#f4f7fb;border:1px solid #dce3ed;border-radius:12px;color:#64748b;margin-top:-12px}.sidebar-party{text-align:center;min-width:0}.sidebar-party span{display:block;font-size:9px;letter-spacing:.04em;margin-bottom:6px}.sidebar-party img{display:block;width:100%;height:35px;object-fit:contain}.sidebar-party:first-child img{transform:scale(.85)}@media(max-width:760px){.rail .brand{order:0}.rail .rail-tools{order:1}.rail .project-label{order:2}.sidebar-parties{order:3;flex:0 0 128px;gap:9px;padding:6px 8px;margin:0;border-radius:9px}.sidebar-party span{font-size:8px;margin-bottom:3px}.sidebar-party img{height:24px}.rail nav{order:4;margin-left:auto}}
+
+@media(max-width:760px){.rail nav{order:3}.rail .sidebar-parties{order:4;margin-left:0;flex-basis:100%}}
