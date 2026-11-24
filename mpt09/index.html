@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-app-version="2026.11.24.33">
+<html lang="en" data-app-version="2026.11.24.34">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -207,7 +207,7 @@ button.kpi{font:inherit;color:var(--tx);text-align:left;cursor:pointer;width:100
   <button class="theme" id="theme" aria-label="Toggle light or dark theme"><span id="fDate" aria-label="Today"></span><span id="theme-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.4 13a8.5 8.5 0 0 1-9.4-9.4A8.5 8.5 0 1 0 20.4 13Z"/><path d="M18 2v4M16 4h4"/></svg></span></button>
 </aside>
 <main id="top">
-  <header class="reg-intro" id="register-header" hidden><div class="register-project"><select class="project-selector" aria-label="Project"><option value="MPT09">Construction of Workshop &amp; Fuel Station · MPT09</option></select></div><h1>Document register</h1></header>
+  <header class="reg-intro" id="register-header" hidden><div class="register-project"><select class="project-selector" aria-label="Project"><option value="MPT09">Construction of Workshop &amp; Fuel Station · MPT09</option><option value="DHC1295">CMA Security System Stage 3 · DHC 1295</option></select></div><h1>Document register</h1></header>
   <div class="bar" id="register-tools">
     <label>Discipline <select id="fd"></select></label>
     <label>Document Type <select id="ft"></select></label>
@@ -224,7 +224,7 @@ button.kpi{font:inherit;color:var(--tx);text-align:left;cursor:pointer;width:100
 <div id="v-dash">
   <header>
     
-    <div class="project-heading"><select class="project-selector" aria-label="Project"><option value="MPT09">Construction of Workshop &amp; Fuel Station · MPT09</option></select></div><p class="project-parties">Client: Red Sea Gateway Terminal · Consultant: Haskoning · Contractor: OZA</p><h1>Osama Zaid Azraq<br>document control</h1>
+    <div class="project-heading"><select class="project-selector" aria-label="Project"><option value="MPT09">Construction of Workshop &amp; Fuel Station · MPT09</option><option value="DHC1295">CMA Security System Stage 3 · DHC 1295</option></select></div><p class="project-parties">Client: Red Sea Gateway Terminal · Consultant: Haskoning · Contractor: OZA</p><h1>Osama Zaid Azraq<br>document control</h1>
     
   </header>
   <section class="pipe" aria-labelledby="ph">
@@ -863,6 +863,8 @@ $('edit-mode').onclick=accessDialog;syncThemeIcon();matchMedia('(prefers-color-s
 $('dashboard-print').onclick=exportPDF;$('nw').onclick=()=>openForm();$('dt').onclick=openData;$('pr').onclick=exportPDF;$('load-published').onclick=refreshPublishedFromRail;
 route();boot().then(checkPublishedUpdate);setInterval(checkPublishedUpdate,60000);window.addEventListener('focus',checkPublishedUpdate);document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkPublishedUpdate()});
 
+
+document.querySelectorAll('.project-selector').forEach(select=>{select.value='MPT09';select.addEventListener('change',()=>{if(select.value==='DHC1295')location.href='cma.html'+(location.hash||'#/dashboard')})});
 </script>
 </body>
 </html>
