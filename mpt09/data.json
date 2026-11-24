@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "project": "MPT09",
-  "version": "45c7cf42-c60c-49da-b7e7-df8a3e87a9c1",
-  "publishedAt": "2026-11-24T11:23:05.184Z",
+  "version": "f520e109-b318-473a-968c-e574e04549ca",
+  "publishedAt": "2026-11-24T13:47:56.235Z",
   "calendar": {
     "excludedWeekdays": [
       5
@@ -1183,7 +1183,7 @@
       "x": "Material Submittal for Sandwich Panels",
       "o": "Eng. Aman",
       "r": "A",
-      "s": "SUBMITTED - WAITING RESPONSE",
+      "s": "COMPLETED",
       "id": "49c81d17-544f-402e-b413-74dd28c14dfb",
       "history": [
         {
@@ -1205,10 +1205,20 @@
           "status": "SUBMITTED - WAITING RESPONSE",
           "who": "Haskoning",
           "previousStatus": "PREPARING"
+        },
+        {
+          "id": "6787129b-32c1-4f6c-a78d-00ec13e6b45b",
+          "kind": "status",
+          "at": "2026-11-24",
+          "recordedAt": "2026-11-24T13:47:47.901Z",
+          "rev": "A",
+          "status": "COMPLETED",
+          "who": "DC",
+          "previousStatus": "SUBMITTED - WAITING RESPONSE"
         }
       ],
       "submittedDate": "2026-11-24",
-      "responseDate": "",
+      "responseDate": "2026-11-24",
       "everSubmitted": true
     }
   ]
