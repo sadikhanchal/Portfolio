@@ -15,7 +15,7 @@ function migrateOwnersOnce(){if(localStorage.getItem(OWNER_ROLLOUT_KEY)==='1')re
 function populateSidebarParties(){const sources=document.querySelectorAll('#print-parties img');document.querySelectorAll('#sidebar-parties img').forEach((img,i)=>{if(sources[i])img.src=sources[i].src;});}
 function toast(text){$('toast').textContent=text;$('toast').classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').classList.remove('show'),4500);}
 function error(e){toast(e.message||String(e));console.error(e);}
-function modal(html){$('modal-body').innerHTML=html;if(!$('modal').open)$('modal').showModal();$('modal').scrollTop=0;}
+function modal(html){$('modal-body').innerHTML=html;$('modal-eyebrow').hidden=html.includes('class="transmittal-hero"');if(!$('modal').open)$('modal').showModal();$('modal').scrollTop=0;}
 function field(label,id,type='text',value='',extra=''){return `<label class="field">${label}<input id="${id}" type="${type}" value="${esc(value)}" ${extra}></label>`;}
 function select(label,id,items,value='',blank='Select…'){return `<label class="field">${label}<select id="${id}">${blank!==null?`<option value="">${blank}</option>`:''}${Object.entries(items).map(([k,v])=>`<option value="${esc(k)}" ${k===value?'selected':''}>${esc(k===v||id==='f-status'||id==='f-owner'?v:k+' · '+v)}</option>`).join('')}</select></label>`;}
 function ownerField(id,value=''){let list=[...new Set([...owners,...data.transmittals.map(t=>t.owner).filter(Boolean),value].filter(Boolean))];return `<label class="field">Owner<select id="${id}"><option value="">Not recorded</option>${list.map(n=>`<option ${n===value?'selected':''}>${esc(n)}</option>`).join('')}<option value="__add">+ Add owner…</option></select></label>`;}
