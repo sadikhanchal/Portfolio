@@ -1,0 +1,1521 @@
+{
+  "schemaVersion": 1,
+  "project": "DHC1295",
+  "version": "initial-cma-2026-11-24-status-corrected",
+  "publishedAt": "2026-11-24T09:54:29.357Z",
+  "catalogs": {
+    "disciplines": {
+      "ARC": "Architectural",
+      "CIV": "Civil",
+      "STR": "Structural",
+      "GEO": "Geotechnical",
+      "SUR": "Surveying/Mapping",
+      "ELE": "Electrical",
+      "FPR": "Fire Protection",
+      "GEN": "General",
+      "HSE": "Health and Safety",
+      "QTY": "Quality",
+      "HVC": "HVAC",
+      "MEC": "Mechanical",
+      "PLB": "Plumbing",
+      "SGN": "Signage / wayfinding",
+      "ADM": "Administrative",
+      "FIN": "Finance",
+      "OTH": "Other"
+    },
+    "documentTypes": {
+      "CAL": "Calculations",
+      "CER": "Certificates",
+      "SPC": "Specifications",
+      "PPG": "Policies / Procedures",
+      "PRP": "Proposal",
+      "RPT": "Report",
+      "PLC": "Policy",
+      "PLN": "Plan",
+      "SCH": "Schedule",
+      "MTX": "Matrix",
+      "TWG": "Tender Drawings",
+      "DWG": "Design Drawings",
+      "SWG": "Shop Drawing",
+      "IFC": "Issued for Construction",
+      "AWG": "As-Built Drawings",
+      "ITP": "Inspection Test Plan",
+      "MIR": "Material Inspection Request",
+      "WIR": "Work Inspection Request",
+      "MST": "Method Statement",
+      "NCR": "Non-Conformance Report",
+      "PQD": "Pre-qualification",
+      "RFI": "Request for information",
+      "MNL": "Manual / O&M",
+      "PAP": "Payment Application",
+      "MTS": "Material Submittal",
+      "TLS": "TLS Document"
+    }
+  },
+  "documents": [
+    {
+      "id": "doc-1",
+      "num": "CMA-1042-TLS-STR-AZR-S03-001",
+      "type": "TLS",
+      "discipline": "STR",
+      "serial": 1,
+      "title": "TLS Security System Stage 3",
+      "sourceRows": [
+        3
+      ]
+    },
+    {
+      "id": "doc-2",
+      "num": "CMA-1042-DWG-STR-AZR-S03-001",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 1,
+      "title": "",
+      "sourceRows": [
+        6
+      ]
+    },
+    {
+      "id": "doc-3",
+      "num": "CMA-1042-DWG-STR-AZR-S03-002",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 2,
+      "title": "GATE HOUSE (GH.NO.1)- FOUNDATION PLAN & RFT-01",
+      "sourceRows": [
+        7
+      ]
+    },
+    {
+      "id": "doc-4",
+      "num": "CMA-1042-DWG-STR-AZR-S03-003",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 3,
+      "title": "GATE HOUSE (GH.NO.1)- FOUNDATION PLAN & RFT-02",
+      "sourceRows": [
+        8
+      ]
+    },
+    {
+      "id": "doc-5",
+      "num": "CMA-1042-DWG-STR-AZR-S03-004",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 4,
+      "title": "GATE HOUSE (GH.NO.1)- COLUMN &AXES",
+      "sourceRows": [
+        9
+      ]
+    },
+    {
+      "id": "doc-6",
+      "num": "CMA-1042-DWG-STR-AZR-S03-005",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 5,
+      "title": "GATE HOUSE (GH.NO.1)- SLAB ON GRADE",
+      "sourceRows": [
+        10
+      ]
+    },
+    {
+      "id": "doc-7",
+      "num": "CMA-1042-DWG-STR-AZR-S03-006",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 6,
+      "title": "GATE HOUSE (GH.NO.1)- ROOF SLAB RFT",
+      "sourceRows": [
+        11
+      ]
+    },
+    {
+      "id": "doc-8",
+      "num": "CMA-1042-DWG-STR-AZR-S03-007",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 7,
+      "title": "GATE HOUSE (GH.NO.1)- ROOF BEAM RFT",
+      "sourceRows": [
+        12
+      ]
+    },
+    {
+      "id": "doc-9",
+      "num": "CMA-1042-DWG-STR-AZR-S03-008",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 8,
+      "title": "",
+      "sourceRows": [
+        13
+      ]
+    },
+    {
+      "id": "doc-10",
+      "num": "CMA-1042-DWG-STR-AZR-S03-009",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 9,
+      "title": "GATE HOUSE (GH.NO.2)- FOUNDATION PLAN & RFT-01",
+      "sourceRows": [
+        14
+      ]
+    },
+    {
+      "id": "doc-11",
+      "num": "CMA-1042-DWG-STR-AZR-S03-010",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 10,
+      "title": "GATE HOUSE (GH.NO.2)- FOUNDATION PLAN & RFT-02",
+      "sourceRows": [
+        15
+      ]
+    },
+    {
+      "id": "doc-12",
+      "num": "CMA-1042-DWG-STR-AZR-S03-011",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 11,
+      "title": "GATE HOUSE (GH.NO.2)- COLUMN &AXES",
+      "sourceRows": [
+        16
+      ]
+    },
+    {
+      "id": "doc-13",
+      "num": "CMA-1042-DWG-STR-AZR-S03-012",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 12,
+      "title": "GATE HOUSE (GH.NO.2)- SLAB ON GRADE",
+      "sourceRows": [
+        17
+      ]
+    },
+    {
+      "id": "doc-14",
+      "num": "CMA-1042-DWG-STR-AZR-S03-013",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 13,
+      "title": "GATE HOUSE (GH.NO.2)- ROOF SLAB CONC. DIM.& RFT",
+      "sourceRows": [
+        18
+      ]
+    },
+    {
+      "id": "doc-15",
+      "num": "CMA-1042-DWG-STR-AZR-S03-014",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 14,
+      "title": "GATE HOUSE (GH.NO.2)- ROOF BEAM RFT",
+      "sourceRows": [
+        19
+      ]
+    },
+    {
+      "id": "doc-16",
+      "num": "CMA-1042-DWG-STR-AZR-S03-015",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 15,
+      "title": "",
+      "sourceRows": [
+        20
+      ]
+    },
+    {
+      "id": "doc-17",
+      "num": "CMA-1042-DWG-STR-AZR-S03-016",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 16,
+      "title": "GATE HOUSE (GH. NO.3)- FOUNDATION PLAN & RFT-01-Sheet 01 of 02",
+      "sourceRows": [
+        21
+      ]
+    },
+    {
+      "id": "doc-18",
+      "num": "CMA-1042-DWG-STR-AZR-S03-017",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 17,
+      "title": "GATE HOUSE (GH. NO.3)- FOUNDATION PLAN & RFT-01-Sheet 02 of 02",
+      "sourceRows": [
+        22
+      ]
+    },
+    {
+      "id": "doc-19",
+      "num": "CMA-1042-DWG-STR-AZR-S03-018",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 18,
+      "title": "GATE HOUSE (GH. NO.3)- COLUMN &AXES",
+      "sourceRows": [
+        23
+      ]
+    },
+    {
+      "id": "doc-20",
+      "num": "CMA-1042-DWG-STR-AZR-S03-019",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 19,
+      "title": "GATE HOUSE (GH. NO.3)- SLAB ON GRADE",
+      "sourceRows": [
+        24
+      ]
+    },
+    {
+      "id": "doc-21",
+      "num": "CMA-1042-DWG-STR-AZR-S03-020",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 20,
+      "title": "GATE HOUSE (GH. NO.3)- ROOF SLAB RFT",
+      "sourceRows": [
+        25
+      ]
+    },
+    {
+      "id": "doc-22",
+      "num": "CMA-1042-DWG-STR-AZR-S03-021",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 21,
+      "title": "GATE HOUSE (GH. NO.3)- ROOF BEAM RFT",
+      "sourceRows": [
+        26
+      ]
+    },
+    {
+      "id": "doc-23",
+      "num": "CMA-1042-DWG-STR-AZR-S03-022",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 22,
+      "title": "",
+      "sourceRows": [
+        27
+      ]
+    },
+    {
+      "id": "doc-24",
+      "num": "CMA-1042-DWG-STR-AZR-S03-023",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 23,
+      "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- FOUNDATION 1-2",
+      "sourceRows": [
+        28
+      ]
+    },
+    {
+      "id": "doc-25",
+      "num": "CMA-1042-DWG-STR-AZR-S03-024",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 24,
+      "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- FOUNDATION -2-2",
+      "sourceRows": [
+        29
+      ]
+    },
+    {
+      "id": "doc-26",
+      "num": "CMA-1042-DWG-STR-AZR-S03-025",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 25,
+      "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- COLUMN & AXES PLAN & RFT",
+      "sourceRows": [
+        30
+      ]
+    },
+    {
+      "id": "doc-27",
+      "num": "CMA-1042-DWG-STR-AZR-S03-026",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 26,
+      "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- SLAB ON GRADE",
+      "sourceRows": [
+        31
+      ]
+    },
+    {
+      "id": "doc-28",
+      "num": "CMA-1042-DWG-STR-AZR-S03-027",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 27,
+      "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- ROOF SLAB ALYOUT & DETAILS",
+      "sourceRows": [
+        32
+      ]
+    },
+    {
+      "id": "doc-29",
+      "num": "CMA-1042-DWG-STR-AZR-S03-028",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 28,
+      "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- ROOF SLAB RFT",
+      "sourceRows": [
+        33
+      ]
+    },
+    {
+      "id": "doc-30",
+      "num": "CMA-1042-DWG-STR-AZR-S03-029",
+      "type": "DWG",
+      "discipline": "STR",
+      "serial": 29,
+      "title": "SECURITY SUPPORT BUILDING AT GT. NO.1- ROOF BEAM RFT",
+      "sourceRows": [
+        34
+      ]
+    },
+    {
+      "id": "doc-31",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-001",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 1,
+      "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  SITE DEVELOPMENT PLAN",
+      "sourceRows": [
+        37
+      ]
+    },
+    {
+      "id": "doc-32",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-002",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 2,
+      "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  GROUND FLOOR PLAN",
+      "sourceRows": [
+        38
+      ]
+    },
+    {
+      "id": "doc-33",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-003",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 3,
+      "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  GROUND FLOOR TILING PLAN",
+      "sourceRows": [
+        39
+      ]
+    },
+    {
+      "id": "doc-34",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-004",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 4,
+      "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  ROOF PLAN &DETAILS",
+      "sourceRows": [
+        40
+      ]
+    },
+    {
+      "id": "doc-35",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-005",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 5,
+      "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  CEILING PLAN",
+      "sourceRows": [
+        41
+      ]
+    },
+    {
+      "id": "doc-36",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-006",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 6,
+      "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  ELEVATIONS 01&02",
+      "sourceRows": [
+        42
+      ]
+    },
+    {
+      "id": "doc-37",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-007",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 7,
+      "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  ELEVATIONS 03&04",
+      "sourceRows": [
+        43
+      ]
+    },
+    {
+      "id": "doc-38",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-008",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 8,
+      "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  SECTION A",
+      "sourceRows": [
+        44
+      ]
+    },
+    {
+      "id": "doc-39",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-009",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 9,
+      "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  SECTION B",
+      "sourceRows": [
+        45
+      ]
+    },
+    {
+      "id": "doc-40",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-010",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 10,
+      "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  WALL SECTION DETAIL",
+      "sourceRows": [
+        46
+      ]
+    },
+    {
+      "id": "doc-41",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-011",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 11,
+      "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  DOORS DETAILS",
+      "sourceRows": [
+        47
+      ]
+    },
+    {
+      "id": "doc-42",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-012",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 12,
+      "title": "GATE NO.1 - MAIN ENTRANCE GATE - CLASS 4 -  WINDOWS DETAILS & FINISHES SCHEDULE",
+      "sourceRows": [
+        48
+      ]
+    },
+    {
+      "id": "doc-43",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-013",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 13,
+      "title": "",
+      "sourceRows": [
+        49
+      ]
+    },
+    {
+      "id": "doc-44",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-014",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 14,
+      "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  GROUND FLOOR PLAN",
+      "sourceRows": [
+        50
+      ]
+    },
+    {
+      "id": "doc-45",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-015",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 15,
+      "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  GROUND FLOOR TILING PLAN",
+      "sourceRows": [
+        51
+      ]
+    },
+    {
+      "id": "doc-46",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-016",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 16,
+      "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  ROOF PLAN &DETAILS",
+      "sourceRows": [
+        52
+      ]
+    },
+    {
+      "id": "doc-47",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-017",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 17,
+      "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  CEILING PLAN",
+      "sourceRows": [
+        53
+      ]
+    },
+    {
+      "id": "doc-48",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-018",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 18,
+      "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  ELEVATIONS 01&02",
+      "sourceRows": [
+        54
+      ]
+    },
+    {
+      "id": "doc-49",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-019",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 19,
+      "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  ELEVATIONS 03&04",
+      "sourceRows": [
+        55
+      ]
+    },
+    {
+      "id": "doc-50",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-020",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 20,
+      "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  SECTION A",
+      "sourceRows": [
+        56
+      ]
+    },
+    {
+      "id": "doc-51",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-021",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 21,
+      "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  SECTION B",
+      "sourceRows": [
+        57
+      ]
+    },
+    {
+      "id": "doc-52",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-022",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 22,
+      "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  WALL SECTION DETAIL",
+      "sourceRows": [
+        58
+      ]
+    },
+    {
+      "id": "doc-53",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-023",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 23,
+      "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  DOORS DETAILS",
+      "sourceRows": [
+        59
+      ]
+    },
+    {
+      "id": "doc-54",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-024",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 24,
+      "title": "GATE NO.2 - MAIN ENTRANCE GATE - CLASS 4 -  WINDOWS DETAILS & FINISHES SCHEDULE",
+      "sourceRows": [
+        60
+      ]
+    },
+    {
+      "id": "doc-55",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-025",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 25,
+      "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - SITE DEVELOPMENT PLAN",
+      "sourceRows": [
+        61,
+        62
+      ]
+    },
+    {
+      "id": "doc-56",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-026",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 26,
+      "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - GROUND FLOOR PLAN",
+      "sourceRows": [
+        63
+      ]
+    },
+    {
+      "id": "doc-57",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-027",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 27,
+      "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - GROUND FLOOR TILING PLAN",
+      "sourceRows": [
+        64
+      ]
+    },
+    {
+      "id": "doc-58",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-028",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 28,
+      "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - ROOF PLAN &DETAILS",
+      "sourceRows": [
+        65
+      ]
+    },
+    {
+      "id": "doc-59",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-029",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 29,
+      "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - CEILING PLAN",
+      "sourceRows": [
+        66
+      ]
+    },
+    {
+      "id": "doc-60",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-030",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 30,
+      "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - ELEVATIONS 01&02",
+      "sourceRows": [
+        67
+      ]
+    },
+    {
+      "id": "doc-61",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-031",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 31,
+      "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - ELEVATIONS 03&04",
+      "sourceRows": [
+        68
+      ]
+    },
+    {
+      "id": "doc-62",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-032",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 32,
+      "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - SECTION A",
+      "sourceRows": [
+        69
+      ]
+    },
+    {
+      "id": "doc-63",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-033",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 33,
+      "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - SECTION B",
+      "sourceRows": [
+        70
+      ]
+    },
+    {
+      "id": "doc-64",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-034",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 34,
+      "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - WALL SECTION DETAIL",
+      "sourceRows": [
+        71
+      ]
+    },
+    {
+      "id": "doc-65",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-035",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 35,
+      "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - DOORS DETAILS",
+      "sourceRows": [
+        72
+      ]
+    },
+    {
+      "id": "doc-66",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-036",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 36,
+      "title": "GATE NO.3 - ADMINISTRATION GATE - CLASS 4 - WINDOWS DETAILS & FINISHES SCHEDULE",
+      "sourceRows": [
+        73
+      ]
+    },
+    {
+      "id": "doc-67",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-037",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 37,
+      "title": "SECURITY SUPPORT BUILDING 1  - GROUND FLOOR PLAN",
+      "sourceRows": [
+        74
+      ]
+    },
+    {
+      "id": "doc-68",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-038",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 38,
+      "title": "SECURITY SUPPORT BUILDING 1  - GROUND TILING PLAN",
+      "sourceRows": [
+        75
+      ]
+    },
+    {
+      "id": "doc-69",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-039",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 39,
+      "title": "SECURITY SUPPORT BUILDING 1  - CEILING PLAN",
+      "sourceRows": [
+        76
+      ]
+    },
+    {
+      "id": "doc-70",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-040",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 40,
+      "title": "SECURITY SUPPORT BUILDING 1  - ROOF FLOOR PLAN",
+      "sourceRows": [
+        77
+      ]
+    },
+    {
+      "id": "doc-71",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-041",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 41,
+      "title": "SECURITY SUPPORT BUILDING 1  - ELEVATION 1&2",
+      "sourceRows": [
+        78
+      ]
+    },
+    {
+      "id": "doc-72",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-042",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 42,
+      "title": "SECURITY SUPPORT BUILDING 1  - ELEVATION 3&4",
+      "sourceRows": [
+        79
+      ]
+    },
+    {
+      "id": "doc-73",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-043",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 43,
+      "title": "SECURITY SUPPORT BUILDING 1  - SECTION A&B",
+      "sourceRows": [
+        80
+      ]
+    },
+    {
+      "id": "doc-74",
+      "num": "CMA-1042-DWG-ARC-AZR-S03-044",
+      "type": "DWG",
+      "discipline": "ARC",
+      "serial": 44,
+      "title": "SECURITY SUPPORT BUILDING 1  - DOOR & FINISHING SCHEDULES",
+      "sourceRows": [
+        81
+      ]
+    },
+    {
+      "id": "doc-75",
+      "num": "CMA-1042-CAL-STR-AZR-S03-001",
+      "type": "CAL",
+      "discipline": "STR",
+      "serial": 1,
+      "title": "Calculation note-GATE NO.1 MEG",
+      "sourceRows": [
+        83
+      ]
+    },
+    {
+      "id": "doc-76",
+      "num": "CMA-1042-CAL-STR-AZR-S03-002",
+      "type": "CAL",
+      "discipline": "STR",
+      "serial": 2,
+      "title": "Calculation note-GATE NO.2 MEG..",
+      "sourceRows": [
+        84
+      ]
+    },
+    {
+      "id": "doc-77",
+      "num": "CMA-1042-CAL-STR-AZR-S03-003",
+      "type": "CAL",
+      "discipline": "STR",
+      "serial": 3,
+      "title": "Calculation note-GATE NO.3 MEG..",
+      "sourceRows": [
+        85
+      ]
+    },
+    {
+      "id": "doc-78",
+      "num": "CMA-1042-CAL-STR-AZR-S03-004",
+      "type": "CAL",
+      "discipline": "STR",
+      "serial": 4,
+      "title": "Calculation note-SSB AT GATE NO.1 MEG.",
+      "sourceRows": [
+        86
+      ]
+    },
+    {
+      "id": "doc-79",
+      "num": "CMA-1042-MTS-CIV-AZR-S03-001",
+      "type": "MTS",
+      "discipline": "CIV",
+      "serial": 1,
+      "title": "Technical Specifications for Bollards Force B12-250-F",
+      "sourceRows": [
+        88
+      ]
+    },
+    {
+      "id": "doc-80",
+      "num": "CMA-1042-MTS-CIV-AZR-S03-002",
+      "type": "MTS",
+      "discipline": "CIV",
+      "serial": 2,
+      "title": "Company Profile for Brosis",
+      "sourceRows": [
+        89
+      ]
+    },
+    {
+      "id": "doc-81",
+      "num": "CMA-1042-MTS-CIV-AZR-S03-003",
+      "type": "MTS",
+      "discipline": "CIV",
+      "serial": 3,
+      "title": "Crash Test Certification",
+      "sourceRows": [
+        90
+      ]
+    },
+    {
+      "id": "doc-82",
+      "num": "CMA-1042-MTS-CIV-AZR-S03-004",
+      "type": "MTS",
+      "discipline": "CIV",
+      "serial": 4,
+      "title": "Certificate of passed Barrier Testing Programme",
+      "sourceRows": [
+        91
+      ]
+    },
+    {
+      "id": "doc-83",
+      "num": "CMA-1042-MTS-CIV-AZR-S03-005",
+      "type": "MTS",
+      "discipline": "CIV",
+      "serial": 5,
+      "title": "HCIS compliance for Fixed Bollards",
+      "sourceRows": [
+        92
+      ]
+    },
+    {
+      "id": "doc-84",
+      "num": "CMA-1042-MTS-CIV-AZR-S03-006",
+      "type": "MTS",
+      "discipline": "CIV",
+      "serial": 6,
+      "title": "Technical Specification for Anit-Ram Road Blockers SHEILD B12",
+      "sourceRows": [
+        93
+      ]
+    },
+    {
+      "id": "doc-85",
+      "num": "CMA-1042-MTS-CIV-AZR-S03-007",
+      "type": "MTS",
+      "discipline": "CIV",
+      "serial": 7,
+      "title": "Company Profile for Brosis",
+      "sourceRows": [
+        94
+      ]
+    },
+    {
+      "id": "doc-86",
+      "num": "CMA-1042-MTS-CIV-AZR-S03-008",
+      "type": "MTS",
+      "discipline": "CIV",
+      "serial": 8,
+      "title": "Certificate of passed Barrier Testing Programme",
+      "sourceRows": [
+        95
+      ]
+    },
+    {
+      "id": "doc-87",
+      "num": "CMA-1042-MTS-CIV-AZR-S03-009",
+      "type": "MTS",
+      "discipline": "CIV",
+      "serial": 9,
+      "title": "HCIS compliance for Road Blockers",
+      "sourceRows": [
+        96
+      ]
+    }
+  ],
+  "transmittals": [
+    {
+      "id": "tn-1",
+      "num": "CMA-DHC-AZR-ISS-DTF-001",
+      "form": "DTF",
+      "serial": 1,
+      "title": "Timeline Schedule for CMA Security System Stage 3",
+      "rev": "0",
+      "status": "CODE_C",
+      "owner": "",
+      "submittedDate": "2026-11-15",
+      "responseDate": "2026-11-23",
+      "documentIds": [
+        "doc-1"
+      ],
+      "history": [
+        {
+          "id": "tn-1-submission",
+          "kind": "status",
+          "at": "2026-11-15",
+          "status": "SUBMITTED",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        },
+        {
+          "id": "tn-1-response",
+          "kind": "status",
+          "at": "2026-11-23",
+          "status": "CODE_C",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        }
+      ],
+      "sourceIndex": 1,
+      "discipline": "OTH"
+    },
+    {
+      "id": "tn-2",
+      "num": "CMA-DHC-AZR-ISS-DRW-001",
+      "form": "DRW",
+      "serial": 1,
+      "title": "Structural Drawings Gate House No.1",
+      "rev": "0",
+      "status": "CODE_B",
+      "owner": "",
+      "submittedDate": "2026-11-15",
+      "responseDate": "2026-11-23",
+      "documentIds": [
+        "doc-3",
+        "doc-4",
+        "doc-5",
+        "doc-6",
+        "doc-7",
+        "doc-8",
+        "doc-75"
+      ],
+      "history": [
+        {
+          "id": "tn-2-submission",
+          "kind": "status",
+          "at": "2026-11-15",
+          "status": "SUBMITTED",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        },
+        {
+          "id": "tn-2-response",
+          "kind": "status",
+          "at": "2026-11-23",
+          "status": "CODE_B",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        }
+      ],
+      "sourceIndex": 2,
+      "discipline": "STR"
+    },
+    {
+      "id": "tn-3",
+      "num": "CMA-DHC-AZR-ISS-DRW-002",
+      "form": "DRW",
+      "serial": 2,
+      "title": "Structural Drawings Gate House No.2",
+      "rev": "0",
+      "status": "CODE_B",
+      "owner": "",
+      "submittedDate": "2026-11-15",
+      "responseDate": "2026-11-23",
+      "documentIds": [
+        "doc-10",
+        "doc-11",
+        "doc-12",
+        "doc-13",
+        "doc-14",
+        "doc-15",
+        "doc-76"
+      ],
+      "history": [
+        {
+          "id": "tn-3-submission",
+          "kind": "status",
+          "at": "2026-11-15",
+          "status": "SUBMITTED",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        },
+        {
+          "id": "tn-3-response",
+          "kind": "status",
+          "at": "2026-11-23",
+          "status": "CODE_B",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        }
+      ],
+      "sourceIndex": 3,
+      "discipline": "STR"
+    },
+    {
+      "id": "tn-4",
+      "num": "CMA-DHC-AZR-ISS-DRW-003",
+      "form": "DRW",
+      "serial": 3,
+      "title": "Structural Drawings Gate House No.3",
+      "rev": "0",
+      "status": "CODE_B",
+      "owner": "",
+      "submittedDate": "2026-11-15",
+      "responseDate": "2026-11-23",
+      "documentIds": [
+        "doc-17",
+        "doc-18",
+        "doc-19",
+        "doc-20",
+        "doc-21",
+        "doc-22",
+        "doc-77"
+      ],
+      "history": [
+        {
+          "id": "tn-4-submission",
+          "kind": "status",
+          "at": "2026-11-15",
+          "status": "SUBMITTED",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        },
+        {
+          "id": "tn-4-response",
+          "kind": "status",
+          "at": "2026-11-23",
+          "status": "CODE_B",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        }
+      ],
+      "sourceIndex": 4,
+      "discipline": "STR"
+    },
+    {
+      "id": "tn-5",
+      "num": "CMA-DHC-AZR-ISS-DRW-004",
+      "form": "DRW",
+      "serial": 4,
+      "title": "Structural Drawings Security Support Building",
+      "rev": "0",
+      "status": "CODE_B",
+      "owner": "",
+      "submittedDate": "2026-11-15",
+      "responseDate": "2026-11-23",
+      "documentIds": [
+        "doc-24",
+        "doc-25",
+        "doc-26",
+        "doc-27",
+        "doc-28",
+        "doc-29",
+        "doc-30",
+        "doc-78"
+      ],
+      "history": [
+        {
+          "id": "tn-5-submission",
+          "kind": "status",
+          "at": "2026-11-15",
+          "status": "SUBMITTED",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        },
+        {
+          "id": "tn-5-response",
+          "kind": "status",
+          "at": "2026-11-23",
+          "status": "CODE_B",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        }
+      ],
+      "sourceIndex": 5,
+      "discipline": "STR"
+    },
+    {
+      "id": "tn-6",
+      "num": "CMA-DHC-AZR-ISS-DRW-005",
+      "form": "DRW",
+      "serial": 5,
+      "title": "Architectural Drawings Main Entrance Gate No.1",
+      "rev": "0",
+      "status": "CODE_B",
+      "owner": "",
+      "submittedDate": "2026-11-15",
+      "responseDate": "2026-11-23",
+      "documentIds": [
+        "doc-31",
+        "doc-32",
+        "doc-33",
+        "doc-34",
+        "doc-35",
+        "doc-36",
+        "doc-37",
+        "doc-38",
+        "doc-39",
+        "doc-40",
+        "doc-41",
+        "doc-42"
+      ],
+      "history": [
+        {
+          "id": "tn-6-submission",
+          "kind": "status",
+          "at": "2026-11-15",
+          "status": "SUBMITTED",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        },
+        {
+          "id": "tn-6-response",
+          "kind": "status",
+          "at": "2026-11-23",
+          "status": "CODE_B",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        }
+      ],
+      "sourceIndex": 6,
+      "discipline": "ARC"
+    },
+    {
+      "id": "tn-7",
+      "num": "CMA-DHC-AZR-ISS-DRW-006",
+      "form": "DRW",
+      "serial": 6,
+      "title": "Architectural Drawings Main Entrance Gate No.2",
+      "rev": "0",
+      "status": "CODE_B",
+      "owner": "",
+      "submittedDate": "2026-11-15",
+      "responseDate": "2026-11-23",
+      "documentIds": [
+        "doc-44",
+        "doc-45",
+        "doc-46",
+        "doc-47",
+        "doc-48",
+        "doc-49",
+        "doc-50",
+        "doc-51",
+        "doc-52",
+        "doc-53",
+        "doc-54",
+        "doc-55"
+      ],
+      "history": [
+        {
+          "id": "tn-7-submission",
+          "kind": "status",
+          "at": "2026-11-15",
+          "status": "SUBMITTED",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        },
+        {
+          "id": "tn-7-response",
+          "kind": "status",
+          "at": "2026-11-23",
+          "status": "CODE_B",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        }
+      ],
+      "sourceIndex": 7,
+      "discipline": "ARC"
+    },
+    {
+      "id": "tn-8",
+      "num": "CMA-DHC-AZR-ISS-DRW-007",
+      "form": "DRW",
+      "serial": 7,
+      "title": "Architectural Drawings Main Entrance Gate No.3",
+      "rev": "0",
+      "status": "CODE_B",
+      "owner": "",
+      "submittedDate": "2026-11-15",
+      "responseDate": "2026-11-23",
+      "documentIds": [
+        "doc-55",
+        "doc-56",
+        "doc-57",
+        "doc-58",
+        "doc-59",
+        "doc-60",
+        "doc-61",
+        "doc-62",
+        "doc-63",
+        "doc-64",
+        "doc-65",
+        "doc-66"
+      ],
+      "history": [
+        {
+          "id": "tn-8-submission",
+          "kind": "status",
+          "at": "2026-11-15",
+          "status": "SUBMITTED",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        },
+        {
+          "id": "tn-8-response",
+          "kind": "status",
+          "at": "2026-11-23",
+          "status": "CODE_B",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        }
+      ],
+      "sourceIndex": 8,
+      "discipline": "ARC"
+    },
+    {
+      "id": "tn-9",
+      "num": "CMA-DHC-AZR-ISS-DRW-008",
+      "form": "DRW",
+      "serial": 8,
+      "title": "Architectural Drawings Security Support Building",
+      "rev": "0",
+      "status": "CODE_B",
+      "owner": "",
+      "submittedDate": "2026-11-15",
+      "responseDate": "2026-11-23",
+      "documentIds": [
+        "doc-67",
+        "doc-68",
+        "doc-69",
+        "doc-70",
+        "doc-71",
+        "doc-72",
+        "doc-73",
+        "doc-74"
+      ],
+      "history": [
+        {
+          "id": "tn-9-submission",
+          "kind": "status",
+          "at": "2026-11-15",
+          "status": "SUBMITTED",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        },
+        {
+          "id": "tn-9-response",
+          "kind": "status",
+          "at": "2026-11-23",
+          "status": "CODE_B",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        }
+      ],
+      "sourceIndex": 9,
+      "discipline": "ARC"
+    },
+    {
+      "id": "tn-10",
+      "num": "CMA-DHC-AZR-ISS-MIS-001",
+      "form": "MIS",
+      "serial": 1,
+      "title": "Material Submittal for Bollards",
+      "rev": "0",
+      "status": "CODE_B",
+      "owner": "",
+      "submittedDate": "2026-11-15",
+      "responseDate": "2026-11-23",
+      "documentIds": [
+        "doc-79",
+        "doc-80",
+        "doc-81",
+        "doc-82",
+        "doc-83"
+      ],
+      "history": [
+        {
+          "id": "tn-10-submission",
+          "kind": "status",
+          "at": "2026-11-15",
+          "status": "SUBMITTED",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        },
+        {
+          "id": "tn-10-response",
+          "kind": "status",
+          "at": "2026-11-23",
+          "status": "CODE_B",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        }
+      ],
+      "sourceIndex": 10,
+      "discipline": "CIV"
+    },
+    {
+      "id": "tn-11",
+      "num": "CMA-DHC-AZR-ISS-MIS-002",
+      "form": "MIS",
+      "serial": 2,
+      "title": "Material Submittal for Road Blockers",
+      "rev": "0",
+      "status": "CODE_B",
+      "owner": "",
+      "submittedDate": "2026-11-15",
+      "responseDate": "2026-11-23",
+      "documentIds": [
+        "doc-84",
+        "doc-85",
+        "doc-86",
+        "doc-87"
+      ],
+      "history": [
+        {
+          "id": "tn-11-submission",
+          "kind": "status",
+          "at": "2026-11-15",
+          "status": "SUBMITTED",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        },
+        {
+          "id": "tn-11-response",
+          "kind": "status",
+          "at": "2026-11-23",
+          "status": "CODE_B",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        }
+      ],
+      "sourceIndex": 11,
+      "discipline": "CIV"
+    },
+    {
+      "id": "tn-12",
+      "num": "CMA-DHC-AZR-ISS-PQA-001",
+      "form": "PQA",
+      "serial": 1,
+      "title": "Supplier's / Sub-Contractor's Approval : BRC Industrial Company for Fencing works",
+      "rev": "0",
+      "discipline": "CIV",
+      "status": "SUBMITTED",
+      "owner": "",
+      "submittedDate": "2026-11-16",
+      "responseDate": "",
+      "documentIds": [],
+      "history": [
+        {
+          "id": "tn-12-submission",
+          "kind": "status",
+          "at": "2026-11-16",
+          "status": "SUBMITTED",
+          "rev": "0",
+          "owner": "",
+          "source": "User-provided status screenshot"
+        }
+      ]
+    }
+  ]
+}
