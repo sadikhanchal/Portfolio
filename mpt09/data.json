@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "project": "MPT09",
-  "version": "05534186-690c-4c50-815a-3c2fe2698156",
-  "publishedAt": "2026-11-26T10:03:22.334Z",
+  "version": "9dba1b0a-b386-4052-bbb9-a179b4ff5058",
+  "publishedAt": "2026-11-26T10:09:33.974Z",
   "calendar": {
     "excludedWeekdays": [
       5
@@ -357,7 +357,7 @@
       "x": "Organization Chart",
       "o": "Technical Office",
       "r": "B",
-      "s": "REQUESTED TO REVISE (INTERNAL)",
+      "s": "SUBMITTED - WAITING RESPONSE",
       "id": "bdd6b96e-aee9-4c36-915c-81f19730c1fa",
       "history": [
         {
@@ -414,9 +414,19 @@
           "status": "REQUESTED TO REVISE (INTERNAL)",
           "who": "Technical Office",
           "action": "Start revision"
+        },
+        {
+          "id": "ad7c1b58-ecc8-4139-9cc9-3139cdb4b774",
+          "kind": "status",
+          "at": "2026-11-26",
+          "recordedAt": "2026-11-26T10:05:11.619Z",
+          "rev": "B",
+          "status": "SUBMITTED - WAITING RESPONSE",
+          "who": "Haskoning",
+          "previousStatus": "REQUESTED TO REVISE (INTERNAL)"
         }
       ],
-      "submittedDate": "",
+      "submittedDate": "2026-11-26",
       "responseDate": "",
       "everSubmitted": true
     },
