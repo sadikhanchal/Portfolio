@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "project": "MPT09",
-  "version": "9dba1b0a-b386-4052-bbb9-a179b4ff5058",
-  "publishedAt": "2026-11-26T10:09:33.974Z",
+  "version": "8640b49b-7b1e-4059-85f7-6611d7ec72b5",
+  "publishedAt": "2026-11-28T10:15:42.331Z",
   "calendar": {
     "excludedWeekdays": [
       5
@@ -202,7 +202,7 @@
       "x": "Communication Matrix",
       "o": "Technical Office",
       "r": "A",
-      "s": "COMPLETED",
+      "s": "SUBMITTED - WAITING RESPONSE",
       "id": "86a47d94-1996-4a01-9ec6-741a2328a281",
       "history": [
         {
@@ -239,20 +239,10 @@
             "submittedDate": "2026-11-19",
             "responseDate": ""
           }
-        },
-        {
-          "id": "5807a236-a264-4941-a000-6f3781f354bf",
-          "kind": "status",
-          "at": "2026-11-25",
-          "recordedAt": "2026-11-25T15:13:12.534Z",
-          "rev": "A",
-          "status": "COMPLETED",
-          "who": "DC",
-          "previousStatus": "SUBMITTED - WAITING RESPONSE"
         }
       ],
       "submittedDate": "2026-11-19",
-      "responseDate": "2026-11-25",
+      "responseDate": "",
       "everSubmitted": true
     },
     {
@@ -356,7 +346,7 @@
       "t": "MTX",
       "x": "Organization Chart",
       "o": "Technical Office",
-      "r": "B",
+      "r": "A",
       "s": "SUBMITTED - WAITING RESPONSE",
       "id": "bdd6b96e-aee9-4c36-915c-81f19730c1fa",
       "history": [
@@ -394,39 +384,9 @@
             "submittedDate": "2026-11-19",
             "responseDate": ""
           }
-        },
-        {
-          "id": "8c87b34a-c2ba-4828-bb03-fdf6a4c1dadd",
-          "kind": "status",
-          "at": "2026-11-25",
-          "recordedAt": "2026-11-25T15:13:53.908Z",
-          "rev": "A",
-          "status": "CODE C - REVISE & RESUBMIT",
-          "who": "DC",
-          "previousStatus": "SUBMITTED - WAITING RESPONSE"
-        },
-        {
-          "id": "d44de37e-f8f8-4ced-b783-83d9820305f6",
-          "kind": "status",
-          "at": "2026-11-25",
-          "recordedAt": "2026-11-25T15:13:58.576Z",
-          "rev": "B",
-          "status": "REQUESTED TO REVISE (INTERNAL)",
-          "who": "Technical Office",
-          "action": "Start revision"
-        },
-        {
-          "id": "ad7c1b58-ecc8-4139-9cc9-3139cdb4b774",
-          "kind": "status",
-          "at": "2026-11-26",
-          "recordedAt": "2026-11-26T10:05:11.619Z",
-          "rev": "B",
-          "status": "SUBMITTED - WAITING RESPONSE",
-          "who": "Haskoning",
-          "previousStatus": "REQUESTED TO REVISE (INTERNAL)"
         }
       ],
-      "submittedDate": "2026-11-26",
+      "submittedDate": "2026-11-19",
       "responseDate": "",
       "everSubmitted": true
     },
@@ -697,7 +657,7 @@
       "x": "RFI for fuel tank wall construction",
       "o": "Eng. Muhammad Adil",
       "r": "A",
-      "s": "COMPLETED",
+      "s": "SUBMITTED - WAITING RESPONSE",
       "id": "3bbe95f0-47db-47e5-9a3e-f7fa78daa458",
       "history": [
         {
@@ -719,20 +679,10 @@
           "status": "SUBMITTED - WAITING RESPONSE",
           "who": "Haskoning",
           "previousStatus": "PREPARING"
-        },
-        {
-          "id": "f8244bb3-57df-4985-9353-959d3dcdcab6",
-          "kind": "status",
-          "at": "2026-11-25",
-          "recordedAt": "2026-11-25T15:18:50.734Z",
-          "rev": "A",
-          "status": "COMPLETED",
-          "who": "DC",
-          "previousStatus": "SUBMITTED - WAITING RESPONSE"
         }
       ],
       "submittedDate": "2026-11-22",
-      "responseDate": "2026-11-25",
+      "responseDate": "",
       "everSubmitted": true
     },
     {
@@ -791,8 +741,8 @@
       "t": "PRP",
       "x": "Architectural Proposals",
       "o": "Al Badeel Design Consultant",
-      "r": "C",
-      "s": "REQUESTED TO REVISE (INTERNAL)",
+      "r": "B",
+      "s": "SUBMITTED - WAITING RESPONSE",
       "id": "0a2dd8cf-1cf0-4111-8c64-6773ca3b811a",
       "history": [
         {
@@ -869,29 +819,9 @@
           "status": "SUBMITTED - WAITING RESPONSE",
           "who": "Haskoning",
           "previousStatus": "APPROVED FOR SUBMISSION"
-        },
-        {
-          "id": "6bccf7a9-9474-4357-a922-ff49f734ec2d",
-          "kind": "status",
-          "at": "2026-11-25",
-          "recordedAt": "2026-11-25T15:09:11.399Z",
-          "rev": "B",
-          "status": "CODE C - REVISE & RESUBMIT",
-          "who": "DC",
-          "previousStatus": "SUBMITTED - WAITING RESPONSE"
-        },
-        {
-          "id": "e52c167f-3027-4944-91f7-f6dea0605751",
-          "kind": "status",
-          "at": "2026-11-25",
-          "recordedAt": "2026-11-25T15:09:17.254Z",
-          "rev": "C",
-          "status": "REQUESTED TO REVISE (INTERNAL)",
-          "who": "Al Badeel Design Consultant",
-          "action": "Start revision"
         }
       ],
-      "submittedDate": "",
+      "submittedDate": "2026-11-23",
       "responseDate": "",
       "everSubmitted": true
     },
@@ -902,7 +832,7 @@
       "x": "Project Layout Proposals",
       "o": "Al Badeel Design Consultant",
       "r": "B",
-      "s": "CODE D - NO REVIEW REQUIRED",
+      "s": "SUBMITTED - WAITING RESPONSE",
       "id": "d8a3d137-5256-431f-bba4-d4610a5001a4",
       "history": [
         {
@@ -979,20 +909,10 @@
           "status": "SUBMITTED - WAITING RESPONSE",
           "who": "Haskoning",
           "previousStatus": "APPROVED FOR SUBMISSION"
-        },
-        {
-          "id": "17404853-cd55-49b2-8fb0-36b09a8b9403",
-          "kind": "status",
-          "at": "2026-11-26",
-          "recordedAt": "2026-11-26T10:03:08.983Z",
-          "rev": "B",
-          "status": "CODE D - NO REVIEW REQUIRED",
-          "who": "DC",
-          "previousStatus": "SUBMITTED - WAITING RESPONSE"
         }
       ],
       "submittedDate": "2026-11-23",
-      "responseDate": "2026-11-26",
+      "responseDate": "",
       "everSubmitted": true
     },
     {
@@ -1300,6 +1220,56 @@
       "submittedDate": "2026-11-24",
       "responseDate": "2026-11-24",
       "everSubmitted": true
+    },
+    {
+      "n": 21,
+      "d": "SUR",
+      "t": "MST",
+      "x": "Method Statement for Survey Work",
+      "o": "Eng. Muhammad Saud",
+      "r": "A",
+      "s": "UNDER REVIEW (INTERNAL)",
+      "id": "c84c7766-7f01-4c6a-a051-d53f93ac8896",
+      "history": [
+        {
+          "id": "9bec3d71-08ad-403c-a6f1-ff99a3617ae0",
+          "kind": "status",
+          "at": "2026-11-25",
+          "recordedAt": "2026-11-28T10:13:54.630Z",
+          "rev": "A",
+          "status": "PREPARING",
+          "who": "Eng. Muhammad Saud",
+          "action": "Created"
+        },
+        {
+          "id": "066edd78-cf62-48d7-afa3-2100740fbd45",
+          "kind": "date correction",
+          "at": "2026-11-28",
+          "recordedAt": "2026-11-28T10:14:46.131Z",
+          "rev": "A",
+          "status": "PREPARING",
+          "who": "Eng. Muhammad Saud",
+          "reason": "Date Correction",
+          "before": {
+            "event": "9bec3d71-08ad-403c-a6f1-ff99a3617ae0",
+            "at": "2026-11-28"
+          },
+          "after": {
+            "event": "9bec3d71-08ad-403c-a6f1-ff99a3617ae0",
+            "at": "2026-11-25"
+          }
+        },
+        {
+          "id": "3391d2ff-6799-48fb-b53c-0dbd22789a86",
+          "kind": "status",
+          "at": "2026-11-26",
+          "recordedAt": "2026-11-28T10:15:15.380Z",
+          "rev": "A",
+          "status": "UNDER REVIEW (INTERNAL)",
+          "who": "Eng. Muhammad Adil (PM)",
+          "previousStatus": "PREPARING"
+        }
+      ]
     }
   ]
 }
