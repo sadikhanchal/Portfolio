@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "project": "DHC1295",
-  "version": "cma-2026-11-24-owner-rollout-v1",
-  "publishedAt": "2026-11-24T11:48:07.227Z",
+  "version": "published-20261128.1",
+  "publishedAt": "2026-11-28T10:44:37.592Z",
   "catalogs": {
     "disciplines": {
       "ARC": "Architectural",
@@ -1977,7 +1977,7 @@
       "serial": 1,
       "title": "Timeline Schedule for CMA Security System Stage 3",
       "rev": "0",
-      "status": "CODE_C",
+      "status": "CODE_B",
       "owner": "Eng. Muhammad Sheta",
       "submittedDate": "2026-11-15",
       "responseDate": "2026-11-23",
@@ -1998,10 +1998,9 @@
           "id": "tn-1-response",
           "kind": "status",
           "at": "2026-11-23",
-          "status": "CODE_C",
+          "status": "CODE_B",
           "rev": "0",
-          "owner": "",
-          "source": "User-provided status screenshot"
+          "owner": ""
         }
       ],
       "sourceIndex": 1,
